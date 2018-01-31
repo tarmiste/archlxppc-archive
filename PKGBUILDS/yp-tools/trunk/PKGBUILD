@@ -1,0 +1,25 @@
+# $Id: PKGBUILD 126193 2011-06-02 14:34:36Z bisson $
+# x86 Maintainer: Gaetan Bisson <bisson@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+pkgname=yp-tools
+pkgver=2.12
+pkgrel=2
+pkgdesc='Linux NIS Tools'
+arch=('i686' 'x86_64' 'ppc')
+url='http://www.linux-nis.org/nis/yp-tools/'
+license=('GPL2')
+depends=('ypbind-mt')
+source=("ftp://ftp.kernel.org/pub/linux/utils/net/NIS/$pkgname-$pkgver.tar.gz")
+sha1sums=('10b0ef5d4c5723e0716d7a1431a900c0ba6ef703')
+
+build() {
+	cd "$srcdir/$pkgname-$pkgver"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make DESTDIR="$pkgdir" install
+}

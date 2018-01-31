@@ -1,0 +1,58 @@
+# $Id: PKGBUILD,v 1.17 2010/03/16 12:53:27 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org>
+pkgname=mol
+pkgver=0.9.72.99.2
+pkgrel=3
+pkgdesc="A virtual machine for powerpcs on powerpcs"
+arch=('ppc')
+license=('GPL')
+depends=('libxt' 'kernel26-pmac>=2.6.33' 'alsa-lib' 'libpng>=1.4' \
+         'libxxf86dga' 'iptables' 'sdl')
+makedepends=('xorg-headers')
+backup=(etc/mol/molrc.input etc/mol/molrc.macos etc/mol/molrc.net etc/mol/molrc.osx
+        etc/mol/molrc.ow etc/mol/molrc.sound etc/mol/molrc.video etc/mol/session.map
+	etc/mol/tunconfig etc/mol/yaboot.conf etc/mol/dhcpd-mol.conf)
+source=(http://kth5.archlinuxppc.org/archlinux/mol/mol-${pkgver}.tar.bz2
+        http://kth5.archlinuxppc.org/archlinux/mol/moldisk.dmg \
+	http://kth5.archlinuxppc.org/archlinux/mol/moldiskX.dmg
+        config)
+url="http://maconlinux.org"
+
+build() {
+
+  cd ${srcdir}/${pkgname}-${pkgver}
+  sh autogen.sh
+  sh configure --prefix=/usr
+  cp ../config .config-ppc
+  
+  make oldconfig || return 1
+
+  # do not build included kernel module just yet
+  make BUILD_MODS=n || return 1
+  make DESTDIR=${pkgdir} install
+
+  # fix arch specific locations of some utilities
+  sed "s@/sbin/lsmod@/bin/lsmod@g" \
+      -i ${pkgdir}/usr/lib/mol/*/bin/modload
+  sed "s@/sbin/iptables@/usr/sbin/iptables@g" \
+      -i ${pkgdri}/etc/mol/tunconfig
+
+  # copy drivers i've taken from trunk svn
+  cp -rv ${srcdir}/${pkgname}-${pkgver}/mollib/* \
+        ${pkgdir}/usr/share/mol/0.9.73/
+
+  install -m644 ${srcdir}/moldisk.dmg \
+                ${pkgdir}/usr/share/mol/0.9.73/images/moldisk.dmg
+  install -m644 ${srcdir}/moldiskX.dmg \
+                ${pkgdir}/usr/share/mol/0.9.73/images/moldiskX.dmg
+
+  #KVER=$(uname -r)
+  #for fn in sheep.ko mol.ko; do
+  #  install -m644 -D ${srcdir}/${pkgname}-${pkgver}/obj-ppc/lib/modules/${KVER}/${fn} \
+  #                   ${pkgdir}/lib/modules/${KVER}/misc/mol/${fn}
+  #done
+}
+md5sums=('0e57d96e8e52cf1d7200aca1ea4d88b5'
+         '3b948ae96614e0356538d63b87c45545'
+         '163487701d0be9183f7ecdaaed913f8c'
+         'da436c0ab91c45b3377a4847952e6c54')

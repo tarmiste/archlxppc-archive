@@ -1,0 +1,122 @@
+--- indi/src/Makefile.am	2007-04-05 13:38:19.000000000 +0000
++++ indi/src/Makefile.am.orig	2008-07-30 09:32:07.000000000 +0000
+@@ -7,7 +7,7 @@
+ libsbigudrv_la_LIBADD = -lm
+ libsbigudrv_la_SOURCES = sbig_dummy.cpp
+ endif
+-bin_add   =  sbigccd apogee_ppi v4ldriver v4lphilips meade_lpi fliccd fliwheel flipdf
++bin_add   =  sbigccd v4ldriver v4lphilips meade_lpi fliccd fliwheel flipdf
+ endif
+ 
+ bin_PROGRAMS = indiserver lx200basic lx200generic celestrongps temma skycommander intelliscope robofocus orionatlas trutechwheel stv $(bin_add)
+@@ -68,14 +68,9 @@
+ orionatlas_SOURCES =  indidrivermain.c base64.c eventloop.c orionatlas.cpp
+ orionatlas_LDADD = liblilxml.a libindicom.a -lm
+ 
+-apogee_ppi_SOURCES = apogee_ppi.cpp base64.c eventloop.c indidrivermain.c
+-apogee_ppi_LDADD = libindicom.a liblilxml.a apogee/libapogee_PPI.la -lz
+-
+ sbigccd_SOURCES = sbigcam.cpp base64.c eventloop.c indidrivermain.c
+ sbigccd_LDADD = libindicom.a liblilxml.a @LIBCFITSIO@ @LIBSBIGUDRV@ -lz
+ 
+-pkgdata_DATA = apogee_caminfo.xml
+-
+ install-exec-hook:
+ 	$(mkinstalldirs) $(DESTDIR)$(bindir)
+ 	rm -f $(DESTDIR)$(bindir)/lx200classic
+@@ -91,5 +86,5 @@
+ 	rm $(DESTDIR)$(bindir)/lx200autostar $(DESTDIR)$(bindir)/lx200_16 $(DESTDIR)$(bindir)/lx200gps
+ 
+ if LINUX
+-SUBDIRS = @EXTRA_SUBDIR@ fli webcam apogee
++SUBDIRS = @EXTRA_SUBDIR@ fli webcam
+ endif
+--- indi/src/Makefile.in	2007-04-16 00:05:48.000000000 +0000
++++ indi/src/Makefile.in.orig	2008-07-30 09:31:45.000000000 +0000
+@@ -82,17 +82,12 @@
+ libsbigudrv_la_OBJECTS = $(am_libsbigudrv_la_OBJECTS)
+ @HAVE_LIBSBIGUDRV_FALSE@@LINUX_TRUE@am_libsbigudrv_la_rpath = -rpath \
+ @HAVE_LIBSBIGUDRV_FALSE@@LINUX_TRUE@	$(libdir)
+-@LINUX_TRUE@am__EXEEXT_1 = sbigccd$(EXEEXT) apogee_ppi$(EXEEXT) \
++@LINUX_TRUE@am__EXEEXT_1 = sbigccd$(EXEEXT) \
+ @LINUX_TRUE@	v4ldriver$(EXEEXT) v4lphilips$(EXEEXT) \
+ @LINUX_TRUE@	meade_lpi$(EXEEXT) fliccd$(EXEEXT) \
+ @LINUX_TRUE@	fliwheel$(EXEEXT) flipdf$(EXEEXT)
+ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+ PROGRAMS = $(bin_PROGRAMS)
+-am_apogee_ppi_OBJECTS = apogee_ppi.$(OBJEXT) base64.$(OBJEXT) \
+-	eventloop.$(OBJEXT) indidrivermain.$(OBJEXT)
+-apogee_ppi_OBJECTS = $(am_apogee_ppi_OBJECTS)
+-apogee_ppi_DEPENDENCIES = libindicom.a liblilxml.a \
+-	apogee/libapogee_PPI.la
+ am_celestrongps_OBJECTS = indidrivermain.$(OBJEXT) base64.$(OBJEXT) \
+ 	eventloop.$(OBJEXT) celestronprotocol.$(OBJEXT) \
+ 	celestrongps.$(OBJEXT)
+@@ -193,7 +188,7 @@
+ CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+ 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ SOURCES = $(libindicom_a_SOURCES) $(liblilxml_a_SOURCES) \
+-	$(libsbigudrv_la_SOURCES) $(apogee_ppi_SOURCES) \
++	$(libsbigudrv_la_SOURCES) \
+ 	$(celestrongps_SOURCES) $(fliccd_SOURCES) $(flipdf_SOURCES) \
+ 	$(fliwheel_SOURCES) $(indiserver_SOURCES) \
+ 	$(intelliscope_SOURCES) $(lx200basic_SOURCES) \
+@@ -203,7 +198,7 @@
+ 	$(trutechwheel_SOURCES) $(v4ldriver_SOURCES) \
+ 	$(v4lphilips_SOURCES)
+ DIST_SOURCES = $(libindicom_a_SOURCES) $(liblilxml_a_SOURCES) \
+-	$(am__libsbigudrv_la_SOURCES_DIST) $(apogee_ppi_SOURCES) \
++	$(am__libsbigudrv_la_SOURCES_DIST) \
+ 	$(celestrongps_SOURCES) $(fliccd_SOURCES) $(flipdf_SOURCES) \
+ 	$(fliwheel_SOURCES) $(indiserver_SOURCES) \
+ 	$(intelliscope_SOURCES) $(lx200basic_SOURCES) \
+@@ -222,7 +217,7 @@
+ DATA = $(pkgdata_DATA)
+ ETAGS = etags
+ CTAGS = ctags
+-DIST_SUBDIRS = @EXTRA_SUBDIR@ fli webcam apogee
++DIST_SUBDIRS = @EXTRA_SUBDIR@ fli webcam
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ ACLOCAL = @ACLOCAL@
+ AMDEP_FALSE = @AMDEP_FALSE@
+@@ -349,7 +344,7 @@
+ @HAVE_LIBSBIGUDRV_FALSE@@LINUX_TRUE@lib_LTLIBRARIES = libsbigudrv.la
+ @HAVE_LIBSBIGUDRV_FALSE@@LINUX_TRUE@libsbigudrv_la_LIBADD = -lm
+ @HAVE_LIBSBIGUDRV_FALSE@@LINUX_TRUE@libsbigudrv_la_SOURCES = sbig_dummy.cpp
+-@LINUX_TRUE@bin_add = sbigccd apogee_ppi v4ldriver v4lphilips meade_lpi fliccd fliwheel flipdf
++@LINUX_TRUE@bin_add = sbigccd v4ldriver v4lphilips meade_lpi fliccd fliwheel flipdf
+ liblilxml_a_SOURCES = lilxml.c
+ libindicom_a_SOURCES = indicom.c base64.c  observer.c
+ noinst_LIBRARIES = liblilxml.a libindicom.a
+@@ -387,12 +382,9 @@
+ intelliscope_LDADD = liblilxml.a libindicom.a -lm
+ orionatlas_SOURCES = indidrivermain.c base64.c eventloop.c orionatlas.cpp
+ orionatlas_LDADD = liblilxml.a libindicom.a -lm
+-apogee_ppi_SOURCES = apogee_ppi.cpp base64.c eventloop.c indidrivermain.c
+-apogee_ppi_LDADD = libindicom.a liblilxml.a apogee/libapogee_PPI.la -lz
+ sbigccd_SOURCES = sbigcam.cpp base64.c eventloop.c indidrivermain.c
+ sbigccd_LDADD = libindicom.a liblilxml.a @LIBCFITSIO@ @LIBSBIGUDRV@ -lz
+-pkgdata_DATA = apogee_caminfo.xml
+-@LINUX_TRUE@SUBDIRS = @EXTRA_SUBDIR@ fli webcam apogee
++@LINUX_TRUE@SUBDIRS = @EXTRA_SUBDIR@ fli webcam
+ all: all-recursive
+ 
+ .SUFFIXES:
+@@ -494,9 +486,6 @@
+ 	  echo " rm -f $$p $$f"; \
+ 	  rm -f $$p $$f ; \
+ 	done
+-apogee_ppi$(EXEEXT): $(apogee_ppi_OBJECTS) $(apogee_ppi_DEPENDENCIES) 
+-	@rm -f apogee_ppi$(EXEEXT)
+-	$(CXXLINK) $(apogee_ppi_LDFLAGS) $(apogee_ppi_OBJECTS) $(apogee_ppi_LDADD) $(LIBS)
+ celestrongps$(EXEEXT): $(celestrongps_OBJECTS) $(celestrongps_DEPENDENCIES) 
+ 	@rm -f celestrongps$(EXEEXT)
+ 	$(CXXLINK) $(celestrongps_LDFLAGS) $(celestrongps_OBJECTS) $(celestrongps_LDADD) $(LIBS)
+@@ -558,7 +547,6 @@
+ distclean-compile:
+ 	-rm -f *.tab.c
+ 
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apogee_ppi.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/celestrongps.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/celestronprotocol.Po@am__quote@

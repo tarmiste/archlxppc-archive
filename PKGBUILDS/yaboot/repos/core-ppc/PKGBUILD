@@ -1,0 +1,33 @@
+# $Id: PKGBUILD,v 1.10 2009/12/01 14:52:32 kth5 Exp $
+# Maintainer: Alexander Baldeck  <alexander@archlinux.org>
+pkgname=yaboot
+pkgver=1.3.16
+pkgrel=1
+pkgdesc="A NewWorld Macintosh bootloader."
+arch=('ppc')
+url="http://yaboot.ozlabs.org"
+license=('GPL2+')
+depends=('glibc' 'hfsutils' 'powerpc-utils')
+backup=('etc/yaboot.conf')
+groups=('base')
+source=(http://yaboot.ozlabs.org/releases/${pkgname}-${pkgver}.tar.gz \
+	fix_xfs-boot.patch
+        yaboot-nvram-pata.patch)
+
+build() {
+  export CFLAGS="${CFLAGS/-O2 /}"
+  cd ${startdir}/src/${pkgname}-${pkgver}
+
+  patch -Np1 -i ${srcdir}/fix_xfs-boot.patch || return 1
+  patch -Np1 -i ${srcdir}/yaboot-nvram-pata.patch || return 1  
+
+  (cd etc;
+    sed -i "s|/usr/local/lib/yaboot/yaboot|/usr/lib/yaboot/yaboot|" yaboot.conf;
+    sed -i "s|/usr/local/lib/yaboot/ofboot|/usr/lib/yaboot/ofboot|" yaboot.conf)
+
+  make ROOT=/ PREFIX=usr
+  make ROOT=${startdir}/pkg PREFIX=usr/ install || return 1
+}
+md5sums=('dd8f436cf23d562c8a9f6ff513e1f435'
+         'dd61354922fc031d534186f6ba4a839b'
+         'd29c8efe49ce00806ed1ea8b2773419a')

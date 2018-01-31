@@ -1,0 +1,38 @@
+--- gnome-blog-poster	2005/01/02 07:06:46	1.7
++++ gnome-blog-poster	2005/01/12 16:53:03	1.8
+@@ -6,7 +6,6 @@
+ import gnome
+ import gnome.ui
+ import gconf
+-
+ import gettext
+ _ = gettext.gettext
+ 
+@@ -28,6 +27,13 @@
+ 
+         client = gconf.client_get_default()
+         value = client.get_bool(self.prefs_key + "/initialized")
++
++        accel_group = gtk.AccelGroup()
++
++        poster = blog_poster.BlogPoster(prefs_key=self.prefs_key,
++                                        accel_group=accel_group,
++                                        on_entry_posted=self._onEntryPosted)
++
+         if (value == None or value == gtk.FALSE):
+             poster._showPrefDialog()
+             client.set_bool(self.prefs_key + "/initialized", gtk.TRUE)
+@@ -35,13 +41,8 @@
+         poster_window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+         poster_window.set_title(_("Post Blog Entry"))
+         poster_window.connect('destroy', lambda w: gtk.main_quit())
+-        accel_group = gtk.AccelGroup()
+         poster_window.add_accel_group(accel_group)
+ 
+-        poster = blog_poster.BlogPoster(prefs_key=self.prefs_key,
+-                                        accel_group=accel_group,
+-                                        on_entry_posted=self._onEntryPosted)
+-        
+         poster_window.add(poster)
+         poster_window.show_all()
+ 

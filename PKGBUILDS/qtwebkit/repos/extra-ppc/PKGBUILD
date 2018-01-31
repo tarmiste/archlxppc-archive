@@ -1,0 +1,49 @@
+# $Id: PKGBUILD 146627 2012-01-14 15:25:15Z andrea $
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=qtwebkit
+pkgver=2.2.1
+pkgrel=2
+arch=('ppc' 'i686' 'x86_64')
+url='http://trac.webkit.org/wiki/QtWebKit'
+pkgdesc='An open source web browser engine (Qt port)'
+license=('LGPL2.1' 'GPL3')
+depends=('qt' 'gperf' 'bison' 'gstreamer0.10-base')
+makedepends=('python2' 'mesa' 'chrpath')
+conflicts=('qt<4.8')
+#source=("http://get.qt.nokia.com/${pkgname}/QtWebKit-${pkgver}.tar.gz"
+source=("ftp://ftp.archlinux.org/other/${pkgname}/QtWebKit-${pkgver}.tar.gz"
+        "ftp://ftp.archlinux.org/other/${pkgname}/qwebview-4.8.0.tar.bz2"
+        'python2-path.patch')
+sha1sums=('283fc116882157df0474af496be73bb9b34cb001'
+          '0e44b27a0f71aceb91a89a2c28ab6331126518d9'
+          'b0ef3d5596171e3900a685df9bcfac3068ad6330')
+
+build() {
+  cd "${srcdir}"/QtWebKit-${pkgver}
+
+  patch -p1 -i "${srcdir}"/python2-path.patch
+
+  cd Tools/Scripts
+  ./build-webkit --qt \
+    --prefix=/usr \
+    --makeargs="${MAKEFLAGS}" \
+    --release \
+    --3d-canvas
+
+  # Build the QWebView plugin (FS#27914)
+  cd "${srcdir}"/QtWebKit-${pkgver}/qwebview-4.8.0/plugins/qwebview
+  qmake
+  make
+}
+
+package() {
+  cd "${srcdir}"/QtWebKit-${pkgver}
+  make INSTALL_ROOT="${pkgdir}" -C WebKitBuild/Release install
+
+  # Fix RPATH
+  chrpath -r /usr/lib/ "${pkgdir}"/usr/lib/qt/imports/QtWebKit/libqmlwebkitplugin.so
+
+  cd "${srcdir}"/QtWebKit-${pkgver}/qwebview-4.8.0/plugins/qwebview
+  make INSTALL_ROOT="${pkgdir}" install
+}

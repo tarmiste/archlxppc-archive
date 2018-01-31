@@ -1,0 +1,26 @@
+# $Id: PKGBUILD,v 1.4 2010/03/17 09:39:00 kth5 Exp $
+# Maintainer: Alexander Baldeck <kthfive@googlemail.com>
+# Contributor: Benoit Chesneau <benoitc@archlinuxppc.org> 
+pkgname=gtkpbbuttons
+pkgver=0.6.10
+pkgrel=2
+pkgdesc="Provides hotkey and power management for powerbooks and ibooks."
+url="http://pbbuttons.berlios.de"
+license=("GPL")
+arch=('ppc')
+depends=('gtk2' 'pbbuttonsd' 'audiofile' 'popt')
+makedepends=('pkgconfig' 'intltool' 'xorg-headers')
+source=(http://dl.sourceforge.net/sourceforge/pbbuttons/$pkgname-$pkgver.tar.gz \
+	ftp://ftp.berlios.de/pub/pbbuttons/crystallarge.tgz)
+md5sums=('a4dfe7b736e5a617793bd4474cb007d6'
+         'adfd7d8fbea38ed8cebce1ef71e08938')
+
+build() {
+  cd $startdir/src/$pkgname-$pkgver
+
+  ./configure --prefix=/usr
+  make || return 1
+  make DESTDIR=$startdir/pkg install-strip
+  cp -R ${srcdir}/CrystalLarge ${pkgdir}/usr/share/gtkpbbuttons/themes/
+
+}

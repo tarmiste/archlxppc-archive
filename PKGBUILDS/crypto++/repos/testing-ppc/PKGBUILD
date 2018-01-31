@@ -1,0 +1,59 @@
+# $Id$
+# x86 Maintainer: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: Alexander Rødseth <rodseth@gmail.com>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Kritoke <kritoke@gamebox.net>
+# Contributor: jlvsimoes <jlvsimoes@oninet.pt>
+
+pkgname=crypto++
+pkgver=5.6.1
+_srcver=561
+pkgrel=4
+pkgdesc="A free C++ class library of cryptographic schemes"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.cryptopp.com/"
+license=('custom')
+depends=('gcc-libs')
+makedepends=('unzip')
+source=("http://www.cryptopp.com/cryptopp${_srcver}.zip"
+	"fix_build_on_ppc.patch"
+        'libcrypto++.pc'
+        'gcc4.7.patch')
+md5sums=('96cbeba0907562b077e26bcffb483828'
+         '2337c6edbc552d9142cae8e0854715e7'
+         'cf26a783d9432e7f9ab7f14d3db3f196')
+
+build() {
+  cd ${srcdir}
+
+  # Fix gcc 4.7 build
+  patch -Np1 -i "${srcdir}/gcc4.7.patch"
+  patch -Np0 -i "${srcdir}/fix_build_on_ppc.patch"
+  sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile
+  export CXXFLAGS="${CXXFLAGS} -DNDEBUG -fPIC"
+  make -f GNUmakefile  
+  make libcryptopp.so
+}
+
+package() {
+  cd ${srcdir}
+
+  install -d ${pkgdir}/usr/{lib/pkgconfig,include/cryptopp}
+  install -m644 *.h ${pkgdir}/usr/include/cryptopp/
+  install -m644 libcryptopp.a "${pkgdir}/usr/lib/libcryptopp.a"
+  install -m644 libcryptopp.so "${pkgdir}/usr/lib/libcryptopp.so"
+  install -m644 ${srcdir}/libcrypto++.pc "${pkgdir}/usr/lib/pkgconfig/libcrypto++.pc"
+  install -D -m644 License.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+md5sums=('96cbeba0907562b077e26bcffb483828'
+         'c827f7570fb42d673a4636789ac15fc1'
+         '2337c6edbc552d9142cae8e0854715e7'
+         'cf26a783d9432e7f9ab7f14d3db3f196')
+md5sums=('96cbeba0907562b077e26bcffb483828'
+         'ca7457b7ad8dbc270f10639da86ae3d2'
+         '2337c6edbc552d9142cae8e0854715e7'
+         'cf26a783d9432e7f9ab7f14d3db3f196')
+md5sums=('96cbeba0907562b077e26bcffb483828'
+         '584bba370793a4637adcb40dcf47824f'
+         '2337c6edbc552d9142cae8e0854715e7'
+         'cf26a783d9432e7f9ab7f14d3db3f196')

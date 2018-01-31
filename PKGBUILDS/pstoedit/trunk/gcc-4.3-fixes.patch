@@ -1,0 +1,44 @@
+--- src/cppcomp.h.orig	2008-04-09 16:07:32.000000000 +0000
++++ src/cppcomp.h	2008-04-09 16:11:23.000000000 +0000
+@@ -223,6 +223,8 @@
+ #else
+ 
+ #include I_iostream
++#include <cstring>
++#include <cstdlib>
+ USESTD
+ 
+ // approach for emulation:
+diff -ruN ../pstoedit-3.45.orig/configure.ac ./configure.ac
+--- configure.ac	2008-04-09 16:34:47.000000000 +0000
++++ configure.ac	2008-04-09 16:35:56.000000000 +0000
+@@ -394,7 +394,7 @@
+     AC_SUBST(LDLIBS)
+   else
+     AC_MSG_RESULT([GNU])
+-    SPECIAL_CXXFLAGS="-DBUGGYGPP -pedantic -Wall -Wwrite-strings -Wcast-qual -Wpointer-arith "
++    SPECIAL_CXXFLAGS="-DBUGGYGPP -Wall -Wwrite-strings -Wcast-qual -Wpointer-arith "
+   fi
+   CXXFLAGS="-g" 
+ elif test `echo "$CXX" | egrep -c 'xlC$'` -eq 1; then
+diff -ruN ../pstoedit-3.45.orig/src/makefile.txt ./src/makefile.txt
+--- src/makefile.txt	2008-04-09 16:34:47.000000000 +0000
++++ src/makefile.txt	2008-04-09 16:36:13.000000000 +0000
+@@ -13,7 +13,7 @@
+ 
+ # uncommment one of the following CCC lines for Un*x like systems
+ # For users of GNU g++
+-GNUGPPFLAGS=-DBUGGYGPP -ansi -pedantic -Wall -Wwrite-strings -Wcast-qual -Wpointer-arith -Wstrict-prototypes 
++GNUGPPFLAGS=-DBUGGYGPP -ansi - Wall -Wwrite-strings -Wcast-qual -Wpointer-arith -Wstrict-prototypes 
+ #CCC=g++ -O2 $(GNUGPPFLAGS)
+ # For debugging
+ #CCC=g++ -g $(GNUGPPFLAGS)
+@@ -60,7 +60,7 @@
+ 
+ # uncomment for Cygwin / Win32
+ # WARNING: -ansi compiler option does not work (for CygWin B20)!
+-GNUGPPFLAGS=-DBUGGYGPP -pedantic -Wall -Wwrite-strings -Wcast-qual -Wpointer-arith -Wstrict-prototypes
++GNUGPPFLAGS=-DBUGGYGPP -Wall -Wwrite-strings -Wcast-qual -Wpointer-arith -Wstrict-prototypes
+ # For the release
+ #CCC=g++ -O2 $(GNUGPPFLAGS)
+ # For debugging

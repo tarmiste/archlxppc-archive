@@ -1,0 +1,28 @@
+# $Id$
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Guenther Wutz <admin@wutzara.de>
+
+pkgname=mx
+pkgver=1.4.1
+pkgrel=1
+pkgdesc="A widget toolkit using Clutter"
+arch=('ppc' 'i686' 'x86_64')
+url="http://www.clutter-project.org"
+license=('LGPL')
+depends=('clutter' 'libxrandr' 'dbus-glib' 'gtk2' 'startup-notification')
+makedepends=('intltool' 'gobject-introspection' 'gtk-doc')
+options=('!libtool')
+source=("http://source.clutter-project.org/sources/$pkgname/${pkgver%.*}/$pkgname-$pkgver.tar.xz")
+sha256sums=('6687300eef0bcee133cb7cd97d91de000e741aa2c0b50718bb2e837b6ca25250')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

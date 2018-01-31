@@ -1,0 +1,13 @@
+--- a/rc.sysinit	2011-10-18 18:28:24.000000000 +0200
++++ b/rc.sysinit	2011-11-19 09:24:59.000000000 +0100
+@@ -7,8 +7,8 @@
+ . /etc/rc.d/functions
+ 
+ echo " "
+-printhl "Arch Linux\n"
+-printhl "${C_H2}http://www.archlinux.org"
++printhl "Arch LinuxPPC\n"
++printhl "${C_H2}http://www.archlinuxppc.org"
+ printsep
+ 
+ # mount /proc, /sys, /run, /dev, /run/lock, /dev/pts, /dev/shm (the api filesystems)

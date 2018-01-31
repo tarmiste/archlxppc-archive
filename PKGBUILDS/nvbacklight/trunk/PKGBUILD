@@ -1,0 +1,36 @@
+# $Id$
+# Maintainer: Alexander Baldeck <kth5@archlinuxppc.org>
+pkgname=nvbacklight
+pkgver=0.1
+pkgrel=8
+pkgdesc="Kernel module for controlling backlight settings on nvidia cards without nvidiafb"
+arch=(ppc)
+url="http://wingolog.org"
+license=('GPL')
+depends=('kernel26-pmac>=2.6.39' 'kernel26-pmac<2.6.40')
+makedepends=('kernel26-pmac-headers')
+install=${pkgname}.install
+source=(http://wingolog.org/pub/$pkgname-$pkgver.tar.bz2
+	nvbacklight-0.1-recent-linux.patch)
+
+_KVER=2.6.39-ARCH
+
+build() {
+  unset LDFLAGS
+
+  export CFLAGS="-DMODVERSIONS"
+
+  cd "$srcdir/$pkgname-$pkgver"
+
+  patch -Np1 -i ${srcdir}/nvbacklight-0.1-recent-linux.patch || return 1
+
+  sed "s@^KVER.*@KVER := ${_KVER}@g" -i Makefile
+
+  ARCH=powerpc make || return 1
+  install -D -m644 nvbacklight.ko ${pkgdir}/lib/modules/${_KVER}/extra/nvbacklight.ko
+
+  sed "s@KERNEL_VERSION=.*@KERNEL_VERSION=${_KVER}@g" -i ${startdir}/${pkgname}.install
+}
+
+md5sums=('99220d78c126fecbd20fcd57f395309e'
+         '8e6ca53307e7c78e59a0e9392d7741e3')

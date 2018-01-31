@@ -1,0 +1,22 @@
+#
+## $repo: Arch Linux PPC @REPO@ repository
+##
+#
+
+# Finland
+Server = http://mirror.academica.fi/archlinuxppc/
+Server = ftp://mirror.academica.fi/archlinuxppc/ 
+
+# Germany
+Server = ftp://ftp.archlinuxppc.org/$repo/os/ppc
+Server = http://ftp.archlinuxppc.org/$repo/os/ppc
+
+# Italy
+Server = http://archlinuxppc.mirror.garr.it/mirrors/archlinuxppc/$repo/os/ppc
+
+# Spain
+Server = ftp://ftp.rediris.es/mirror/archlinux-ppc/$repo/os/ppc/
+Server = http://ftp.rediris.es/mirror/archlinux-ppc/$repo/os/ppc/
+
+# UK
+Server = http://archlinuxppc.positive-internet.com/$repo/os/ppc/

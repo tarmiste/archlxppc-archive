@@ -1,0 +1,24 @@
+# Contributor: William Rea <sillywilly@gmail.com>
+pkgname=gobby
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="A collaborative text editor"
+url="http://gobby.0x539.de"
+license="GPL"
+depends=('obby' 'libxml++2' 'gtkmm' 'gtksourceview' 'gnome-vfs')
+makedepends=('gettext' 'pkgconfig')
+source=(http://releases.0x539.de/gobby/gobby-$pkgver.tar.gz)
+install=$pkgname.install
+md5sums=('a2c79bdda652a2d74fec104235d27bc0')
+
+build() {
+  cd $startdir/src/gobby-$pkgver
+  ./configure --prefix=/usr --with-gnome
+  make || return 1
+  make DESTDIR=$startdir/pkg install
+  #find -name gobby.desktop -exec sed -i "s|Network|Office|" {} \;
+  install -D -m644 contrib/gobby.desktop \
+                   $startdir/pkg/usr/share/applications/gobby.desktop
+  #install -D -m644 contrib/artwork/gobby.png \
+  #                 $startdir/pkg/usr/share/pixmaps/gobby.png
+}

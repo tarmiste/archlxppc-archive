@@ -1,0 +1,30 @@
+# $Id$
+# x86 Maintainer: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: G_Syme <demichan(at)mail(dot)upb(dot)de>
+
+pkgname=libass
+pkgver=0.10.0
+pkgrel=3.1
+pkgdesc="A portable library for SSA/ASS subtitles rendering"
+arch=('i686' 'x86_64' 'ppc')
+url="http://code.google.com/p/libass/"
+license=('BSD')
+depends=('enca' 'fontconfig' 'fribidi')
+makedepends=('pkg-config')
+options=(!libtool)
+source=("http://libass.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
+md5sums=('1855bddc4c167f96968dddeeda0eb45c')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
+  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

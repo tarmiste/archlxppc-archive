@@ -1,0 +1,119 @@
+# $Id: PKGBUILD,v 1.3 2008/06/13 13:09:23 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org>
+
+# This kernel is meant to drive only Motorola Powerstack II
+# machines. Many other PreP machines such as this one, need
+# you to dd your kernel onto a PreP (id 41) partitions to
+# boot it. Newer kernerls do not properly support the
+# zImage.initrd target anymore and this we need to build in
+# certain drivers such as SCSI.
+
+pkgname=kernel26-powerstack
+basekernel=2.6.22
+pkgver=2.6.22.19
+pkgrel=2
+pkgdesc="The Linux Kernel and modules - Motorola Powerstack II"
+arch=(ppc)
+license=('GPL')
+url="http://www.kernel.org"
+backup=('boot/kconfig26')
+depends=('module-init-tools')
+conflicts=('kernel26-pmac')
+install=kernel26.install
+source=(ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-$basekernel.tar.bz2 \
+        http://www.kernel.org/pub/linux/kernel/v2.6/patch-$pkgver.bz2 \
+        config logo_linux_clut224.ppm logo_linux_mono.pbm logo_linux_vga16.ppm
+	gcc-4.3.0-compilation-fix.patch)
+
+build() {
+  KARCH=ppc
+  ARCH=ppc
+
+  cd $startdir/src/linux-$basekernel
+  # add upstream patch from 2.6.21 series
+  patch -Np1 -i ../patch-${pkgver} || return 1
+  
+  # remove the extraversion from Makefile
+  sed -i 's|^EXTRAVERSION = .*$|EXTRAVERSION =|g' Makefile  
+  # Arch logo!
+  cp ../logo_linux_clut224.ppm drivers/video/logo/
+  cp ../logo_linux_mono.pbm drivers/video/logo/
+  cp ../logo_linux_vga16.ppm drivers/video/logo/
+
+  cat ../config | sed "s|#CARCH#|$CARCH|g" >./.config
+
+  # build the full kernel version to use in pathnames
+  . ./.config
+  _kernver="${basekernel}${CONFIG_LOCALVERSION}"
+  # load configuration
+  yes "" | ARCH=ppc make oldconfig
+  # build!
+  ARCH=ppc make zImage modules|| return 1
+  mkdir -p $startdir/pkg/{lib/modules,boot}
+  ARCH=ppc make INSTALL_MOD_PATH=$startdir/pkg modules_install || return 1
+  cp System.map $startdir/pkg/boot/System.map26
+  cp arch/ppc/boot/images/zImage.prep $startdir/pkg/boot/zImage26
+
+
+  install -D -m644 Makefile \
+    $startdir/pkg/usr/src/linux-${_kernver}/Makefile
+  install -D -m644 kernel/Makefile \
+    $startdir/pkg/usr/src/linux-${_kernver}/kernel/Makefile
+  install -D -m644 .config \
+    $startdir/pkg/usr/src/linux-${_kernver}/.config
+  install -D -m644 .config $startdir/pkg/boot/kconfig26
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/include
+
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/arch/$KARCH/kernel
+
+  for i in acpi config linux math-emu media net pcmcia scsi sound video; do
+    cp -a include/$i $startdir/pkg/usr/src/linux-${_kernver}/include/
+  done
+
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/include/{asm,asm-ppc}
+  cp -a include/asm/* $startdir/pkg/usr/src/linux-${_kernver}/include/asm/
+  cp -a include/asm-powerpc/* $startdir/pkg/usr/src/linux-${_kernver}/include/asm
+  cp -a include/asm-ppc/* $startdir/pkg/usr/src/linux-${_kernver}/include/asm-ppc
+  cp -a include/asm-generic $startdir/pkg/usr/src/linux-${_kernver}/include/asm-generic
+
+
+  # copy files necessary for later builds
+  cp Module.symvers $startdir/pkg/usr/src/linux-${_kernver}
+  cp -a scripts $startdir/pkg/usr/src/linux-${_kernver}
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/.tmp_versions
+  
+  cp arch/$KARCH/Makefile $startdir/pkg/usr/src/linux-${_kernver}/arch/$KARCH/
+  cp arch/$KARCH/kernel/asm-offsets.s $startdir/pkg/usr/src/linux-${_kernver}/arch/$KARCH/kernel/
+
+
+  # add inotify.h
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/include/linux
+  cp include/linux/inotify.h $startdir/pkg/usr/src/linux-${_kernver}/include/linux/
+
+  # copy in Kconfig files
+  for i in `find . -name "Kconfig*"`; do 
+    mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/`echo $i | sed 's|/Kconfig.*||'`
+    cp $i $startdir/pkg/usr/src/linux-${_kernver}/$i
+  done
+
+  chown -R root.root $startdir/pkg/usr/src/linux-${_kernver}
+  cd $startdir/pkg/lib/modules/${_kernver} && \
+    (rm -f source build; ln -sf ../../../usr/src/linux-${_kernver} build)
+  # for binary modules make prepare
+  cd $startdir/pkg/lib/modules/${_kernver}/build
+  ARCH=ppc make prepare
+  # set correct depmod command for install
+  sed -i -e "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/g" $startdir/kernel26.install
+
+  for fn in page.h highmem.h; do
+    install -m644 ${startdir}/src/linux-${basekernel}/include/asm-ppc/$fn \
+                  ${startdir}/pkg/usr/src/linux-${_kernver}/include/asm/$fn
+  done
+}
+md5sums=('2e230d005c002fb3d38a3ca07c0200d0'
+         '066cc3bdd2783dcd01f6ff466e449ec0'
+         '9c103098f5015c3db1648f50587a6172'
+         '5974286ba3e9716bfbad83d3f4ee985a'
+         'e8c333eaeac43f5c6a1d7b2f47af12e2'
+         'a6f0377c814da594cffcacbc0785ec1a'
+         'a47ed631f578ddd409d4d4a95d5954b9')

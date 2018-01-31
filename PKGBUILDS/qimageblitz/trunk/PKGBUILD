@@ -1,0 +1,30 @@
+# $Id: PKGBUILD 145862 2012-01-03 12:41:58Z andrea $
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Tobias Powalowski <tpowa@archlinux.org>
+
+pkgname=qimageblitz
+pkgver=0.0.6
+pkgrel=2
+pkgdesc="A graphical effect and filter library for KDE"
+arch=('ppc' 'i686' 'x86_64')
+url="http://www.kde.org/"
+license=('GPL2')
+depends=('qt')
+makedepends=('cmake')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('0ae2f7d4e0876764a97ca73799f61df4')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr 
+  make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+}

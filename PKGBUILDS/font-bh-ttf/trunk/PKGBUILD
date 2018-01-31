@@ -1,0 +1,29 @@
+# $Id: PKGBUILD 137951 2011-09-13 04:15:29Z allan $
+#x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=font-bh-ttf
+pkgver=1.0.1
+pkgrel=2
+pkgdesc="X.org Luxi Truetype fonts"
+arch=('any')
+url="http://xorg.freedesktop.org/"
+license=('custom')
+depends=('xorg-fonts-encodings' 'xorg-fonts-alias' 'xorg-font-utils' 'fontconfig')
+install=xfonts.install
+source=(${url}/releases/individual/font/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('664df71cb510b744b4a10e778445c37b')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr \
+      --with-fontdir=/usr/share/fonts/TTF
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  rm "${pkgdir}/usr/share/fonts/"*/fonts.*
+
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

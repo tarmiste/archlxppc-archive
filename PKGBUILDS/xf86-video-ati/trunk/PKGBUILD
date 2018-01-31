@@ -1,0 +1,40 @@
+# $Id$
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: Alexander Baldeck <alexander@archlinux.org>
+
+pkgname=xf86-video-ati
+pkgver=6.14.4
+pkgrel=1
+pkgdesc="X.org ati video driver"
+arch=('i686' 'x86_64' 'ppc')
+url="http://xorg.freedesktop.org/"
+license=('custom')
+depends=(libpciaccess libdrm udev pixman ati-dri)
+makedepends=('xorg-server-devel>=1.11.99.902' 'libdrm' 'xf86driproto' 'mesa' 'glproto')
+conflicts=('xorg-server<1.11.99.902')
+groups=('xorg-drivers' 'xorg')
+options=('!libtool')
+source=(${url}/releases/individual/driver/${pkgname}-${pkgver}.tar.bz2)
+sha1sums=('db635e2e2858d5db90362f546ac0adad85474bad')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr --enable-dri --disable-kms
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make "DESTDIR=${pkgdir}" install
+  install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+sha1sums=('db635e2e2858d5db90362f546ac0adad85474bad'
+          '3b42db2a94bee9935730866cc931a5005fd364d4')
+sha1sums=('db635e2e2858d5db90362f546ac0adad85474bad'
+          '3b42db2a94bee9935730866cc931a5005fd364d4'
+          '30c9fedbef41eea071af37dd8be89328bd652427')
+sha1sums=('db635e2e2858d5db90362f546ac0adad85474bad'
+          '3b42db2a94bee9935730866cc931a5005fd364d4'
+          '012e91b96be8eda5c348539be80b55ab80f39d3a')
+sha1sums=('75ad000bc00599e1797134f2d20d3094cba6af92')

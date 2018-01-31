@@ -1,0 +1,28 @@
+# $Id: PKGBUILD 143664 2011-11-28 09:22:53Z eric $
+# x86 Maintainer: Eric Bélanger <eric@archlinux.org>
+
+pkgname=cln
+pkgver=1.3.2
+pkgrel=1
+pkgdesc="Class library for numbers"
+arch=('ppc' 'i686' 'x86_64')
+url="http://www.ginac.de/CLN/"
+license=('GPL')
+depends=('gmp')
+makedepends=('texlive-core')
+options=('!libtool')
+install=cln.install
+source=(http://www.ginac.de/CLN/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('d897cce94d9c34d106575ed4ec865d71')
+sha1sums=('c30dca80e75f45e2107f233075e6d0339ea884b0')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make all html pdf
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install install-html install-pdf
+}

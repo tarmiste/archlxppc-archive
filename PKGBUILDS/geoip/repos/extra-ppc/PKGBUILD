@@ -1,0 +1,36 @@
+# $Id$
+# Maintainer: Dan McGee <dan@archlinux.org>
+# Contributor: Manolis Tzanidakis <manolis@archlinux.org>
+
+pkgname=geoip
+pkgver=1.4.8
+pkgrel=1
+pkgdesc="Non-DNS IP-to-country resolver C library & utils"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.maxmind.com/app/c"
+license=('GPL')
+depends=('zlib')
+backup=('etc/geoip/GeoIP.conf')
+options=('!libtool')
+source=(http://www.maxmind.com/download/geoip/api/c/GeoIP-${pkgver}.tar.gz)
+md5sums=('05b7300435336231b556df5ab36f326d')
+
+build() {
+  cd "${srcdir}/GeoIP-${pkgver}"
+
+  autoreconf -i
+  ./configure --prefix=/usr --mandir=/usr/share/man --sysconfdir=/etc/geoip
+  make
+}
+
+check() {
+  cd "${srcdir}/GeoIP-${pkgver}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/GeoIP-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:

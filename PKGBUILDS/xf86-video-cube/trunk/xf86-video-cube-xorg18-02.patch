@@ -1,0 +1,43 @@
+diff -rupN xf86-video-cube.orig//src/cube_driver.c xf86-video-cube/src/cube_driver.c
+--- xf86-video-cube.orig//src/cube_driver.c	2010-04-08 09:29:41.000000000 +0200
++++ xf86-video-cube/src/cube_driver.c	2010-04-08 09:40:51.000000000 +0200
+@@ -172,16 +172,6 @@ static SymTabRec CUBEChipsets[] = {
+  * unresolved symbols that are not required.
+  */
+ 
+-static const char *fbSymbols[] = {
+-  "fbScreenInit",
+-  "fbPictureInit",
+-  NULL
+-};
+-
+-static const char *shadowSymbols[] = {
+-  "ShadowFBInit",
+-  NULL
+-};
+ 
+ /**
+ * This is the algorithm borrowed from libSDL port for gc-linux,
+@@ -372,7 +362,6 @@ cubeSetup(pointer module, pointer opts,
+      * Tell the loader about symbols from other modules that this module
+      * might refer to.
+      */
+-    LoaderRefSymLists(fbSymbols, shadowSymbols, NULL);
+ 
+     /*
+      * The return value must be non-NULL on success even though there
+@@ -680,14 +669,12 @@ CUBEPreInit(ScrnInfoPtr pScrn, int flags
+     return FALSE;
+   }
+ 
+-  xf86LoaderReqSymLists(fbSymbols, NULL);
+ 
+   /* Load the shadow framebuffer */
+   if (!xf86LoadSubModule(pScrn, "shadowfb")) {
+     CUBEFreeRec(pScrn);
+     return FALSE;
+   }
+-  xf86LoaderReqSymLists(shadowSymbols, NULL);
+ 
+   return TRUE;
+ }

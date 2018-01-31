@@ -1,0 +1,40 @@
+diff -ruN rhythmbox-0.8.8.old/metadata/rb-metadata-gst.c rhythmbox-0.8.8/metadata/rb-metadata-gst.c
+--- rhythmbox-0.8.8.old/metadata/rb-metadata-gst.c	2004-05-17 19:15:12.000000000 +0000
++++ rhythmbox-0.8.8/metadata/rb-metadata-gst.c	2005-01-07 14:40:33.000000000 +0000
+@@ -114,7 +114,7 @@
+ static void
+ rb_metadata_init (RBMetaData *md)
+ {
+-	GstElement *elt;
++	GstElementFactory *elt;
+ 	
+ 	md->priv = g_new0 (RBMetaDataPrivate, 1);
+ 
+@@ -123,14 +123,23 @@
+ 	add_supported_type (md, "application/x-id3", "id3tag", "MP3");
+ 	add_supported_type (md, "audio/mpeg", NULL, "MP3");
+ 	add_supported_type (md, "application/ogg", NULL, "Ogg");
+-	add_supported_type (md, "audio/x-flac", "flactag", "FLAC");
+ 	add_supported_type (md, "application/x-ape", NULL, "MonkeysAudio");
+-	add_supported_type (md, "audio/x-mod", NULL, "MOD");
+ 	add_supported_type (md, "audio/mpeg", NULL, "MP3");
+ 	
+-	if ((elt = gst_element_factory_make ("faad", "faad")) != NULL) {
++	if ((elt = gst_element_factory_find ("faad")) != NULL ) {
+ 		add_supported_type (md, "audio/x-m4a", NULL, "MPEG-4");
+-		gst_object_unref (GST_OBJECT (elt));
++	}
++	if ((elt = gst_element_factory_find ("musepackdec")) != NULL) {
++		add_supported_type (md, "audio/x-musepack", NULL, "Musepack");
++	}
++	if ((elt = gst_element_factory_find ("ffdec_wmav2")) != NULL) {
++		add_supported_type (md, "video/x-ms-asf", NULL, "WMA");
++	}
++	if ((elt = gst_element_factory_find ("flactag")) != NULL) {
++		add_supported_type (md, "audio/x-flac", "flactag", "FLAC");
++	}
++	if ((elt = gst_element_factory_find ("mikmod")) != NULL) {
++		add_supported_type (md, "audio/x-mod", NULL, "MOD");
+ 	}
+ }
+ 

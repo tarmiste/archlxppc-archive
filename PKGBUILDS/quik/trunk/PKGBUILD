@@ -1,0 +1,25 @@
+# $Id: PKGBUILD,v 1.4 2008/04/10 12:21:28 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org> 
+pkgname=quik
+pkgver=2.1
+pkgrel=4
+pkgdesc="Quik is an Open Firmware-based bootloader for Old World Macintosh with Open Firmware version < 3.0, CHRP, and Apple Network Servers."
+url="http://penguinppc.org/bootloaders/quik/"
+license=("GPL")
+arch=(ppc)
+depends=('glibc')
+backup=(etc/quik.conf)
+source=(ftp://ftp2.de.debian.org/debian/pool/main/q/quik/$pkgname\_$pkgver.orig.tar.gz \
+	ftp://ftp2.de.debian.org/debian/pool/main/q/quik/quik_2.1-9.diff.gz)
+
+build() {
+  cd $startdir/src/$pkgname-$pkgver
+  patch -Np1 -i ../quik_2.1-9.diff || return 1
+  make || return 1
+  make DESTDIR=$startdir/pkg install
+
+  # prevent conflict with yaboot
+  rm $startdir/pkg/usr/share/man/man8/bootstrap.8
+}
+md5sums=('c2dae2b3fa8462664d9e0d418a5fc348'
+         'd35adec525d541478c2024ea50bfa71f')

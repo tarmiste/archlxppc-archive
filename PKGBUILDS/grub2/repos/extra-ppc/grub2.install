@@ -1,0 +1,10 @@
+post_install() {
+  echo ">> Generating GRUB image and placing it in /boot/grubof.modules..."
+  /usr/bin/grub-mkelfimage -d /usr/lib/grub/powerpc-ieee1275/ -o /boot/grubof.modules /usr/lib/grub/powerpc-ieee1275/*.mod
+}
+
+post_upgrade() {
+  post_install
+}
+
+# vim:set ts=2 sw=2 et:

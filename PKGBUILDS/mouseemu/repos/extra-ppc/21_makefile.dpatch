@@ -1,0 +1,16 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 21_makefile.dpatch by  <gaudenz@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: install manpage to /usr/share/man
+
+@DPATCH@
+
+--- mouseemu/Makefile	2005-03-30 08:48:19.000000000 +0200
++++ mouseemu-0.15/Makefile	2005-03-30 23:52:17.000000000 +0200
+@@ -4,4 +4,4 @@
+ 	rm -f *.o core* mouseemu
+ install:
+ 	cp -f mouseemu $(DESTDIR)/usr/sbin/
+-	cp -f mouseemu.8 $(DESTDIR)/usr/man/man8
++	cp -f mouseemu.8 $(DESTDIR)/usr/share/man/man8

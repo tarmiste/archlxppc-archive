@@ -1,0 +1,27 @@
+# $Id$
+# x86 Maintainer: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+
+pkgname=whois
+pkgver=5.0.15
+pkgrel=1
+pkgdesc="The whois client by Marco d'Itri"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.linux.it/~md/software/"
+license=('GPL')
+depends=('libidn')
+makedepends=('perl')
+source=("http://ftp.debian.org/debian/pool/main/w/whois/${pkgname}_${pkgver}.tar.xz")
+md5sums=('3ff3d7a13f51152c2a6b5f59c00765f0')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make prefix=/usr CFLAGS="$CFLAGS" HAVE_LIBIDN=1
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make prefix=/usr BASEDIR="${pkgdir}" install-whois
+}

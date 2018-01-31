@@ -1,0 +1,20 @@
+# $Id: PKGBUILD,v 1.2 2010/03/12 14:50:21 kth5 Exp $
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: dibblethewrecker <dibblethewrecker.at.jiwe.org>
+pkgname=quilt
+pkgver=0.48
+pkgrel=1
+pkgdesc="Manage a series of patches by keeping track of the changes each patch makes."
+arch=('i686' 'x86_64' 'ppc')
+url="http://savannah.nongnu.org/projects/quilt"
+license=('GPL')
+depends=('perl' 'diffstat' 'gawk' 'patch' 'diffutils' 'mktemp' 'gettext')
+source=(http://savannah.nongnu.org/download/quilt/${pkgname}-${pkgver}.tar.gz)
+
+build() {
+  cd ${startdir}/src/${pkgname}-${pkgver}
+  ./configure --prefix=/usr --mandir=/usr/share/man || return 1
+  make || return 1
+  make prefix=${startdir}/pkg/usr mandir=${startdir}/pkg/usr/share/man install || return 1
+}
+md5sums=('f77adda60039ffa753f3c584a286f12b')

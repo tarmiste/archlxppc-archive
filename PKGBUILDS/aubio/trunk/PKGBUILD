@@ -1,0 +1,27 @@
+# $Id: PKGBUILD 122072 2011-05-02 05:51:30Z andrea $
+# x86 Maintainer: Tobias Kieslich tobias [funnychar] archlinux org
+# Contributor: Peter Baldwin <bald_pete@hotmail.com>
+# Contributor: Shinlun Hsieh <yngwiexx@yahoo.com.tw>
+
+pkgname=aubio
+pkgver=0.3.2
+pkgrel=4
+pkgdesc="A library for audio labelling"
+arch=('ppc' 'i686' 'x86_64')
+url="http://aubio.org/"
+license=('GPL')
+depends=('libsamplerate' 'fftw' 'jack')
+options=('!libtool')
+source=("http://aubio.org/pub/${pkgname}-${pkgver}.tar.gz")
+md5sums=('ffc3e5e4880fec67064f043252263a44')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,46 @@
+# $Id: PKGBUILD 137033 2011-09-05 17:19:25Z schiv $
+# x86 Maintainer: Ray Rashif <schiv@archlinux.org>
+# Contributor: damir <damir@archlinux.org>
+
+pkgname=fluidsynth
+pkgver=1.1.5
+pkgrel=1
+pkgdesc="A real-time software synthesizer based on the SoundFont 2 specifications"
+arch=('ppc' 'i686' 'x86_64')
+url="http://www.fluidsynth.org/"
+depends=('glib2' 'jack' 'dbus-core' 'libpulse')
+makedepends=('cmake' 'ladspa' 'doxygen')
+optdepends=('pulseaudio: PulseAudio sound support'
+            'bash: init script')
+license=('LGPL')
+backup=('etc/conf.d/fluidsynth')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz"
+        'fluidsynth.conf'
+        'fluidsynthd')
+md5sums=('657e49e682b316432a4421dbb0313c3e'
+         '16c5f4d4cbdddc6c5fcbd4fd4cc142f1'
+         'b296dbfb524c2164f552f68bd9abe2ec')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release \
+          -Denable-ladspa=ON \
+          -DLIB_SUFFIX=""
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+
+  install -Dm644 "$srcdir/fluidsynth.conf" \
+    "$pkgdir/etc/conf.d/fluidsynth"
+
+  install -Dm755 "$srcdir/fluidsynthd" \
+    "$pkgdir/etc/rc.d/fluidsynth"
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,23 @@
+# $Id: PKGBUILD 142537 2011-11-11 21:11:11Z pierre $
+# x86 Maintainer: Pierre Schmitz <pierre@archlinux.de>
+
+pkgname=devtools
+pkgver=20120215
+pkgrel=2
+pkgdesc='Tools for ArchLinuxPPC package maintainers'
+arch=('any')
+license=('GPL')
+url='http://projects.archlinux.org/devtools.git/'
+depends=('namcap' 'openssh' 'subversion' 'rsync')
+source=("ftp://ftp.archlinuxppc.org/other/${pkgname}/${pkgname}-${pkgver}-ppc.tar.gz") 
+md5sums=('5950fa89d490de4e35270ab0f89c66a3')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}-ppc
+	make PREFIX=/usr
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}-ppc
+	make PREFIX=/usr DESTDIR=${pkgdir} install
+}

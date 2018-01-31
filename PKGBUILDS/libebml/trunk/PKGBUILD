@@ -1,0 +1,26 @@
+# $Id: PKGBUILD 143796 2011-11-29 12:02:45Z giovanni $
+# x86 Maintainer: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: 03/08/04 <lefungus@altern.org>
+
+pkgname=libebml
+pkgver=1.2.2
+pkgrel=2
+pkgdesc="Extensible Binary Meta Language library"
+arch=('ppc' 'i686' 'x86_64')
+url="http://dl.matroska.org/downloads/libebml/"
+license=('LGPL')
+depends=('gcc-libs')
+source=("http://dl.matroska.org/downloads/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('726cc2bd1a525929ff35ff9854c0ebab')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}/make/linux"
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}/make/linux"
+
+  make prefix="${pkgdir}/usr" install
+}

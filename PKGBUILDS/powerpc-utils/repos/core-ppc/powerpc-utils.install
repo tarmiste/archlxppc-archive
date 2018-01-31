@@ -1,0 +1,13 @@
+## arg 1:  the new package version
+post_install() {
+  echo ">> We have replaced the original very outdated pmac-utils with powerpc-utils."
+  echo ">> You are encouraged to replace any usage of the old tools with their corres-"
+  echo ">> ponding replacements. See which are contained in this package by issuing:"
+  echo ">>"
+  echo ">>     pacman -Ql powerpc-utils | grep bin"
+  echo ">>"
+}
+
+post_upgrade() {
+  post_install
+}

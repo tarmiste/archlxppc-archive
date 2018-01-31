@@ -1,0 +1,27 @@
+# $Id: PKGBUILD 140549 2011-10-17 07:24:10Z bisson $
+# Contributor: damir <damir@archlinux.org>
+# x86 Maintainer: Gaetan Bisson <bisson@archlinux.org>
+
+pkgname=libhangul
+pkgver=0.1.0
+pkgrel=1
+_filecode=6000
+pkgdesc='Input method library for Korean'
+arch=('ppc' 'i686' 'x86_64')
+url='http://kldp.net/projects/hangul/'
+license=('LGPL')
+options=('!libtool')
+DLAGENTS=("http::/usr/bin/curl -A '' -fLC - --retry 3 --retry-delay 3 -o %o %u") # moronic httpd bans curl's user-agent
+source=("http://kldp.net/frs/download.php/${_filecode}/${pkgname}-${pkgver}.tar.gz")
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr --enable-static=no
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
+md5sums=('e9cf109772cc5fbc79f5de503ea7550a')

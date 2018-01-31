@@ -1,0 +1,32 @@
+# $Id: PKGBUILD 142940 2011-11-18 18:23:32Z ibiru $
+# x86 Maintainer: Ionut Biru <ibiru@archlinux.org>
+
+pkgname=telepathy-farstream
+pkgver=0.1.2
+pkgrel=1
+pkgdesc="A telepathy-backend to use stream engine."
+arch=('ppc' i686 x86_64)
+url="http://telepathy.freedesktop.org"
+license=('LGPL2.1')
+depends=('telepathy-glib' 'farsight2')
+makedepends=('libxslt' 'python2')
+options=('!libtool')
+source=(http://telepathy.freedesktop.org/releases/$pkgname/$pkgname-$pkgver.tar.gz)
+md5sums=('f858fc02e1981bb8ccd29c2bed567e50')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  PYTHON=python2 ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib/telepathy \
+    --disable-static
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

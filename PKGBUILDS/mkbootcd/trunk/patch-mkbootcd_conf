@@ -1,0 +1,18 @@
+--- mkbootcd.conf.orig	2007-04-10 21:23:47.000000000 +0200
++++ mkbootcd.conf	2007-04-10 21:24:14.000000000 +0200
+@@ -13,7 +13,7 @@
+ VERSION="$(uname -r)"
+ 
+ # kernel image, defaulted to stock arch kernel
+-KERNEL="/boot/vmlinuz26"
++KERNEL="/boot/vmlinux26"
+ 
+ # boot message file
+ BOOTMESSAGE="/usr/share/mkbootcd/boot.msg"
+@@ -34,4 +34,4 @@
+ # Setting cdrecord options
+ DEVICE=""
+ SPEED=""
+-BLANKMODE=""
+\ No newline at end of file
++BLANKMODE=""

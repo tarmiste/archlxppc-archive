@@ -1,0 +1,48 @@
+# $Id: PKGBUILD 356 2008-04-18 22:56:27Z aaron $
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: Alexander Baldeck <alexander@archlinux.org>
+
+pkgname=libpciaccess
+pkgver=0.13
+pkgrel=1
+pkgdesc="X11 PCI access library"
+arch=(i686 x86_64 'ppc')
+license=('custom')
+url="http://xorg.freedesktop.org/"
+depends=('glibc')
+makedepends=('pkgconfig' 'xorg-util-macros')
+options=('!libtool')
+source=(${url}/releases/individual/lib/${pkgname}-${pkgver}.tar.bz2
+	001-dev_port.patch)
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -p0 < ${srcdir}/001-dev_port.patch
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          '0252a4e1a10e7b9c44ccb8cb1dcc230381ba3884')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          'dc029dbf300e34a36132b6e810bc194a231c5068')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          '2a9bf1d4b717a972984f05fbf726850cb5e777c7')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          'caa69c1a9408cf4030438df0c9b3b099bcaf3636')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          '28da795441753732524b1405b2ff7652395e3706')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          '8ecde641ce1752b918f2e5a4188a4cc123365fef')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          '8e04b0187c50e4ba55f76e65862b6d3f88ab6995')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          '5804fddd4d83c28ebc743c28fc1e744db148cf7b')
+sha1sums=('7ddd8e1de27326f6f4a3ac6b4d2241fe77ef5353'
+          'd54718ad0b7ff65fd33e986eba7e08f36a325cf0')

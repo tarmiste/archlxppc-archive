@@ -1,0 +1,12 @@
+diff -Naur yaboot-1.3.14rc1/second/fs_xfs.c yaboot-1.3.14rc1-new/second/fs_xfs.c
+--- yaboot-1.3.14rc1/second/fs_xfs.c	2006-02-10 02:08:33.000000000 +0000
++++ yaboot-1.3.14rc1-new/second/fs_xfs.c	2008-03-30 10:15:37.000000000 +0000
+@@ -658,8 +658,6 @@
+ 
+ 	startpos = xfs_file->pos;
+ 	endpos = xfs_file->pos + len;
+-	if (endpos > xfs_file->len)
+-		endpos = xfs_file->len;
+ 	endofprev = (xfs_fileoff_t)-1;
+ 	init_extents ();
+ 	while (len > 0 && (xad = next_extent ())) {

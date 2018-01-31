@@ -1,0 +1,19 @@
+# Maintainer: Eric Belanger <belanger@astro.umontreal.ca>
+# Contributor: Shahar Weiss <sweiss4@gmx.net>
+
+pkgname=visualboyadvance
+pkgver=1.7.2
+pkgrel=5
+pkgdesc="An emulator for Gameboy and Gameboy Advance systems."
+url="http://vba.ngemu.com/"
+license="GPL"
+depends=('libglademm' 'sdl')
+source=(http://dl.sourceforge.net/sourceforge/vba/VisualBoyAdvance-src-$pkgver.tar.gz)
+md5sums=('cc02339e3fd8efd9f23121b0a2f81fd8')
+
+build() {
+  cd $startdir/src/VisualBoyAdvance-$pkgver
+  ./configure --prefix=/usr --sysconfdir=/etc --enable-gtk=2.4
+  make || return 1
+  make DESTDIR=$startdir/pkg install
+}

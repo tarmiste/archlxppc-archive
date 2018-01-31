@@ -1,0 +1,33 @@
+# $Id: PKGBUILD 144075 2011-12-02 23:05:11Z allan $
+# x86 Maintainer: Allan McRae <allan@archlinux.org>
+
+pkgname=dejagnu
+pkgver=1.5
+pkgrel=2
+pkgdesc="Framework for testing other programs"
+arch=('any')
+url="http://www.gnu.org/software/dejagnu/"
+license=('GPL')
+depends=('sh' 'expect')
+makedepends=('dejagnu')
+options=('!libtool')
+install=dejagnu.install
+source=(http://ftp.gnu.org/gnu/dejagnu/${pkgname}-${pkgver}.tar.gz)
+md5sums=('3df1cbca885e751e22d3ebd1ac64dc3c')
+
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr
+  make
+}
+
+check() {
+  cd $srcdir/$pkgname-$pkgver
+  make check
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make -j1 DESTDIR=$pkgdir/ install
+}

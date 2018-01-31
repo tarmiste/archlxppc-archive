@@ -1,0 +1,21 @@
+#!/bin/bash
+ 
+target=${1:-zImage}
+ofile=zImage1
+
+[ -r ${KSRC}/arch/powerpc/boot/${target} ] || {
+  echo "Can't find target image ${KSRC}/arch/powerpc/boot/${target}"
+  exit 1
+}
+ 
+cp ${KSRC}/arch/powerpc/boot/${target} ${ofile}
+ 
+CROSS=
+entry=`${CROSS}objdump -f "$ofile" | grep '^start address ' | cut -d' ' -f3`
+entry=`echo -n $entry | perl -ne 'printf"%x\n", hex($_) + 0x80000000;'`
+echo $entry
+ 
+${CROSS}objcopy -O binary -R .comment -R .shstrtab -R .symtab -R .strtab ${ofile} ${ofile}.bin
+doltool -c ${ofile}.bin 80400000 $entry
+doltool -i ${ofile}.dol
+

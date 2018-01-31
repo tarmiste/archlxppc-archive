@@ -1,0 +1,28 @@
+# $Id$
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: Arjan Timmerman <arjan@soufly.nl>
+# Contributor: Tor Krill
+
+pkgname=autogen
+pkgver=5.12
+pkgrel=1
+pkgdesc="A tool designed to simplify the creation and maintenance of programs that contain large amounts of repetitious text"
+arch=('i686' 'x86_64' 'ppc')
+url="http://autogen.sourceforge.net/"
+license=('GPL3')
+depends=('guile' 'libxml2')
+options=('!libtool')
+install=autogen.install
+source=(ftp://ftp.gnu.org/gnu/${pkgname}/rel${pkgver}/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('126e56be629cda747390e8ba9be71e4b')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+} 

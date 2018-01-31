@@ -1,0 +1,11 @@
+--- GNUmakefile.orig	2012-04-25 21:06:35.000000000 +0200
++++ GNUmakefile	2012-04-25 21:09:16.000000000 +0200
+@@ -22,6 +22,8 @@
+ CXX = g++
+ endif
+ 
++IS_SUN_CC = $(shell $(CXX) -V 2>&1 | $(EGREP) -c "CC: Sun")
++
+ ifeq ($(ISX86),1)
+ 
+ GCC42_OR_LATER = $(shell $(CXX) -v 2>&1 | $(EGREP) -c "^gcc version (4.[2-9]|[5-9])")

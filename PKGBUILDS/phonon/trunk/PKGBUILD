@@ -1,0 +1,34 @@
+# $Id$
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=phonon
+pkgver=4.6.0
+pkgrel=1
+epoch=1
+arch=('ppc' 'i686' 'x86_64')
+url='http://phonon.kde.org/'
+license=('LGPL')
+pkgdesc="The multimedia framework for KDE"
+depends=('qt' 'phonon-backend' 'libpulse' 'libqzeitgeist')
+optdepends=('pulseaudio: PulseAudio support')
+makedepends=('cmake' 'automoc4' 'pulseaudio')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+md5sums=('bbe0c1c62ed14c31479c4c1a6cf1e173')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DPHONON_QT_MKSPECS_INSTALL_DIR=/usr/share/qt/mkspecs/modules \
+    -DPHONON_QT_PLUGIN_INSTALL_DIR=/usr/lib/qt/plugins/designer
+  make
+}
+
+package(){
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}

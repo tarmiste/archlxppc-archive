@@ -1,0 +1,39 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+
+KERNEL_NAME=
+KERNEL_VERSION=3.3.2-1-ARCH
+
+post_install () {
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod ${KERNEL_VERSION}
+  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  mkinitcpio -p linux-pmac${KERNEL_NAME}
+}
+
+post_upgrade() {
+  # reminder notices
+    echo ">>>"
+    echo ">>> With the kernel26-pmac => linux-pmac name change, some things"
+    echo ">>> has changed for the yaboot bootloader too."
+    echo ">>> The kernel image is now at '/boot/vmlinuz-linux-pmac' for both"
+    echo ">>> standard and fallback. The initrd is located on"
+    echo ">>> '/boot/initramfs-linux-pmac.img' for the standard kernel, and on"
+    echo ">>> '/boot/initramfs-linux-pmac-fallback.img' for the fallback kernel."
+    echo ">>> Remember to update /etc/yaboot.conf, and run ybin -v before"
+    echo ">>> rebooting. Have a nice day"
+    echo ">>>"
+
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod ${KERNEL_VERSION}
+  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  mkinitcpio -p linux-pmac${KERNEL_NAME}
+}
+
+post_remove() {
+  # also remove the compat symlinks
+  rm -f boot/{initramfs-linux}${KERNEL_NAME}.img
+  rm -f boot/{initramfs-linux}${KERNEL_NAME}-fallback.img
+}

@@ -1,0 +1,23 @@
+# $Id: PKGBUILD 143546 2011-11-26 09:49:37Z tpowa $
+# x86 Maintainer: dorphell <dorphell@archlinux.org>
+# Committer: Judd Vinet <jvinet@zeroflux.org>
+pkgname=dosfstools
+pkgver=3.0.12
+pkgrel=1
+pkgdesc="DOS filesystem utilities"
+arch=('ppc' i686 x86_64)
+depends=('glibc')
+source=(http://www.daniel-baumann.ch/software/dosfstools/$pkgname-$pkgver.tar.bz2)
+url="http://www.daniel-baumann.ch/software/dosfstools/"
+license=('GPL2')
+
+build() {
+   cd $srcdir/$pkgname-$pkgver
+   make
+}
+
+package () {
+   cd $srcdir/$pkgname-$pkgver
+   make PREFIX=$pkgdir MANDIR=$pkgdir/usr/share/man DOCDIR=$pkgdir/usr/share/doc install
+}
+md5sums=('5c7c2adac9eae4afbe1f16443142b566')

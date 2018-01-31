@@ -1,0 +1,24 @@
+diff -ruN nvbacklight-0.1.orig//nvbacklight.c nvbacklight-0.1//nvbacklight.c
+--- nvbacklight-0.1.orig//nvbacklight.c	2008-01-12 22:59:08.000000000 +0100
++++ nvbacklight-0.1//nvbacklight.c	2010-05-27 14:21:22.000000000 +0200
+@@ -135,6 +135,7 @@
+ 	struct nvbacklight_par *par;
+ 	struct fb_info *info;
+ 	struct backlight_device *bd;
++	struct backlight_properties props; 
+ 
+         info = framebuffer_alloc(sizeof(struct nvbacklight_par),
+ 				 &pd->dev);
+@@ -177,8 +178,11 @@
+ 
+ 	par->fpSyncs = NV_RD32(par->PRAMDAC, 0x0848) & 0x30000033;
+ 
++	memset(&props, 0, sizeof(struct backlight_properties));
++	props.max_brightness = FB_BACKLIGHT_MAX; 
++
+ 	bd = backlight_device_register("nvbacklight", &pd->dev, par,
+-				       &nvidia_bl_ops);
++				       &nvidia_bl_ops,&props);
+ 	if (IS_ERR(bd)) {
+ 		printk(KERN_WARNING "nvbacklight: registration failed\n");
+ 		goto bl_device_register_failed;

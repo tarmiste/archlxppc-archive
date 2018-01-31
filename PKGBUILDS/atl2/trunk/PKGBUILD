@@ -1,0 +1,20 @@
+# $Id: PKGBUILD,v 1.6 2008/12/26 14:07:50 kth5 Exp $
+pkgname=atl2
+_kernver=2.6.28-ARCH
+pkgver=2.0.5
+pkgrel=2
+pkgdesc="Drivers for atl2 ethernet card"
+url="http://people.redhat.com/csnook/atl2"
+depends=('kernel26-pmac>=2.6.28' 'kernel26-pmac<2.6.29')
+arch=('ppc')
+license=('GPL')
+install=$pkgname.install
+source=(http://people.redhat.com/csnook/atl2/$pkgname-$pkgver.tar.bz2)
+
+build() {
+  cd ${startdir}/src/${pkgname}-${pkgver}
+  make ARCH=powerpc KSRC=/lib/modules/${_kernver}/build || return 1
+  install -D -m644 atl2.ko $startdir/pkg/lib/modules/${_kernver}/kernel/drivers/net/atl2/atl2.ko || return 1
+  sed -i -e "s/KERNEL_VERSION='.*'/KERNEL_VERSION='${_kernver}'/" $startdir/*.install
+}
+md5sums=('bbd5696cb6c7c6432d7338d783c408f2')

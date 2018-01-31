@@ -1,0 +1,30 @@
+# $Id$
+# x86 Maintainer: Ray Rashif <schiv@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+
+pkgname=audiofile
+pkgver=0.3.3
+pkgrel=1
+pkgdesc="Silicon Graphics Audio File Library"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.68k.org/~michael/audiofile/"
+license=('LGPL')
+depends=('gcc-libs' 'alsa-lib')
+options=('!libtool')
+source=("http://audiofile.68k.org/$pkgname-$pkgver.tar.gz")
+md5sums=('64c7a03023b4b181d997ff0b272d29e4')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,119 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+
+KERNEL_NAME=-pmac-lts
+KERNEL_VERSION=2.6.32-ARCH
+
+post_install () {
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod $KERNEL_VERSION 
+  # generate init ramdisks
+  echo ">>> MKINITCPIO SETUP"
+  echo ">>> ----------------"
+  echo ">>> If you use LVM2, Encrypted root or software RAID,"
+  echo ">>> Ensure you enable support in /etc/mkinitcpio.conf ."
+  echo ">>> More information about mkinitcpio setup can be found here:"
+  echo ">>> http://wiki.archlinux.org/index.php/Mkinitcpio"
+  echo ""
+  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  /sbin/mkinitcpio -p kernel26${KERNEL_NAME}
+}
+
+post_upgrade() {
+  if grep "^[^#]*/boot" /etc/fstab 2>&1 >/dev/null; then
+    if ! grep "/boot" /etc/mtab 2>&1 >/dev/null; then
+      echo "WARNING: /boot appears to be a seperate partition but is not mounted"
+      echo "         This is most likely not what you want.  Please mount your /boot"
+      echo "         partition and reinstall the kernel unless you are sure this is OK"
+    fi
+  fi
+
+  if [ "`vercmp $2 2.6.13`" -lt 0 ]; then
+    # important upgrade notice
+    echo ">>>"
+    echo ">>> IMPORTANT KERNEL UPGRADE NOTICE"
+    echo ">>> -------------------------------"
+    echo ">>> As of kernel 2.6.13, DevFS is NO LONGER AVAILABLE!"
+    echo ">>> If you still use DevFS, please make the transition to uDev before"
+    echo ">>> rebooting.  If you really need to stay with DevFS for some reason,"
+    echo ">>> then you can manually downgrade to an older version:"
+    echo ">>>"
+    echo ">>> # pacman -U http://archlinux.org/~judd/kernel/kernel26-scsi-2.6.12.2-1.pkg.tar.gz"
+    echo ">>>"
+    echo ">>> If you choose to downgrade, don't forget to add kernel26-scsi to your"
+    echo ">>> IgnorePkg list in /etc/pacman.conf"
+    echo ">>>"
+    echo ">>> (NOTE: The following portion applies to uDev users as well!)"
+    echo ">>>"
+    echo ">>> If you use any DevFS paths in your GRUB menu.lst, then you will not"
+    echo ">>> be able to boot!  Change your root= parameter to use the classic"
+    echo ">>> naming scheme."
+    echo ">>>"
+    echo ">>> EXAMPLES:"
+    echo ">>> - change root=/dev/discs/disc0/part3 to root=/dev/sda3"
+    echo ">>> - change root=/dev/md/0 to root=/dev/md0"
+    echo ">>>"
+  fi
+  # generate new init ramdisk
+  if [ "`vercmp $2 2.6.18`" -lt 0 ]; then
+    echo ">>> --------------------------------------------------------------"
+    echo ">>> |                          WARNING:                          |"
+    echo ">>> |mkinitrd is not supported anymore in kernel >=2.6.18 series!|"
+    echo ">>> |              Please change to Mkinitcpio setup.            |"
+    echo ">>> --------------------------------------------------------------"
+    echo ">>>"
+  fi
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod $KERNEL_VERSION
+  echo ">>> MKINITCPIO SETUP"
+  echo ">>> ----------------"
+  if [ "`vercmp $2 2.6.18`" -lt 0 ]; then
+    echo ">>> Please change your bootloader config files:"
+    echo ">>> Grub: /boot/grub/menu.lst | Lilo: /etc/lilo.conf"
+    echo "------------------------------------------------"
+    echo "| - initrd26.img to kernel26.img               |"
+    echo "| - initrd26-full.img to kernel26-fallback.img |"
+    echo "------------------------------------------------"
+  fi
+  echo ">>> If you use LVM2, Encrypted root or software RAID,"
+  echo ">>> Ensure you enable support in /etc/mkinitcpio.conf ."
+  echo ">>> More information about mkinitcpio setup can be found here:"
+  echo ">>> http://wiki.archlinux.org/index.php/Mkinitcpio"
+  echo ""
+  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  /sbin/mkinitcpio -p kernel26${KERNEL_NAME}
+  
+  if [ "`vercmp $2 2.6.34`" -lt 0 ]; then
+    echo ""
+    echo ">>> IMPORTANT!! New PATA/IDE subsystem"
+    echo ">>> ----------"
+    echo ">>> To use the new pata drivers, change the 'ide' hook "
+    echo ">>> to 'pata' and add scsi in /etc/mkinicpio.conf HOOKS="
+    echo ">>> The new system changes: /dev/hd? to /dev/sd?"
+    echo ">>> Don't forget to modify yaboot.conf fstab to the"
+    echo ">>> new naming system. "
+    echo ">>> eg: hda3 --> sda3, hdc8 --> sdc8"
+    echo ""
+    echo ">>> IMPORTANT!! Yaboot configuration"
+    echo "----------"
+    echo ">>> As yaboot in s1 continues to use hd? instead of sd?, you must" 
+    echo ">>> tell yaboot.conf where from it can boot 2nd stage."
+    echo ">>> Just add the foloowing right below the line boot=/dev/sd{something}:"
+    echo ">>>     ofdev=hd:{ofpath}"
+    echo ">>> Where ofpath is \`ofpath /dev/sd?\`."
+    echo ">>> Be reminded to switch every old hd? (of course don't touch ofdev=)"
+    echo ">>> with sd. After you've finished, run ybin as root."
+    echo ""
+    echo ">>> IMPORTANT!! Headers are a split package now."
+    echo "----------"
+    echo ">>> If you want kernel headers, remember to install the"
+    echo ">>> package kernel26${KERNEL_NAME}-headers"
+  fi
+}
+
+post_remove() {
+  rm -f /boot/kernel26${KERNEL_NAME}.img
+  rm -f /boot/kernel26${KERNEL_NAME}-fallback.img
+}

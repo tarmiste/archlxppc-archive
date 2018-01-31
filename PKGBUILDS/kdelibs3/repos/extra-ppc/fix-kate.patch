@@ -1,0 +1,12 @@
+diff -ru kdelibs-3.5.9_old/kate/part/katesupercursor.cpp kdelibs-3.5.9/kate/part/katesupercursor.cpp
+--- kdelibs-3.5.9_old/kate/part/katesupercursor.cpp	2008-02-13 04:41:05.000000000 -0500
++++ kdelibs-3.5.9/kate/part/katesupercursor.cpp	2008-03-20 17:32:40.521572781 -0400
+@@ -186,7 +186,7 @@
+ {
+   if (newLine)
+   {
+-    if (m_line > int(line) || (m_line == int(line) && m_col > int(col)))
++    if (m_line > int(line) || (m_line == int(line) && m_col >= int(col)))
+     {
+       if(m_line == int(line))
+          m_col -= col;

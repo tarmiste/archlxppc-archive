@@ -1,0 +1,101 @@
+--- backlight.c.orig	2007-09-27 16:35:57.000000000 +0000
++++ backlight.c	2007-09-27 16:35:28.000000000 +0000
+@@ -24,7 +24,7 @@
+ #include <sys/types.h>
+ #include <linux/ioctl.h>
+ #include <linux/types.h>
+-#include <linux/adb_mouse.h>
++/*#include <linux/adb_mouse.h>*/
+ #include <linux/cuda.h>
+ #include <linux/adb.h>
+ #include <linux/pmu.h>
+--- trackpad.c.orig	2007-09-27 16:34:58.000000000 +0000
++++ trackpad.c	2007-09-27 16:35:09.000000000 +0000
+@@ -18,7 +18,7 @@
+ #include <unistd.h>
+ #include <errno.h>
+ #include <fcntl.h>
+-#include <linux/adb_mouse.h>
++/*#include <linux/adb_mouse.h>*/
+ #include <linux/cuda.h>
+ #include <linux/adb.h>
+ 
+--- Makefile.orig	2007-09-27 16:39:49.000000000 +0000
++++ Makefile	2007-09-27 16:41:28.000000000 +0000
+@@ -117,22 +117,13 @@
+ 		chmod 600 $(DESTDIR)$(devsdir)/sndstat; \
+ 	fi
+ 
+-install:	all man installdirs
++install:	all installdirs
+ 	$(INSTALL) -m 4511  clock $(DESTDIR)$(sbindir) 
+ 	$(INSTALL) -m 755   nvsetenv nvvideo $(DESTDIR)$(sbindir)
+ 	$(INSTALL) -m 755   mousemode sndvolmix vmode $(DESTDIR)$(usbindir)
+ 	$(INSTALL) -m 755   fdeject $(DESTDIR)/$(ubindir)
+ 	$(INSTALL) -m 755   $(SCRIPTS) $(DESTDIR)$(sbindir)
+ 
+-	$(INSTALL) -m 644   fdeject.man	$(DESTDIR)$(man1dir)/fdeject.1
+-	$(INSTALL) -m 644   clock.man	$(DESTDIR)$(man8dir)/clock.8
+-	$(INSTALL) -m 644   mousemode.man	$(DESTDIR)$(man8dir)/mousemode.8
+-	$(INSTALL) -m 644   nvsetenv.man	$(DESTDIR)$(man8dir)/nvsetenv.8
+-	$(INSTALL) -m 644   nvvideo.man	$(DESTDIR)$(man8dir)/nvvideo.8
+-	$(INSTALL) -m 644   sndvolmix.man	$(DESTDIR)$(man8dir)/sndvolmix.8
+-	$(INSTALL) -m 644   vmode.man	$(DESTDIR)$(man8dir)/vmode.8
+-	$(INSTALL) -m 644   macos.man	$(DESTDIR)$(man8dir)/macos.8
+-
+ cleanobjs:
+ 	$(RM) *.o *.bak *~ *.man *.1 *.8
+ 
+--- Makefile.orig	2007-09-27 16:42:54.000000000 +0000
++++ Makefile	2007-09-27 16:43:09.000000000 +0000
+@@ -24,7 +24,7 @@
+ CC	= gcc -Wall -Wstrict-prototypes
+ CFLAGS	= -g -O2 -fsigned-char
+ LDFLAGS =
+-INSTALL	= /usr/bin/install -c
++INSTALL	= /bin/install -c
+ SOUND_INC = -I.
+ 
+ PROGS	= clock mousemode nvsetenv trackpad backlight
+--- Makefile.orig	2007-09-27 16:45:05.000000000 +0000
++++ Makefile	2007-09-27 16:45:14.000000000 +0000
+@@ -27,7 +27,7 @@
+ INSTALL	= /bin/install -c
+ SOUND_INC = -I.
+ 
+-PROGS	= clock mousemode nvsetenv trackpad backlight
++PROGS	= clock mousemode nvsetenv trackpad backlight nvvideo
+ SCRIPTS	= macos
+ 
+ # DEPENDENCIES:
+--- Makefile.orig	2007-09-27 16:46:33.000000000 +0000
++++ Makefile	2007-09-27 16:46:47.000000000 +0000
+@@ -27,7 +27,7 @@
+ INSTALL	= /bin/install -c
+ SOUND_INC = -I.
+ 
+-PROGS	= clock mousemode nvsetenv trackpad backlight nvvideo
++PROGS	= clock mousemode nvsetenv trackpad backlight nvvideo sndvolmix 
+ SCRIPTS	= macos
+ 
+ # DEPENDENCIES:
+--- Makefile.orig	2007-09-27 16:49:04.000000000 +0000
++++ Makefile	2007-09-27 16:49:53.000000000 +0000
+@@ -27,7 +27,7 @@
+ INSTALL	= /bin/install -c
+ SOUND_INC = -I.
+ 
+-PROGS	= clock mousemode nvsetenv trackpad backlight nvvideo sndvolmix 
++PROGS	= clock mousemode nvsetenv trackpad backlight nvvideo sndvolmix fdeject
+ SCRIPTS	= macos
+ 
+ # DEPENDENCIES:
+@@ -120,7 +120,7 @@
+ install:	all installdirs
+ 	$(INSTALL) -m 4511  clock $(DESTDIR)$(sbindir) 
+ 	$(INSTALL) -m 755   nvsetenv nvvideo $(DESTDIR)$(sbindir)
+-	$(INSTALL) -m 755   mousemode sndvolmix vmode $(DESTDIR)$(usbindir)
++	$(INSTALL) -m 755   mousemode sndvolmix $(DESTDIR)$(usbindir)
+ 	$(INSTALL) -m 755   fdeject $(DESTDIR)/$(ubindir)
+ 	$(INSTALL) -m 755   $(SCRIPTS) $(DESTDIR)$(sbindir)
+ 

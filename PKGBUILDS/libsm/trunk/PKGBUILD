@@ -1,0 +1,29 @@
+# $Id$
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=libsm
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="X11 Session Management library"
+arch=('i686' 'x86_64' 'ppc')
+license=('custom')
+url="http://xorg.freedesktop.org/"
+depends=('libice' 'util-linux-ng')
+makedepends=('xorg-util-macros' 'xtrans')
+options=('!libtool')
+_mirror=http://mi.mirror.garr.it/mirrors/x.org/
+source=(${_mirror}/individual/lib/libSM-${pkgver}.tar.bz2)
+sha1sums=('8d354a165e330022ffd3606aba562b8c8154213d')
+
+build() {
+  cd "${srcdir}/libSM-${pkgver}"
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "${srcdir}/libSM-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

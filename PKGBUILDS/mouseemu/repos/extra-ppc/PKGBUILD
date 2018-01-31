@@ -1,0 +1,39 @@
+# Maintainer: Juan Diego Tascon <juantascon@gmail.com>
+# Contributor: Mildred <silkensedai@online.fr>
+
+pkgname=mouseemu
+pkgver=0.15
+pkgrel=1
+pkgdesc="Emulate mouse events"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.biophys.uni-duesseldorf.de/~schmitz/mouseemu/"
+license=('GPL')
+install=mouseemu.install
+source=(https://launchpad.net/ubuntu/+archive/primary/+files/mouseemu_$pkgver.orig.tar.gz
+	10-uinput.rules
+	fixes.patch
+	21_makefile.dpatch
+  )
+
+build() {
+	cd "$srcdir/mouseemu"
+	patch -p0 -i ${srcdir}/fixes.patch
+	patch -p1 -i ${srcdir}/21_makefile.dpatch
+	make
+}
+
+package() {
+	cd "$srcdir/mouseemu"
+	install -d "${pkgdir}/etc/udev/rules.d"
+	install -m 0660 "${srcdir}/10-uinput.rules" "${pkgdir}/etc/udev/rules.d/"
+	install -d "$pkgdir/usr/sbin"
+	install -d "$pkgdir/usr/share/man/man8"
+	make DESTDIR="$pkgdir" install
+}
+md5sums=('bb17b2925185c5613b48778b0554d86a'
+         'dfebad797c2d713a29f77241aee65ea6'
+         '51ea9a4b8ec8da73b38adec20987713f')
+md5sums=('bb17b2925185c5613b48778b0554d86a'
+         'dfebad797c2d713a29f77241aee65ea6'
+         '51ea9a4b8ec8da73b38adec20987713f'
+         'cb01aebecbbee990dd21c6b0ef74cc0c')

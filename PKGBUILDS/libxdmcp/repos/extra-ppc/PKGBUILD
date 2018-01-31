@@ -1,0 +1,23 @@
+# $Id: PKGBUILD,v 1.6 2009/11/30 21:36:22 danimoth Exp $
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+pkgname=libxdmcp
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="X11 Display Manager Control Protocol library"
+arch=(ppc i686 x86_64)
+url="http://xorg.freedesktop.org/"
+license=('custom')
+depends=('glibc')
+makedepends=('pkgconfig' 'xorg-headers>=7.6')
+options=('!libtool')
+source=(${url}/releases/individual/lib/libXdmcp-${pkgver}.tar.bz2)
+
+build() {
+  cd ${srcdir}/libXdmcp-${pkgver}
+  ./configure --prefix=/usr --sysconfdir=/etc --disable-static \
+              --host=${CHOST} --build=${CHOST}
+  make || return 1
+  make DESTDIR=${pkgdir} install || return 1
+  install -D -m644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
+md5sums=('762b6bbaff7b7d0831ddb4f072f939a5')

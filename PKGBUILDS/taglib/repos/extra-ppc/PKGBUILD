@@ -1,0 +1,38 @@
+# $Id$
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Tobias Powalowski <tpowa@archlinux.org>
+
+pkgname=taglib
+pkgver=1.7.1
+pkgrel=1
+pkgdesc="A Library for reading and editing the meta-data of several popular audio formats"
+arch=('i686' 'x86_64' 'ppc')
+url="http://developer.kde.org/~wheeler/taglib.html"
+license=('LGPL' 'MPL')
+depends=('sh' 'zlib' 'gcc-libs')
+makedepends=('cmake' 'pkg-config')
+options=('!libtool')
+source=("http://developer.kde.org/~wheeler/files/src/$pkgname-$pkgver.tar.gz"
+        'ape-idev2.patch')
+sha1sums=('bafe0958eb884981cade83d45c18ee34165479b8'
+          '9bdae5c2da6bb4e1a2ea38a5a587773b850c3518')
+
+build() {
+  cd "${srcdir}"/${pkgname}-${pkgver}
+  patch -p1 -i "${srcdir}"/ape-idev2.patch
+
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_MP4=ON \
+    -DWITH_ASF=ON
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}

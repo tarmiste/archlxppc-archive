@@ -1,0 +1,35 @@
+# $Id: PKGBUILD 145626 2011-12-24 14:41:49Z andyrtr $
+# x86 Maintainer: AndyRTR <andyrtr@archlinux.org>
+
+pkgname=libmythes
+pkgver=1.2.2
+pkgrel=1
+epoch=1
+pkgdesc="a simple thesaurus"
+arch=('ppc' 'i686' 'x86_64')
+url="http://hunspell.sourceforge.net/ "
+license=('custom')
+depends=('glibc' 'perl')
+makedepends=('hunspell')
+options=('!libtool')
+provides=('mythes')
+source=(http://downloads.sourceforge.net/hunspell/${pkgname/lib/}-${pkgver}.tar.gz)
+md5sums=('e1e255dc43dbcbb34cb19e8a0eba90ae')
+
+build() {
+  cd ${srcdir}/${pkgname/lib/}-$pkgver
+  ./configure --prefix=/usr --disable-static
+  make
+  # run the example program:
+  ./example th_en_US_new.idx th_en_US_new.dat checkme.lst
+  # run the example program with stemming and morphological generation:
+  # e.g. to check mouse, mice, rodents, eats, eaten, ate, eating etc. words
+  ./example morph.idx morph.dat morph.lst morph.aff morph.dic
+}
+
+package() {
+  cd ${srcdir}/${pkgname/lib/}-$pkgver
+  make DESTDIR=$pkgdir install
+  # license
+  install -Dm644 ${srcdir}/${pkgname/lib/}-$pkgver/COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+}

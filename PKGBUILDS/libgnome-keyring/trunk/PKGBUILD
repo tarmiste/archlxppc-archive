@@ -1,0 +1,28 @@
+#$Id$
+#x86 Maintainer: Jan De Groot <jgc@archlinux.org>
+
+pkgname=libgnome-keyring
+pkgver=3.4.0
+pkgrel=1
+pkgdesc="GNOME keyring client library"
+arch=(i686 x86_64 'ppc')
+license=('GPL' 'LGPL')
+depends=('dbus-core' 'glib2' 'libgcrypt')
+makedepends=('intltool' 'gobject-introspection')
+options=('!libtool' '!emptydirs')
+url="http://www.gnome.org"
+source=(http://ftp.gnome.org/pub/gnome/sources/$pkgname/${pkgver%.*}/$pkgname-$pkgver.tar.xz)
+sha256sums=('60cc0728fd9c1c10c62b05abec24037ca616931e167b658ed78ec93ede2d3f7a')
+
+build() {
+  cd "$pkgname-$pkgver"
+  ./configure --prefix=/usr --sysconfdir=/etc \
+      --localstatedir=/var --disable-static \
+      --libexecdir=/usr/lib/gnome-keyring
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}

@@ -1,0 +1,12 @@
+--- a/configure.ac	2009-01-09 10:19:59.000000000 +0100
++++ b/configure.ac	2009-01-09 10:20:43.000000000 +0100
+@@ -173,9 +173,6 @@
+   AS_COMPILER_FLAG(-Werror, LIBOIL_CFLAGS="$LIBOIL_CFLAGS -Werror")
+ fi
+ if test x$HAVE_GCC_ASM = xyes -a x$HAVE_POWERPC = xyes ; then
+-  AS_COMPILER_FLAG(["-Wa,-maltivec"],
+-    [LIBOIL_CFLAGS="$LIBOIL_CFLAGS -Wa,-maltivec"],
+-    true)
+   AS_COMPILER_FLAG(["-Wa,-mregnames"],
+     [LIBOIL_CFLAGS="$LIBOIL_CFLAGS -Wa,-mregnames"],
+     true)

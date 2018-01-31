@@ -1,0 +1,24 @@
+diff -Naur wmii-3.6+debian.orig/man/wmii.1 wmii-3.6+debian/man/wmii.1
+--- wmii-3.6+debian.orig/man/wmii.1	2007-11-16 13:59:15.000000000 +0000
++++ wmii-3.6+debian/man/wmii.1	2007-12-23 19:57:54.000000000 +0000
+@@ -12,7 +12,7 @@
+ ..
+ .TH "WMII" "1" "03 July 2007" "" ""
+ .SH NAME
+-wmii\-VERSION
++wmii\-VERSION \- lightweight tabbed and tiled X11 window manager
+ .PP
+ .SH SYNOPSIS
+ wmii
+diff -Naur wmii-3.6+debian.orig/man/wmiiloop.1 wmii-3.6+debian/man/wmiiloop.1
+--- wmii-3.6+debian.orig/man/wmiiloop.1	2007-11-16 13:59:15.000000000 +0000
++++ wmii-3.6+debian/man/wmiiloop.1	2007-12-23 20:00:31.000000000 +0000
+@@ -13,7 +13,7 @@
+ .TH "WMIILOOP" "1" "25 May 2007" "" ""
+ .SH NAME
+ 
+-wmiiloop\-VERSION
++wmiiloop\-VERSION \- tool for easy wmii event handling
+ .PP
+ .SH SYNOPSIS
+ 

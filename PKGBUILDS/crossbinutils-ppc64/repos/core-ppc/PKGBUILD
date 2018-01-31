@@ -1,0 +1,63 @@
+# $Id: PKGBUILD,v 1.2 2009/12/27 13:03:29 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org>
+pkgname=crossbinutils-ppc64
+pkgver=2.22
+pkgrel=2
+_date=20111201
+pkgdesc="A set of programs to assemble and manipulate binary and object files"
+url="http://sources.redhat.com/binutils"
+depends=('glibc' 'binutils')
+arch=(i686 x86_64 ppc)
+license=('GPL')
+options=('!distcc')
+source=(ftp://ftp.archlinux.org/other/binutils/binutils-${pkgver}_${_date}.tar.bz2)
+
+build() {
+  # if you need other targets state it here
+  export TARGET=powerpc64-unknown-linux-gnu
+  # make our target's installation be relative to a more general path
+  
+  # do *NOT* optimize
+  unset CFLAGS
+  unset CXXFLAGS
+
+  mkdir -p ${srcdir}/binutils-build
+  cd ${srcdir}/binutils-build
+
+  echo ${pkgdir}
+  ../binutils/configure --target=${TARGET} \
+              --prefix=/usr \
+              --program-prefix=${TARGET}- \
+              --libdir=${pkgdir}/usr/lib/${TARGET}/ \
+              --enable-static \
+	          --with-sysroot \
+              --enable-ld=default \
+              --enable-gold
+  make tooldir=${pkgdir}/usr || return 1
+}
+
+package() {
+  cd ${srcdir}/binutils-build
+  export TARGET=powerpc64-unknown-linux-gnu
+  
+  make prefix=${pkgdir}/usr tooldir=${pkgdir}/usr install
+
+  # Remove these symlinks, with binutils prereleases they are not ABI stable.
+  # Programs should compile static to the .a file.
+  rm -f ${pkgdir}/usr/lib/lib{bfd,opcodes}.so
+
+  # remove tools with generic names that would overlap native ones
+  for tool in ar as nm objcopy objdump ranlib strip; do
+    rm ${pkgdir}/usr/bin/${tool}
+  done
+
+  # remove ldscripts provided by native package
+  [ "${pkgname}" = "crossbinutils-ppc64" ] && rm -rf ${pkgdir}/usr/lib/ldscripts/
+
+  # locales etc aren't needed
+  for folder in info locale man; do
+    rm -rf ${pkgdir}/usr/share/${folder}
+  done
+}
+
+md5sums=('77c15027ac112c65fd5f73ca91b0651c')

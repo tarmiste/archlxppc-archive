@@ -1,0 +1,20 @@
+--- boot.msg.orig	2007-04-10 21:25:09.000000000 +0200
++++ boot.msg	2007-04-10 21:26:36.000000000 +0200
+@@ -1,13 +1,14 @@
+ 
+ 
+ ------------------------------------------------------------------------------
+-Arch Linux
+-ISOLINUX BOOT
++Arch Linux PPC
++YABOOT BOOT
+ created with 'mkbootcd' written by Tobias Powalowski <tpowa@archlinux.org>
++Adapted for Arch Linux PPC by Benoit Chesneau <benoitc@archlinuxppc.org>
+ 
+ Press ENTER or type 'arch' to boot the CD.
+ 
+ If you wish to change your defaults to boot into your existing system,
+-type 'vmlinuz initrd=initrd.img <any_other_boot_option>'
++type 'vmlinux initrd=initrd.img <any_other_boot_option>'
+ ------------------------------------------------------------------------------
+ 

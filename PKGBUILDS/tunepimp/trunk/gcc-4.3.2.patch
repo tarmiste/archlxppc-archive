@@ -1,0 +1,62 @@
+--- a/lib/utf8/utf8util.cpp	2008-10-24 10:22:04.000000000 +0200
++++ b/lib/utf8/utf8util.cpp	2008-10-24 10:21:32.000000000 +0200
+@@ -26,6 +26,7 @@
+ ----------------------------------------------------------------------------*/
+ 
+ #include <stdio.h>
++#include <cstdlib>
+ #include "utf8util.h"
+ #include "utf8.h"
+ #ifdef WIN32
+--- a/lib/tunepimp.cpp	2006-11-18 11:52:33.000000000 +0100
++++ b/lib/tunepimp.cpp	2008-10-24 10:39:49.000000000 +0200
+@@ -31,6 +31,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <cstdlib>
+ #include <map>
+ using namespace std;
+ 
+--- a/include/tunepimp-0.5/metadata.h	2006-11-18 11:52:08.000000000 +0100
++++ b/include/tunepimp-0.5/metadata.h	2008-10-24 10:49:32.000000000 +0200
+@@ -28,6 +28,8 @@
+ #define __METADATA_H__
+ 
+ #include <string>
++#include <cstring>
++#include <cstdlib>
+ #include <cstdio>
+ 
+ #include "defs.h"
+--- a/lib/fileio.cpp	2006-11-18 11:52:33.000000000 +0100
++++ b/lib/fileio.cpp	2008-10-24 11:02:43.000000000 +0200
+@@ -28,6 +28,8 @@
+ #include <assert.h>
+ #include <errno.h>
+ #include <string>
++#include <cstring>
++#include <cstdlib>
+ #ifndef WIN32
+ #include <unistd.h>
+ #endif
+--- a/lib/protocol.cpp	2006-11-28 21:25:04.000000000 +0100
++++ b/lib/protocol.cpp	2008-10-24 11:20:25.000000000 +0200
+@@ -9,6 +9,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string>
++#include <cstring>
+ #include <map>
+ #include <expat.h>
+ #include <curl/curl.h>
+--- a/plugins/wma/wmafile.cpp	2006-11-18 11:51:28.000000000 +0100
++++ b/plugins/wma/wmafile.cpp	2008-10-24 11:25:47.000000000 +0200
+@@ -20,6 +20,7 @@
+  ***************************************************************************/
+ 
+ #include <tstring.h>
++#include <cstring>
+ #include <wmafile.h>
+ #include <wmatag.h>
+ #include <wmaproperties.h>

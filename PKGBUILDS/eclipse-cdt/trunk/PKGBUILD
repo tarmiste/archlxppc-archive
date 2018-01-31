@@ -1,0 +1,26 @@
+# $Id: PKGBUILD,v 1.1 2009/03/02 13:50:41 kth5 Exp $
+# Contributor: Paul Mattal <paul@mattal.com>
+# Maintainer: Paul Mattal <paul@archlinux.org>
+pkgname=eclipse-cdt
+pkgver=5.0.1
+pkgrel=1
+pkgdesc="C/C++ Plugin for Eclipse"
+arch=(i686 x86_64 ppc)
+url="http://www.eclipse.org/cdt"
+license=("EPL")
+depends=('eclipse>=3.4.2')
+install=
+source=(http://download.eclipse.org/tools/cdt/releases/ganymede/dist/cdt-master-$pkgver.zip)
+noextract=("cdt-master-$pkgver.zip")
+
+build() {
+  installdir=$startdir/pkg/usr/share/eclipse/dropins
+
+  cd $startdir/src || return 1
+  unzip cdt-master-$pkgver.zip || return 1
+
+  mkdir -p $installdir/eclipse || return 1
+  cp -a $startdir/src/features $installdir/eclipse || return 1
+  cp -a $startdir/src/plugins $installdir/eclipse || return 1
+}
+md5sums=('a7c1851dabff7fb258824137cd6b198c')

@@ -1,0 +1,40 @@
+# $Id: PKGBUILD,v 1.13 2010/03/15 13:11:01 kth5 Exp $
+# x86 Maintainer: dorphell <dorphell@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+pkgname=opera
+pkgver=10.63
+pkgrel=1
+pkgdesc="The Opera web browser"
+url="http://www.opera.com/"
+url="http://www.opera.com/browser/"
+depends=('gcc-libs' 'gstreamer0.10-good' 'libxt' 'freetype2' 'libxext')
+optdepends=('gtk2: GTK integration' \
+            'kdebase-runtime: KDE4 integration' \
+            'gstreamer0.10-ffmpeg: HTML5 H.264 support' \
+            'gstreamer0.10-bad-plugins: HTML5 H.264 support')
+install=$pkgname.install
+license=('custom:opera')
+arch=('ppc')
+source=(ftp://ftp.opera.com/pub/opera/linux/${pkgver/\./}/${pkgname}-${pkgver}-6450.ppc.linux.tar.bz2
+        opera opera-widget-manager opera.desktop destdir.patch)
+options=(!strip !zipman)
+
+build() {
+   cd ${srcdir}/opera-${pkgver}-????.ppc.linux
+   patch -Np1 -i ${srcdir}/destdir.patch || return 1;
+   sed 's|/usr/X11R6/lib/mozilla/plugins=1|/opt/mozilla/lib/plugins=1|' -i share/opera/defaults/pluginpath.ini || return 1
+   mkdir ${pkgdir}/usr
+   DESTDIR=${pkgdir}/usr ./install --unattended --system 
+   rm -rf ${pkgdir}/usr/share/mime
+   rm ${pkgdir}/usr/share/applications/mimeinfo.cache
+   install -D -m 644 ${srcdir}/opera.desktop ${pkgdir}/usr/share/applications/opera.desktop
+   install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/opera/license.txt
+   cp ${srcdir}/opera ${pkgdir}/usr/bin
+   cp ${srcdir}/opera-widget-manager ${pkgdir}/usr/bin
+
+}
+md5sums=('9cc19c0458cfcb23e9d57b1012dd25d1'
+         'd794467cd625ea4788f97b38bafe3350'
+         '5c18930818188e2321cd3ff1b224217a'
+         'c9fc5c08e0880784d38f4f8fd31a676d'
+         '551f50ca3c87e1fc330cd4b9ae2bcd0c')

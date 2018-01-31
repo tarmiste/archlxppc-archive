@@ -1,0 +1,44 @@
+# $Id: PKGBUILD 32972 2009-04-03 13:47:52Z andrea $
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+pkgname=mp3blaster
+pkgver=3.2.5
+pkgrel=2
+pkgdesc="A console based mp3 and OGG player."
+depends=('ncurses' 'libvorbis' 'sdl' 'libsidplay')
+url="http://mp3blaster.sourceforge.net"
+arch=('i686' 'x86_64' 'ppc')
+license=('GPL')
+source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz
+	02_bool.patch
+	03_endian.patch
+	04_memleak.patch
+	05_macro.patch
+	06_man.patch
+	07_fix_ogg.patch
+	08_fix_ftbfs_const_char.patch)
+
+build() {
+  cd ${srcdir}/$pkgname-$pkgver
+ 
+  patch -Np1 -i ${srcdir}/02_bool.patch || return 1
+  patch -Np1 -i ${srcdir}/03_endian.patch || return 1
+  patch -Np1 -i ${srcdir}/04_memleak.patch || return 1
+  patch -Np1 -i ${srcdir}/05_macro.patch || return 1
+  patch -Np1 -i ${srcdir}/06_man.patch || return 1
+  patch -Np1 -i ${srcdir}/07_fix_ogg.patch || return 1
+  patch -Np1 -i ${srcdir}/08_fix_ftbfs_const_char.patch || return 1
+
+  ./configure --prefix=/usr
+  make || return 1
+  make prefix=${pkgdir}/usr install
+}
+md5sums=('edb3bb122553d2d544dfb084010311c6'
+         '55e4cca9b21586d13f47c278f496f82a'
+         '4d7ee1a2793a95438ff2ab18d6985fa4'
+         '498372ed7c95cfae1483c2a4886219b6'
+         '805b677fa277a30f1228522a9526bdf3'
+         '3e888b2ec8d9d64e144fb249e570ba5a'
+         '82d2000644014c0c67bf05664f7b71b2'
+         '731554a0fb253ada87f208a31484323b')

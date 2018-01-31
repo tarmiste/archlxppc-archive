@@ -1,0 +1,11 @@
+--- linux-a/include/linux/time.h.orig	2008-04-10 17:03:53.000000000 +0000
++++ linux-b/include/linux/time.h	2008-04-10 17:04:44.000000000 +0000
+@@ -172,7 +172,7 @@
+ static inline void timespec_add_ns(struct timespec *a, u64 ns)
+ {
+ 	ns += a->tv_nsec;
+-	while(unlikely(ns >= NSEC_PER_SEC)) {
++	while(unlikely((unsigned long)ns >= (unsigned long)NSEC_PER_SEC)) {
+ 		ns -= NSEC_PER_SEC;
+ 		a->tv_sec++;
+ 	}

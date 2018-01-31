@@ -1,0 +1,75 @@
+# $Id: PKGBUILD,v 1.8 2008/08/10 14:53:02 kth5 Exp $
+# Maintainer : Tobias Powalowski <tpowa@archlinux.org>
+
+pkgname=archboot
+pkgver=0.4.26.1
+pkgrel=1
+pkgdesc="Advanced, modular arch boot/install image creation utility"
+arch=(i686 x86_64 ppc)
+url="http://www.archlinux.org/"
+depends=('mkinitcpio' \
+	'mkbootcd' 'initscripts' 'cvs' 'wget' \
+       	'bash' 'coreutils' 'cryptsetup' 'dialog' \
+	'e2fsprogs' 'findutils' 'gawk' 'grep' 'iputils' \
+       	'jfsutils' 'less' 'lvm2' 'mdadm' 'module-init-tools' 'nano' \
+	'ncurses' 'net-tools' 'gnu-netcat' 'ntfsprogs' 'pcmciautils' \
+	'procps' 'psmisc' 'reiserfsprogs' 'sed' 'snarf' \
+	'syslog-ng' 'sysvinit' 'tar' 'util-linux-ng' 'which' 'kbd' \
+       	'wireless_tools' 'xfsprogs' 'dnsutils' 'hdparm' \
+       	'netkit-telnet' 'openssh' 'hwdetect' 'portmap' 'shadow' \
+       	'bridge-utils' 'ifenslave' 'cpufrequtils' 'links' 'tcp_wrappers' \
+	'dosfstools' 'glibc' 'kernel-headers' 'xinetd' 'naim' \
+       	'ppp' 'rp-pppoe' \
+	'yaboot' 'mac-fdisk'\
+       	'iptables' 'capi4k-utils' \
+	'isdn4k-utils' 'ntfs-3g' 'pciutils' 'usbutils' 'vpnc' 'openvpn' \
+       	'bcm43xx-fwcutter' 'wpa_supplicant' 'rsync' 'gzip' 'libdownload' 'libarchive' \
+       	'device-mapper' 'screen' 'libelf' 'pam' 'cracklib' 'nfs-utils' 'nfsidmap' \
+	'readline' 'acl' 'attr' 'pcre' 'cpio' 'archboot' 'fuse' 'klibc' 'libusb' \
+       	'vim' 'lzo2' 'libsasl' 'libldap' 'gpm' 'libevent' 'gcc-libs' 'sdparm' \
+	'licenses' 'pptpclient'
+       	'smbclient' 'parted')
+source=($pkgname-0.4.26.tar.bz2 archboot_ppc-${pkgver}.patch)
+backup=('etc/archboot/archbootcd.conf' 'etc/archboot/archpxelinux.conf' 'etc/archboot/archsyslinux.conf' \
+        'etc/archboot/install.conf' 'etc/archboot/install-ppc.conf')
+install=archboot.install
+
+build()
+{
+  cd $startdir/src/$pkgname-0.4.26
+
+  if [ "$CARCH" = "x86_64" ]; then
+    # fix tag for checkout
+    sed -i -e "s:CURRENT:CURRENT-64:g" install.conf
+  fi
+  
+  [ "$CARCH" = "ppc" ] && patch -Np1 -i ${startdir}/src/archboot_ppc-${pkgver}.patch
+
+  mkdir -p $startdir/pkg/etc/archboot/etc
+  install -m755 -D etc/init $startdir/pkg/etc/archboot/etc/init
+  install -m755 -D etc/rc.sysinit $startdir/pkg/etc/archboot/etc/rc.sysinit
+  install -m755 -D etc/rc.shutdown $startdir/pkg/etc/archboot/etc/rc.shutdown
+  install -m755 -D etc/rc.local $startdir/pkg/etc/archboot/etc/rc.local
+  install -m755 -D etc/load-modules.sh $startdir/pkg/etc/archboot/etc/load-modules.sh
+  install -m755 -D etc/start_udev $startdir/pkg/etc/archboot/etc/start_udev
+  install -m755 -D etc/login.sh $startdir/pkg/etc/archboot/etc/login.sh
+  for i in etc/{fstab,host.conf,hosts,inittab,inputrc,mke2fs.conf,nanorc,nsswitch.conf,profile,protocols,rc.conf,services,syslog-ng.conf,virc,isolinux.cfg,menu.lst,append-message,append-message-syslinux,udev.rules,passwd,shadow,group,shells,securetty,wpa_supplicant.conf}; do
+  install -m644 -D $i $startdir/pkg/etc/archboot/$i
+  done
+  for i in etc/{conf.d,naim,pacman,pam,remote,shadow-config,ppp,lilo,grub,iptables,capi4k,isdn,openvpn,vpnc}; do
+  cp -r $i $startdir/pkg/etc/archboot/$i
+  done
+  for i in hooks/*; do install -m644 -D $i $startdir/pkg/lib/initcpio/$i ; done
+  for i in install/*; do install -m644 -D $i $startdir/pkg/lib/initcpio/$i ; done
+  for i in *.conf; do install -m644 -D $i $startdir/pkg/etc/archboot/$i ; done
+
+  # no red pill on ppc ...
+  if [ "$CARCH" != "ppc" ]; then
+  	# vmware-detect
+  	cd $startdir/src
+  	gcc -o vmware-detect vmware-detect.c
+  	install -D -m 755 vmware-detect $startdir/pkg/usr/bin/vmware-detect
+  fi
+}
+md5sums=('f13bb4e3177706ec45622701ac2e392f'
+         '634e63b24235eb715d927bb83dffa404')

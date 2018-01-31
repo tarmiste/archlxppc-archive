@@ -1,0 +1,23 @@
+# $Id: PKGBUILD,v 1.5 2008/04/10 12:21:28 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org>
+pkgname=mac-fdisk
+pkgver=0.1
+pkgrel=7
+pkgdesc="A Apple partition map partitioner utility."
+arch=('ppc')
+url="http://packages.debian.org/source/mac-fdisk"
+license=("GPL")
+group=('base')
+depends=('glibc')
+source=(http://ftp.debian.org/debian/pool/main/m/mac-fdisk/$pkgname\_$pkgver.orig.tar.gz \
+	http://ftp.debian.org/debian/pool/main/m/mac-fdisk/$pkgname\_$pkgver-15.diff.gz)
+
+build() {
+  cd $startdir/src/$pkgname-$pkgver.orig
+  patch -Np1 -i ../${pkgname}_${pkgver}-15.diff || return 1
+  make || return 1
+  mkdir -p $startdir/pkg/sbin
+  make DESTDIR=$startdir/pkg install
+}
+md5sums=('24476329fe86ef6ccf222e233e2a99f1'
+         'b71ca4a4c6c35143b31655bd394f593c')

@@ -1,0 +1,10 @@
+# ext.  xlate  creator  type    comment
+.gz	Raw    'UNIX'   'gz'    "Gunzipped Archive"
+.bin    Raw    'ddsk'   'DDim'  "Floppy or ramdisk image"
+.img    Raw    'ddsk'   'DDim'  "Floppy or ramdisk image"
+.b      Raw    'UNIX'   'tbxi'  "bootstrap"
+yaboot  Raw    'UNIX'   'boot'  "bootstrap"
+vmlinux Raw    'UNIX'   'boot'  "bootstrap"
+.conf   Raw    'UNIX'   'conf'  "bootstrap"
+.msg    Ascii  '????'   '????'  "Text message"
+*       Ascii  '????'   '????'  "Text file"

@@ -1,0 +1,32 @@
+# $Id$
+# x86 Maintainer: Eric Bélanger <eric@archlinux.org>
+
+pkgname=bluefish
+pkgver=2.2.2
+pkgrel=1
+pkgdesc="A powerful HTML editor for experienced web designers and programmers"
+arch=('i686' 'x86_64' 'ppc')
+url="http://bluefish.openoffice.nl/"
+license=('GPL3')
+depends=('gtk3' 'enchant' 'desktop-file-utils' 'hicolor-icon-theme')
+makedepends=('gucharmap' 'intltool')
+optdepends=('gucharmap: for using the charmap plugin')
+options=('!libtool')
+install=bluefish.install
+source=(http://bluefish.mrball.net/stable/source/bluefish-${pkgver}.tar.bz2{,.sig})
+sha1sums=('2fca4e4fa67e6f2fda1335e1dc4e19ca318eb002'
+          'a7f2b776d9bacff1e2fd6d70aa0e37c53e85f7a2')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  sed -i 's|/usr/bin/env python|/usr/bin/env python2|' \
+    src/plugin_zencoding/zencoding/{,filters/,actions/}*.py
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+    --enable-spell-check --disable-update-databases --disable-xml-catalog-update
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,46 @@
+# $Id: PKGBUILD,v 1.3 2009/02/24 12:53:41 kth5 Exp $
+# ppc Maintainer: Alexander Baldeck <alexander@archlinux.org>
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+pkgname=vuze
+pkgver=4.1.0.2
+pkgrel=3
+pkgdesc="BitTorrent client with GUI, written in Java, formerly known as Azureus"
+arch=('ppc')
+url="http://azureus.sourceforge.net/"
+license=('GPL')
+depends=('java-runtime' 'swt=3.4-2')
+optdepends=('xulrunner: needed for browsing the vuze content')
+provides=('azureus')
+conflicts=('azureus')
+replaces=('azureus')
+source=("http://downloads.sourceforge.net/azureus/Vuze_${pkgver}_linux.tar.bz2"
+	'vuze.desktop')
+md5sums=('3430e85eb4b808ea7329e05401ce38c3'
+	'345ad45b972009dcd672c4eaf52fb336')
+
+build() {
+  cd ${srcdir}
+
+  install -d "$pkgdir/usr/share"
+  cp -r vuze "$pkgdir/usr/share" || return 1
+
+  install -D -m755 vuze/vuze "$pkgdir/usr/bin/vuze" || return 1
+  sed -i 's%#PROGRAM_DIR="/home/username/apps/azureus"%PROGRAM_DIR="/usr/share/vuze"%' "$pkgdir/usr/bin/vuze" || return 1
+
+  install -D -m644 vuze/vuze.png "$pkgdir/usr/share/pixmaps/vuze.png"|| return 1
+  install -D -m644 vuze.desktop  "$pkgdir/usr/share/applications/vuze.desktop" || return 1
+
+  # remove unzupported swt & link ours
+  cd ${pkgdir}/usr/share/vuze/
+  rm -rv swt.jar
+  ln -sf /usr/share/java/swt.jar
+  ln -sf /usr/lib/libswt-atk-gtk-3448.so
+  ln -sf /usr/lib/libswt-awt-gtk-3448.so
+  ln -sf /usr/lib/libswt-cairo-gtk-3448.so
+  ln -sf /usr/lib/libswt-glx-gtk-3448.so
+  ln -sf /usr/lib/libswt-gnome-gtk-3448.so
+  ln -sf /usr/lib/libswt-gtk-3448.so
+  ln -sf /usr/lib/libswt-mozilla-gtk-3448.so
+  ln -sf /usr/lib/libswt-pi-gtk-3448.so
+  ln -sf /usr/lib/libswt-xulrunner-gtk-3448.so
+}

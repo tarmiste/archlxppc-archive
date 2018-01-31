@@ -1,0 +1,118 @@
+--- mkbootcd.orig	2007-04-10 21:45:14.000000000 +0200
++++ mkbootcd	2007-04-10 21:45:38.000000000 +0200
+@@ -6,8 +6,9 @@
+ GENIMG=""
+ BURN="0"
+ BLANK="0"
+-GRUB="0"
++YABOOT="0"
+ TARNAME=""
++
+ export TEMPDIR=$(mktemp /tmp/mkbootcd.XXXX)
+ usage ()
+ {
+@@ -16,7 +17,6 @@
+     echo "  -c=CONFIG        Use CONFIG file. default: /etc/mkbootcd.conf"
+     echo "  -B               Burn the ISO image after creation"
+     echo "  -b               Blanking media first"
+-    echo "  -grub            Use grub instead of isolinux"
+     echo "  -t=TARNAME       Generate a tar.bz2 image instead of an iso image"
+     echo "  -h               This message."
+     exit 1
+@@ -30,7 +30,6 @@
+ 		-g=*|--g=*) GENIMG="$(echo $1 | awk -F= '{print $2;}')" ;;
+ 		-B|--B) BURN="1" ;;
+ 		-b|--b) BLANK="1" ;;
+-		-grub|--grub) GRUB="1" ;;
+ 		-t=*|--t=*) TARNAME="$(echo $1 | awk -F= '{print $2;}')" ;;
+ 		-h|--h|?) usage ;; 
+ 		*) usage ;;
+@@ -52,45 +51,40 @@
+ # export for mkinitcpio
+ [ -n "${APPENDBOOTMESSAGE}" ] && export APPENDBOOTMESSAGE
+ [ -n "${APPENDBOOTMESSAGE_SYSLINUX}" ] && export APPENDBOOTMESSAGE_SYSLINUX
+-if [ "$GRUB" = "1" ]; then
+-	export RUNPROGRAM="${APPNAME}-grub"
+-	export BOOTDIRNAME="boot"
+-else
+-	export RUNPROGRAM="${APPNAME}"
+-	export BOOTDIRNAME="isolinux"
+-fi
++
++export RUNPROGRAM="${APPNAME}"
++export BOOTDIRNAME="boot"
++
+ [ "${BOOTMESSAGE}" = "" ] && export BOOTMESSAGE=$(mktemp /tmp/bootmessage.XXXX)
+ [ "${ISONAME}" = "" ] && export ISONAME=$(mktemp /tmp/isoname.XXXX)
+ export USEKERNEL=${VERSION}
+ # begin script
+ [ -e ${TEMPDIR} ] && rm -r ${TEMPDIR}
++
+ mkdir -p ${TEMPDIR}/${BOOTDIRNAME}
+-if [ "$GRUB" = "1" ]; then
+-	mkdir ${TEMPDIR}/${BOOTDIRNAME}/grub
+-	install -m755 /usr/share/grub/i386-pc/stage2_eltorito ${TEMPDIR}/${BOOTDIRNAME}/grub/stage2_eltorito
+-else
+-	install -m755 /usr/share/mkbootcd/isolinux.bin ${TEMPDIR}/${BOOTDIRNAME}/isolinux.bin
+-fi
+-# create isolinux.cfg
+-if [ "$GRUB" = "1" ]; then
+-	echo ":: Creating menu.lst ..."
+-	[ ! -e "${MENULST}" ] && echo "No menu.lst found" && exit 1
+-	sed "s|@@PROMPT@@|${PROMPT}|g;s|@@TIMEOUT@@|${TIMEOUT}|g;s|@@KERNEL_BOOT_OPTIONS@@|${KERNEL_BOOT_OPTIONS}|g" \
+-		${MENULST} \
+-		> ${TEMPDIR}/${BOOTDIRNAME}/grub/menu.lst
+-else
+-	echo ":: Creating isolinux.cfg ..."
+-	[ ! -e "${ISOLINUXCFG}" ] && echo "No isolinux.cfg found" && exit 1
+-	sed "s|@@PROMPT@@|${PROMPT}|g;s|@@TIMEOUT@@|${TIMEOUT}|g;s|@@KERNEL_BOOT_OPTIONS@@|${KERNEL_BOOT_OPTIONS}|g" \
+-		${ISOLINUXCFG} \
+-		> ${TEMPDIR}/${BOOTDIRNAME}/isolinux.cfg
+-fi
++install -m755 /usr/lib/yaboot/yaboot ${TEMPDIR}/${BOOTDIRNAME}/yaboot
++install -m644 /lib/mkbootcd/ofboot.b ${TEMPDIR}/${BOOTDIRNAME}/ofboot.b
++install -m644 ${BOOTMESSAGE} ${TEMPDIR}/${BOOTDIRNAME}/boot.msg
++install -m644 /lib/mkbootcd/map.hfs ${TEMPDIR}/${BOOTDIRNAME}/map.hfs
++
++echo ":: Creating yaboot.conf ..."
++echo "device=cd:" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "default=install" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "timeout=100" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "message=/boot/boot.msg" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "image=/boot/vmlinux" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "        label=install" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "        initrd=/boot/initrd.img" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "        initrd-size=16384" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++echo "        append=\"${KERNEL_BOOT_OPTIONS}\"" >> ${TEMPDIR}/${BOOTDIRNAME}/yaboot.conf
++
+ echo ":: Calling mkinitcpio CONFIG=${MKINITCPIO_CONFIG} KERNEL=${VERSION} ..." 
+ # generate initramdisk
+ echo ":: Creating initramdisk ..."
+ 	mkinitcpio -c ${MKINITCPIO_CONFIG} -k ${VERSION} -g ${TEMPDIR}/${BOOTDIRNAME}/initrd.img
+ echo ":: Using ${KERNEL} as image kernel ..."
+-	install -m644 ${KERNEL} ${TEMPDIR}/${BOOTDIRNAME}/vmlinuz
++	install -m644 ${KERNEL} ${TEMPDIR}/${BOOTDIRNAME}/vmlinux
+ install -m644 ${BOOTMESSAGE} ${TEMPDIR}/${BOOTDIRNAME}/boot.msg
+ [ ! -s ${TEMPDIR}/${BOOTDIRNAME}/boot.msg ] && echo 'ERROR:no boot.msg found, aborting!' && exit 1
+ # create image
+@@ -102,14 +96,11 @@
+ else
+ 	echo ":: Creating ISO image ..."
+ 		[ -e ${GENIMG} ] && rm ${GENIMG}
+-		[ -s "${ISONAME}" ] && ISONAME=$(cat $ISONAME) || ISONAME="Arch Linux"
+-		if [ "$GRUB" = "1" ]; then
+-			mkisofs -RlDJLV "${ISONAME}" -b boot/grub/stage2_eltorito -c boot/boot.cat \
+-				-no-emul-boot -boot-load-size 4 -boot-info-table -o ${GENIMG} ${TEMPDIR}/ > /dev/null 2>&1
+-		else
+-			mkisofs -RlDJLV "${ISONAME}" -b isolinux/isolinux.bin -c isolinux/boot.cat \
+-				-no-emul-boot -boot-load-size 4 -boot-info-table -o ${GENIMG} ${TEMPDIR}/ > /dev/null 2>&1
+-		fi
++		[ -s "${ISONAME}" ] && ISONAME=$(cat $ISONAME) || ISONAME="Arch Linux PPC"
++		 mkisofs -r -V "arch-boot" -U -hfs -part -probe -no-desktop \
++		 -hfs-bless ${TEMPDIR}/boot -map ${TEMPDIR}/boot/map.hfs \
++		 -v -o ${GENIMG} ${TEMPDIR} 
++
+ 		[ $? -ne 0 ] && echo ":: ISO Image succesfull created at ${GENIMG}"
+ 	# burning/blanking image
+ 	if [ "$BLANK" = "1" ]; then

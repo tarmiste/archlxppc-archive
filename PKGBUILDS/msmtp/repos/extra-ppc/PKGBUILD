@@ -1,0 +1,36 @@
+# $Id$
+# Maintainer: tobias <tobias@archlinux.org>
+# Contributor: Ben Mazer <blm@groknil.org>
+
+pkgname=msmtp
+pkgver=1.4.27
+pkgrel=1
+pkgdesc="A mini smtp client"
+arch=('i686' 'x86_64' 'ppc')
+license=('GPL3')
+url="http://msmtp.sourceforge.net"
+depends=('gnutls' 'libidn')
+provides=('smtp-forwarder')
+install=msmtp.install
+source=(http://download.sourceforge.net/sourceforge/msmtp/${pkgname}-${pkgver}.tar.bz2)
+sha1sums=('e335745133b4729fe84c49f836b4d2fa9281e040')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr --sysconfdir=/etc --with-ssl=gnutls
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install 
+  make DESTDIR="${pkgdir}" -C doc 
+
+# Installing example configs and scripts to /usr/share/doc/msmtp
+# as they are not installed by default (Debian and Gentoo do it this way)
+  install -d "${pkgdir}/usr/share/doc/msmtp"
+  cp -r scripts/{find_alias,msmtp-gnome-tool,msmtpqueue,msmtpq,set_sendmail} "${pkgdir}/usr/share/doc/msmtp/"
+  install -D -m644 doc/*.example "${pkgdir}/usr/share/doc/msmtp/"
+
+  install -D -m644 scripts/vim/msmtp.vim "${pkgdir}/usr/share/vim/vimfiles/syntax/msmtp.vim"
+}

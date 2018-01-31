@@ -1,0 +1,63 @@
+--- Makefile	2002-06-05 12:08:24.000000000 +0000
++++ Makefile.patched	2005-01-29 10:27:23.100631368 +0000
+@@ -27,7 +27,7 @@
+ INSTALL	= /usr/bin/install -c
+ SOUND_INC = -I.
+ 
+-PROGS	= clock mousemode nvsetenv trackpad backlight
++PROGS	= clock mousemode nvsetenv trackpad backlight nvvideo sndvolmix
+ SCRIPTS	= macos
+ 
+ # DEPENDENCIES:
+@@ -60,26 +60,6 @@
+ vmode:
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $@.c
+ 
+-all-man: clock.8 mousemode.8 nvsetenv.8 sndvolmix.8 vmode.8 macos.8 nvvideo.8 fdeject.8
+-
+-clock.8: clock.sgml
+-	$(SGMLMAN) $< && mv -f clock.man $@
+-mousemode.8: mousemode.sgml
+-	$(SGMLMAN) $< && mv -f mousemode.man $@
+-nvsetenv.8: nvsetenv.sgml
+-	$(SGMLMAN) $< && mv -f nvsetenv.man $@
+-
+-sndvolmix.8: sndvolmix.sgml
+-	$(SGMLMAN) $< && mv -f sndvolmix.man $@
+-vmode.8: vmode.sgml
+-	$(SGMLMAN) $< && mv -f vmode.man $@
+-macos.8: macos.sgml
+-	$(SGMLMAN) $< && mv -f macos.man $@
+-nvvideo.8: nvvideo.sgml
+-	$(SGMLMAN) $< && mv -f nvvideo.man $@
+-fdeject.8: fdeject.sgml
+-	$(SGMLMAN) $< && mv -f fdeject.man $@
+-
+ installdirs:
+ 	./mkinstalldirs $(DESTDIR)$(sbindir) $(DESTDIR)$(ubindir) \
+ 			$(DESTDIR)$(man1dir) $(DESTDIR)$(man8dir) \
+@@ -117,22 +97,11 @@
+ 		chmod 600 $(DESTDIR)$(devsdir)/sndstat; \
+ 	fi
+ 
+-install:	all man installdirs
++install:	installdirs
+ 	$(INSTALL) -m 4511  clock $(DESTDIR)$(sbindir) 
+ 	$(INSTALL) -m 755   nvsetenv nvvideo $(DESTDIR)$(sbindir)
+-	$(INSTALL) -m 755   mousemode sndvolmix vmode $(DESTDIR)$(usbindir)
+-	$(INSTALL) -m 755   fdeject $(DESTDIR)/$(ubindir)
++	$(INSTALL) -m 755   mousemode sndvolmix $(DESTDIR)$(usbindir)
+ 	$(INSTALL) -m 755   $(SCRIPTS) $(DESTDIR)$(sbindir)
+-
+-	$(INSTALL) -m 644   fdeject.man	$(DESTDIR)$(man1dir)/fdeject.1
+-	$(INSTALL) -m 644   clock.man	$(DESTDIR)$(man8dir)/clock.8
+-	$(INSTALL) -m 644   mousemode.man	$(DESTDIR)$(man8dir)/mousemode.8
+-	$(INSTALL) -m 644   nvsetenv.man	$(DESTDIR)$(man8dir)/nvsetenv.8
+-	$(INSTALL) -m 644   nvvideo.man	$(DESTDIR)$(man8dir)/nvvideo.8
+-	$(INSTALL) -m 644   sndvolmix.man	$(DESTDIR)$(man8dir)/sndvolmix.8
+-	$(INSTALL) -m 644   vmode.man	$(DESTDIR)$(man8dir)/vmode.8
+-	$(INSTALL) -m 644   macos.man	$(DESTDIR)$(man8dir)/macos.8
+-
+ cleanobjs:
+ 	$(RM) *.o *.bak *~ *.man *.1 *.8
+ 

@@ -1,0 +1,16 @@
+--- a/install	2010-06-30 14:04:24.000000000 +0200
++++ b/install	2010-07-03 13:54:21.000000000 +0200
+@@ -1111,11 +1111,12 @@
+ 		PREFIX=$HOME/.local
+ 		;;
+ 	system)
+-		PREFIX=/usr/local
++		PREFIX=$DESTDIR
+ 		if [ ! -w $PREFIX ] && ! $force
+ 		then
+ 			ui_error "You must be root to install software system-wide."
+ 		fi
++		echo $PREFIX
+ 		;;
+ esac
+ 

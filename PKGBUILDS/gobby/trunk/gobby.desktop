@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=gobby
+Icon=gobby
+Type=Application
+Terminal=false
+MultipleArgs=false
+Name=Gobby
+GenericName=Collaborative Text Editor
+StartupNotify=false
+Categories=Application;Office;

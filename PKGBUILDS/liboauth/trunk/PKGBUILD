@@ -1,0 +1,29 @@
+# $Id: PKGBUILD 145266 2011-12-20 18:56:18Z heftig $
+# x86 Maintainer: Jan "heftig" Steffens <jan.steffens@gmail.com>
+# Contributor: Kaiting Chen <kaitocracy@gmail.com>
+# Contributor: Martin Häger <martin.haeger@gmail.com>
+
+pkgname=liboauth
+pkgver=0.9.6
+pkgrel=1
+pkgdesc='C library implementing OAuth Core RFC 5849'
+arch=('ppc' 'i686' 'x86_64')
+url='http://liboauth.sourceforge.net'
+license=('MIT')
+depends=('curl')
+options=('!libtool')
+source=("$url/pool/$pkgname-$pkgver.tar.gz")
+sha256sums=('9fa0f9d86ac4fbdd8c17d4c242ceef33096e8cf3b1834d9198ccc0cbf8b0f207')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr --disable-static
+  make
+
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 COPYING.MIT "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}

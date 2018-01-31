@@ -1,0 +1,36 @@
+# $Id: PKGBUILD,v 1.5 2009/12/01 14:25:47 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org>
+pkgname=powerpc-utils
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="Tools for setting boot variables from Linux (PowerPC specific)"
+arch=('ppc')
+url="http://powerpc-utils.ozlabs.org"
+license="CUSTOM"
+group=('base')
+depends=('librtas')
+conflicts=('pmac-utils')
+replaces=('pmac-utils')
+provides=('pmac-utils')
+options=('!distcc')
+install=${pkgname}.install
+source=(http://powerpc-utils.ozlabs.org/releases/${pkgname}-${pkgver}.tar.gz
+        ibmvscsisd)
+
+build() {
+  cd ${startdir}/src/${pkgname}
+
+  ./bootstrap.sh || return 1
+  ./configure --prefix=/usr  
+  make || return 1
+  make DESTDIR=${pkgdir}/ install
+
+  rm -rfv ${pkgdir}/etc/init.d
+  install -m755 -D ${srcdir}/ibmvscsisd ${pkgdir}/etc/rc.d/ibmvscsis
+
+  install -m644 -D ${srcdir}/${pkgname}/COPYRIGHT \
+                   ${pkgdir}/usr/share/licenses/${pkgname}/COPYRIGHT
+}
+
+md5sums=('6a79a185421aa6f88d163124073ffae0'
+         '302513418a482a5c645399a838471a39')

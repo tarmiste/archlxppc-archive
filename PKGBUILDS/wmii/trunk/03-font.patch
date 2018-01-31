@@ -1,0 +1,36 @@
+diff -Naur wmii-3.6+debian.orig/cmd/wmii/dat.h wmii-3.6+debian/cmd/wmii/dat.h
+--- wmii-3.6+debian.orig/cmd/wmii/dat.h	2007-11-16 13:59:15.000000000 +0000
++++ wmii-3.6+debian/cmd/wmii/dat.h	2007-11-23 12:53:08.000000000 +0000
+@@ -13,7 +13,7 @@
+ #include <fmt.h>
+ #include "x11.h"
+ 
+-#define FONT		"-*-fixed-medium-r-*-*-13-*-*-*-*-*-*-*"
++#define FONT		"fixed"
+ #define FOCUSCOLORS	"#ffffff #335577 #447799"
+ #define NORMCOLORS	"#222222 #eeeeee #666666"
+ 
+diff -Naur wmii-3.6+debian.orig/rc/rc.wmii.rc wmii-3.6+debian/rc/rc.wmii.rc
+--- wmii-3.6+debian.orig/rc/rc.wmii.rc	2007-11-16 13:59:15.000000000 +0000
++++ wmii-3.6+debian/rc/rc.wmii.rc	2007-11-23 12:52:46.000000000 +0000
+@@ -36,7 +36,7 @@
+ LEFT=h
+ RIGHT=l
+ 
+-WMII_FONT='-*-fixed-medium-r-*-*-13-*-*-*-*-*-*-*'
++WMII_FONT='fixed'
+ WMII_NORMCOLORS=('#888888' '#222222' '#333333')
+ WMII_FOCUSCOLORS=('#ffffff' '#285577' '#4C7899')
+ WMII_BACKGROUND='#333333'
+diff -Naur wmii-3.6+debian.orig/rc/wmiirc.sh wmii-3.6+debian/rc/wmiirc.sh
+--- wmii-3.6+debian.orig/rc/wmiirc.sh	2007-11-16 13:59:15.000000000 +0000
++++ wmii-3.6+debian/rc/wmiirc.sh	2007-11-23 12:52:09.000000000 +0000
+@@ -13,7 +13,7 @@
+ WMII_FOCUSCOLORS='#ffffff #285577 #4c7899'
+ 
+ WMII_BACKGROUND='#333333'
+-WMII_FONT='-*-fixed-medium-r-*-*-13-*-*-*-*-*-*-*'
++WMII_FONT='fixed'
+ 
+ set -- $(echo $WMII_NORMCOLORS $WMII_FOCUSCOLORS)
+ WMII_MENU="dmenu -b -fn '$WMII_FONT' -nf '$1' -nb '$2' -sf '$4' -sb '$5'"

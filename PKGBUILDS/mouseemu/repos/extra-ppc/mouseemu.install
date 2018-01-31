@@ -1,0 +1,4 @@
+pre_install() {
+  echo " ==> Add yourself to the 'users' group and modprobe"
+  echo "     uinput module to use mouseemu."
+}

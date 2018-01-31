@@ -1,0 +1,20 @@
+--- qt-x11-free-3.3.8/src/tools/qvaluelist.h.orig	2011-04-12 15:47:08.000000000 +0000
++++ qt-x11-free-3.3.8/src/tools/qvaluelist.h	2011-04-12 15:47:22.000000000 +0000
+@@ -47,6 +47,7 @@
+ #ifndef QT_NO_STL
+ #include <iterator>
+ #include <list>
++#include <cstddef>
+ #endif
+ 
+ //#define QT_CHECK_VALUELIST_RANGE
+--- qt-x11-free-3.3.8/src/tools/qmap.h.orig	2011-04-12 15:46:44.000000000 +0000
++++ qt-x11-free-3.3.8/src/tools/qmap.h	2011-04-12 15:46:56.000000000 +0000
+@@ -49,6 +49,7 @@
+ #ifndef QT_NO_STL
+ #include <iterator>
+ #include <map>
++#include <cstddef>
+ #endif
+ 
+ //#define QT_CHECK_MAP_RANGE

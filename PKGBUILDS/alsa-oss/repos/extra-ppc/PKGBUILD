@@ -1,0 +1,25 @@
+# $Id$
+# Contributor: judd <jvinet@zeroflux.org>
+
+pkgname=alsa-oss
+pkgver=1.0.25
+pkgrel=1
+pkgdesc="OSS compatibility library"
+arch=('i686' 'x86_64' 'ppc')
+license=('GPL')
+url="http://www.alsa-project.org"
+options=('!libtool')
+depends=('alsa-lib')
+source=("ftp://ftp.alsa-project.org/pub/oss-lib/$pkgname-$pkgver.tar.bz2")
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
+md5sums=('922ea177db15c72f1b5037181c73f934')

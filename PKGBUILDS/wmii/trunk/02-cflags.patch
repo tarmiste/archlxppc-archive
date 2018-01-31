@@ -1,0 +1,9 @@
+diff -Naur wmii-3.6+debian.orig/mk/gcc.mk wmii-3.6+debian/mk/gcc.mk
+--- wmii-3.6+debian.orig/mk/gcc.mk	2007-11-16 13:59:15.000000000 +0000
++++ wmii-3.6+debian/mk/gcc.mk	2007-11-19 20:10:01.000000000 +0000
+@@ -1,5 +1,4 @@
+ CFLAGS += \
+-	-std=c99 \
+ 	-pipe \
+ 	-Wall \
+ 	-Wno-parentheses \

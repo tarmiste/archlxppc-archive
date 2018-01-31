@@ -1,0 +1,50 @@
+# $Id$
+# x86 Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
+# Contributor: tobias <tobias funnychar archlinux.org>
+
+pkgname=xfce4-session
+pkgver=4.8.3
+pkgrel=1
+pkgdesc="A session manager for Xfce"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.xfce.org/"
+license=('GPL2')
+groups=('xfce4')
+# keep xorg-server-utils for https://bugs.archlinux.org/task/21096
+# upower and consolekit for reboot/shutdown/hibernate/suspend
+depends=('xfce4-panel' 'gconf' 'libgnome-keyring' 'libwnck' 'libsm'
+         'xorg-iceauth' 'upower' 'consolekit' 'hicolor-icon-theme')
+makedepends=('intltool')
+optdepends=('fortune-mod: for xfce4-tips')
+replaces=('xfce4-toys')
+options=('!libtool')
+install=$pkgname.install
+source=(http://archive.xfce.org/src/xfce/$pkgname/4.8/$pkgname-$pkgver.tar.bz2)
+sha256sums=('f0801b8c0ffa7e5d41b29b8df281ac127adf467bf50e8ded8aebe5a02bd99338')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib/xfce4 \
+    --localstatedir=/var \
+    --disable-static \
+    --disable-hal \
+    --enable-gnome \
+    --enable-libgnome-keyring \
+    --enable-session-screenshots \
+    --enable-upower \
+    --enable-consolekit \
+    --enable-polkit \
+    --enable-panel-plugin \
+    --disable-debug
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

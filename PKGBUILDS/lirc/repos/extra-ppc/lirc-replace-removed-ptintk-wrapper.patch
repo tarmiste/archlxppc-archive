@@ -1,0 +1,1059 @@
+diff -ruN lirc-0.8.4a.orig/drivers/lirc_cmdir/commandir.c lirc-0.8.4a/drivers/lirc_cmdir/commandir.c
+--- lirc-0.8.4a.orig/drivers/lirc_cmdir/commandir.c	2009-04-09 16:17:51.000000000 +0200
++++ lirc-0.8.4a/drivers/lirc_cmdir/commandir.c	2009-04-09 16:17:57.000000000 +0200
+@@ -271,7 +271,7 @@
+ 		return -1;
+ 	}
+ 
+-	info(DRIVER_DESC " " DRIVER_VERSION);
++	printk(KERN_INFO KBUILD_MODNAME ": " DRIVER_DESC " " DRIVER_VERSION);
+ 
+ 	return 0;
+ #else
+@@ -362,7 +362,7 @@
+ 			break;
+ 	}
+ 	if (minor >= MAX_DEVICES) {
+-		info("Too many devices plugged in, cannot handle this device.");
++		printk(KERN_INFO KBUILD_MODNAME ": Too many devices plugged in, cannot handle this device.");
+ 		goto exit;
+ 	}
+ 
+@@ -435,7 +435,7 @@
+ 				     &cmdir_fops, NULL);
+ 
+ 	/* let the user know what node this device is now attached to */
+-	info("CommandIR USB device now attached to commandir%d", dev->minor);
++	printk(KERN_INFO KBUILD_MODNAME ": CommandIR USB device now attached to commandir%d", dev->minor);
+ 
+ 	/* should reset just the one that was plugged in */
+ 	reset_cmdir(minor);
+@@ -530,7 +530,7 @@
+ 		minor = minor-USB_CMDIR_MINOR_BASE;
+ 
+ 	/* let the user know what node this device is now attached to */
+-	info("CommandIR USB device now attached to commandir%d", minor);
++	printk(KERN_INFO KBUILD_MODNAME ": CommandIR USB device now attached to commandir%d", minor);
+ 
+ 	reset_cmdir(minor);
+ 
+@@ -597,7 +597,7 @@
+ 		up(&dev->sem);
+ 	}
+ 
+-	info("CommandIR #%d now disconnected", minor);
++	printk(KERN_INFO KBUILD_MODNAME ": CommandIR #%d now disconnected", minor);
+ 	up(&minor_table_mutex);
+ 
+ 	/* check if default RX device still exists */
+@@ -608,7 +608,7 @@
+ 			if (cmdir_check(rx_device) == 0) break;
+ 		}
+ 		if (minor > 0)
+-			info("Active Receiver is on CommandIR #%d", rx_device);
++			printk(KERN_INFO KBUILD_MODNAME ": Active Receiver is on CommandIR #%d", rx_device);
+ 	}
+ 
+ }
+@@ -640,7 +640,7 @@
+ 	if (minor >= USB_CMDIR_MINOR_BASE)
+ 		minor = minor-USB_CMDIR_MINOR_BASE;
+ 
+-	info("CommandIR #%d now disconnected", minor);
++	printk(KERN_INFO KBUILD_MODNAME ": CommandIR #%d now disconnected", minor);
+ 
+ 	/* check if default RX device still exists */
+ 	if (minor == rx_device) {
+@@ -651,7 +651,7 @@
+ 				break;
+ 		}
+ 		if (minor > 0)
+-			info("Active Receiver is on CommandIR #%d", rx_device);
++			printk(KERN_INFO KBUILD_MODNAME ": Active Receiver is on CommandIR #%d", rx_device);
+ 	}
+ }
+ #endif
+@@ -755,7 +755,7 @@
+ 		multiplier = multiplier*0x10;
+ 	transmitters |= multiplier * 0x0F;
+ 	next_transmitters = transmitters;
+-	info("commandir%d reset", device_num);
++	printk(KERN_INFO KBUILD_MODNAME ": commandir%d reset", device_num);
+ 	return;
+ }
+ 
+@@ -831,7 +831,7 @@
+ static void print_cmdir(int device_num)
+ {
+ 	update_cmdir_string(device_num);
+-	info("%s", cmdir_var);
++	printk(KERN_INFO KBUILD_MODNAME ": %s", cmdir_var);
+ 	return;
+ }
+ 
+@@ -1027,7 +1027,7 @@
+ 					break;
+ 				case cFLASH:
+ 					ctrl_buffer[0] = FLASH_HEADER;
+-					info("Flashing indicators on device %d",
++					printk(KERN_INFO KBUILD_MODNAME ": Flashing indicators on device %d",
+ 					     minor);
+ 					retval = write_core(ctrl_buffer,
+ 						MCU_CTRL_SIZE,
+@@ -1046,12 +1046,12 @@
+ 					break;
+ 				case cRX:
+ 					rx_device = minor;
+-					info("Default receiver set to %d",
++					printk(KERN_INFO KBUILD_MODNAME ": Default receiver set to %d",
+ 					     minor);
+ 					break;
+ 				case cLCD:
+ 					lcd_device = minor;
+-					info("commandir: Default LCD set to %d",
++					printk(KERN_INFO KBUILD_MODNAME ": commandir: Default LCD set to %d",
+ 					     minor);
+ 					break;
+ 				default:
+diff -ruN lirc-0.8.4a.orig/drivers/lirc_imon/lirc_imon.c lirc-0.8.4a/drivers/lirc_imon/lirc_imon.c
+--- lirc-0.8.4a.orig/drivers/lirc_imon/lirc_imon.c	2009-04-09 16:17:51.000000000 +0200
++++ lirc-0.8.4a/drivers/lirc_imon/lirc_imon.c	2009-04-09 16:17:57.000000000 +0200
+@@ -315,7 +315,7 @@
+ 	kfree(context);
+ 
+ 	if (debug)
+-		info("%s: context deleted", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME ": %s: context deleted", __FUNCTION__);
+ }
+ 
+ static inline void deregister_from_lirc(struct imon_context *context)
+@@ -325,10 +325,10 @@
+ 
+ 	retval = lirc_unregister_plugin(minor);
+ 	if (retval)
+-		err("%s: unable to deregister from lirc(%d)",
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: unable to deregister from lirc(%d)",
+ 			__FUNCTION__, retval);
+ 	else
+-		info("Deregistered iMON plugin(minor:%d)", minor);
++		printk(KERN_INFO KBUILD_MODNAME "Deregistered iMON plugin(minor:%d)", minor);
+ 
+ }
+ 
+@@ -352,7 +352,7 @@
+ 	subminor = iminor(inode);
+ 	interface = usb_find_interface(&imon_driver, subminor);
+ 	if (!interface) {
+-		err("%s: could not find interface for minor %d",
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: could not find interface for minor %d",
+ 		    __FUNCTION__, subminor);
+ 		retval = -ENODEV;
+ 		goto exit;
+@@ -361,7 +361,7 @@
+ #else
+ 	subminor = MINOR(inode->i_rdev) - VFD_MINOR_BASE;
+ 	if (subminor < 0 || subminor >= MAX_DEVICES) {
+-		err("%s: no record of minor %d", __FUNCTION__, subminor);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no record of minor %d", __FUNCTION__, subminor);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+@@ -369,7 +369,7 @@
+ #endif
+ 
+ 	if (!context) {
+-		err("%s: no context found for minor %d",
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no context found for minor %d",
+ 					__FUNCTION__, subminor);
+ 		retval = -ENODEV;
+ 		goto exit;
+@@ -378,16 +378,16 @@
+ 	LOCK_CONTEXT;
+ 
+ 	if (!context->vfd_supported) {
+-		err("%s: VFD not supported by device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: VFD not supported by device", __FUNCTION__);
+ 		retval = -ENODEV;
+ 	} else if (context->vfd_isopen) {
+-		err("%s: VFD port is already open", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: VFD port is already open", __FUNCTION__);
+ 		retval = -EBUSY;
+ 	} else {
+ 		MOD_INC_USE_COUNT;
+ 		context->vfd_isopen = TRUE;
+ 		file->private_data = context;
+-		info("VFD port opened");
++		printk(KERN_INFO KBUILD_MODNAME "VFD port opened");
+ 	}
+ 
+ 	UNLOCK_CONTEXT;
+@@ -409,22 +409,22 @@
+ 	context = (struct imon_context *) file->private_data;
+ 
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no context for device", __FUNCTION__);
+ 		return -ENODEV;
+ 	}
+ 
+ 	LOCK_CONTEXT;
+ 
+ 	if (!context->vfd_supported) {
+-		err("%s: VFD not supported by device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: VFD not supported by device", __FUNCTION__);
+ 		retval = -ENODEV;
+ 	} else if (!context->vfd_isopen) {
+-		err("%s: VFD is not open", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: VFD is not open", __FUNCTION__);
+ 		retval = -EIO;
+ 	} else {
+ 		context->vfd_isopen = FALSE;
+ 		MOD_DEC_USE_COUNT;
+-		info("VFD port closed");
++		printk(KERN_INFO KBUILD_MODNAME "VFD port closed");
+ 		if (!context->dev_present && !context->ir_isopen) {
+ 			/* Device disconnected before close and IR port is not
+ 			 * open. If IR port is open, context will be deleted by
+@@ -497,7 +497,7 @@
+ #endif
+ 	if (retval != SUCCESS) {
+ 		atomic_set(&(context->tx.busy), 0);
+-		err("%s: error submitting urb(%d)", __FUNCTION__, retval);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: error submitting urb(%d)", __FUNCTION__, retval);
+ 	} else {
+ 		/* Wait for tranmission to complete(or abort) */
+ 		UNLOCK_CONTEXT;
+@@ -506,7 +506,7 @@
+ 
+ 		retval = context->tx.status;
+ 		if (retval != SUCCESS)
+-			err("%s: packet tx failed(%d)", __FUNCTION__, retval);
++			printk(KERN_INFO KBUILD_MODNAME "error: %s: packet tx failed(%d)", __FUNCTION__, retval);
+ 	}
+ 
+ 	kfree(control_req);
+@@ -530,14 +530,14 @@
+ 					  0x00, 0x00, 0x00, 0x20 };
+ 
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no context for device", __FUNCTION__);
+ 		return -ENODEV;
+ 	}
+ 
+ 	LOCK_CONTEXT;
+ 
+ 	if (!context->dev_present) {
+-		err("%s: no iMON device present", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no iMON device present", __FUNCTION__);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+@@ -641,20 +641,20 @@
+ 
+ 	context = (struct imon_context *) file->private_data;
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no context for device", __FUNCTION__);
+ 		return -ENODEV;
+ 	}
+ 
+ 	LOCK_CONTEXT;
+ 
+ 	if (!context->dev_present) {
+-		err("%s: no iMON device present", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no iMON device present", __FUNCTION__);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+ 
+ 	if (n_bytes <= 0 || n_bytes > 32) {
+-		err("%s: invalid payload size", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: invalid payload size", __FUNCTION__);
+ 		retval = -EINVAL;
+ 		goto exit;
+ 	}
+@@ -678,7 +678,7 @@
+ 
+ 		retval = send_packet(context);
+ 		if (retval != SUCCESS) {
+-			err("%s: send packet failed for packet #%d",
++			printk(KERN_INFO KBUILD_MODNAME "error: %s: send packet failed for packet #%d",
+ 					__FUNCTION__, seq/2);
+ 			goto exit;
+ 		} else {
+@@ -694,7 +694,7 @@
+ 		context->usb_tx_buf[7] = (unsigned char) seq;
+ 		retval = send_packet(context);
+ 		if (retval != SUCCESS)
+-			err("%s: send packet failed for packet #%d",
++			printk(KERN_INFO KBUILD_MODNAME "error: %s: send packet failed for packet #%d",
+ 					__FUNCTION__, seq/2);
+ 	}
+ 
+@@ -725,20 +725,20 @@
+ 
+ 	context = (struct imon_context *) file->private_data;
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no context for device", __FUNCTION__);
+ 		return -ENODEV;
+ 	}
+ 
+ 	LOCK_CONTEXT;
+ 
+ 	if (!context->dev_present) {
+-		err("%s: no iMON device present", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no iMON device present", __FUNCTION__);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+ 
+ 	if (n_bytes != 8) {
+-		err("%s: invalid payload size: %d (expecting 8)",
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: invalid payload size: %d (expecting 8)",
+ 		  __FUNCTION__, (int) n_bytes);
+ 		retval = -EINVAL;
+ 		goto exit;
+@@ -751,11 +751,11 @@
+ 
+ 	retval = send_packet(context);
+ 	if (retval != SUCCESS) {
+-		err("%s: send packet failed!",
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: send packet failed!",
+ 		  __FUNCTION__);
+ 		goto exit;
+ 	} else if (debug) {
+-		info("%s: write %d bytes to LCD", __FUNCTION__, (int) n_bytes);
++		printk(KERN_INFO KBUILD_MODNAME "%s: write %d bytes to LCD", __FUNCTION__, (int) n_bytes);
+ 	}
+ exit:
+ 	UNLOCK_CONTEXT;
+@@ -804,7 +804,7 @@
+ 	LOCK_CONTEXT;
+ 
+ 	if (context->ir_isopen) {
+-		err("%s: IR port is already open", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: IR port is already open", __FUNCTION__);
+ 		retval = -EBUSY;
+ 		goto exit;
+ 	}
+@@ -827,12 +827,12 @@
+ #endif
+ 
+ 	if (retval)
+-		err("%s: usb_submit_urb failed for ir_open(%d)",
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: usb_submit_urb failed for ir_open(%d)",
+ 		    __FUNCTION__, retval);
+ 	else {
+ 		MOD_INC_USE_COUNT;
+ 		context->ir_isopen = TRUE;
+-		info("IR port opened");
++		printk(KERN_INFO KBUILD_MODNAME "IR port opened");
+ 	}
+ 
+ exit:
+@@ -851,7 +851,7 @@
+ 
+ 	context = (struct imon_context *)data;
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no context for device", __FUNCTION__);
+ 		return;
+ 	}
+ 
+@@ -861,7 +861,7 @@
+ 	context->ir_isopen = FALSE;
+ 	context->ir_isassociating = FALSE;
+ 	MOD_DEC_USE_COUNT;
+-	info("IR port closed");
++	printk(KERN_INFO KBUILD_MODNAME "IR port closed");
+ 
+ 	if (!context->dev_present) {
+ 		/* Device disconnected while IR port was
+@@ -892,7 +892,7 @@
+ 	int i;
+ 
+ 	if (debug)
+-		info("submitting data to LIRC\n");
++		printk(KERN_INFO KBUILD_MODNAME "submitting data to LIRC\n");
+ 
+ 	value *= BIT_DURATION;
+ 	value &= PULSE_MASK;
+@@ -923,7 +923,7 @@
+ #endif
+ 
+ 	if (len != 8) {
+-		warn("%s: invalid incoming packet size(%d)",
++		printk(KERN_INFO KBUILD_MODNAME "warning: %s: invalid incoming packet size(%d)",
+ 		     __FUNCTION__, len);
+ 		return;
+ 	}
+@@ -936,7 +936,7 @@
+ 	    buf[5] == 0xFF &&				/* iMON 2.4G */
+ 	   ((buf[6] == 0x4E && buf[7] == 0xDF) ||	/* LT */
+ 	    (buf[6] == 0x5E && buf[7] == 0xDF))) {	/* DT */
+-		warn("%s: remote associated refid=%02X", __FUNCTION__, buf[1]);
++		printk(KERN_INFO KBUILD_MODNAME "warning: %s: remote associated refid=%02X", __FUNCTION__, buf[1]);
+ 		context->ir_isassociating = FALSE;
+ 	}
+ 
+@@ -1038,7 +1038,7 @@
+ 			incoming_packet(context, urb);
+ 		break;
+ 	default	:
+-		warn("%s: status(%d): ignored", __FUNCTION__, urb->status);
++		printk(KERN_INFO KBUILD_MODNAME "warning: %s: status(%d): ignored", __FUNCTION__, urb->status);
+ 		break;
+ 	}
+ 
+@@ -1088,7 +1088,7 @@
+ 	struct imon_context *context = NULL;
+ 	int i;
+ 
+-	info("%s: found IMON device", __FUNCTION__);
++	printk(KERN_INFO KBUILD_MODNAME "%s: found IMON device", __FUNCTION__);
+ 
+ 	/*
+ 	 * If it's the LCD, as opposed to the VFD, we just need to replace
+@@ -1103,7 +1103,7 @@
+ 			break;
+ 	}
+ 	if (subminor == MAX_DEVICES) {
+-		err("%s: allowed max number of devices already present",
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: allowed max number of devices already present",
+ 		    __FUNCTION__);
+ 		retval = -ENOMEM;
+ 		goto exit;
+@@ -1148,7 +1148,7 @@
+ 			rx_endpoint = ep;
+ 			ir_ep_found = TRUE;
+ 			if (debug)
+-				info("%s: found IR endpoint", __FUNCTION__);
++				printk(KERN_INFO KBUILD_MODNAME "%s: found IR endpoint", __FUNCTION__);
+ 
+ 		} else if (!vfd_ep_found &&
+ 			   ep_dir == USB_DIR_OUT &&
+@@ -1156,7 +1156,7 @@
+ 			tx_endpoint = ep;
+ 			vfd_ep_found = TRUE;
+ 			if (debug)
+-				info("%s: found VFD endpoint", __FUNCTION__);
++				printk(KERN_INFO KBUILD_MODNAME "%s: found VFD endpoint", __FUNCTION__);
+ 		}
+ 	}
+ 
+@@ -1168,14 +1168,14 @@
+ 			tx_control = 1;
+ 			vfd_ep_found = TRUE;
+ 			if (debug)
+-				info("%s: LCD device uses control endpoint, "
++				printk(KERN_INFO KBUILD_MODNAME "%s: LCD device uses control endpoint, "
+ 				     "not interface OUT endpoint", __func__);
+ 		}
+ 	}
+ 
+ 	/* Input endpoint is mandatory */
+ 	if (!ir_ep_found) {
+-		err("%s: no valid input(IR) endpoint found.", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: no valid input(IR) endpoint found.", __FUNCTION__);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	} else {
+@@ -1184,7 +1184,7 @@
+ 			ir_onboard_decode = TRUE;
+ 
+ 		if (debug)
+-			info("ir_onboard_decode: %d", ir_onboard_decode);
++			printk(KERN_INFO KBUILD_MODNAME "ir_onboard_decode: %d", ir_onboard_decode);
+ 	}
+ 
+ 	/* Determine if VFD requires 6 packets */
+@@ -1193,7 +1193,7 @@
+ 			vfd_proto_6p = TRUE;
+ 
+ 		if (debug)
+-			info("vfd_proto_6p: %d", vfd_proto_6p);
++			printk(KERN_INFO KBUILD_MODNAME "vfd_proto_6p: %d", vfd_proto_6p);
+ 	}
+ 
+ 
+@@ -1203,24 +1203,24 @@
+ 
+ 	context = kmalloc(sizeof(struct imon_context), GFP_KERNEL);
+ 	if (!context) {
+-		err("%s: kmalloc failed for context", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: kmalloc failed for context", __FUNCTION__);
+ 		alloc_status = 1;
+ 		goto alloc_status_switch;
+ 	}
+ 	plugin = kmalloc(sizeof(struct lirc_plugin), GFP_KERNEL);
+ 	if (!plugin) {
+-		err("%s: kmalloc failed for lirc_plugin", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: kmalloc failed for lirc_plugin", __FUNCTION__);
+ 		alloc_status = 2;
+ 		goto alloc_status_switch;
+ 	}
+ 	rbuf = kmalloc(sizeof(struct lirc_buffer), GFP_KERNEL);
+ 	if (!rbuf) {
+-		err("%s: kmalloc failed for lirc_buffer", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: kmalloc failed for lirc_buffer", __FUNCTION__);
+ 		alloc_status = 3;
+ 		goto alloc_status_switch;
+ 	}
+ 	if (lirc_buffer_init(rbuf, BUF_CHUNK_SIZE, BUF_SIZE)) {
+-		err("%s: lirc_buffer_init failed", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: lirc_buffer_init failed", __FUNCTION__);
+ 		alloc_status = 4;
+ 		goto alloc_status_switch;
+ 	}
+@@ -1230,7 +1230,7 @@
+ 	rx_urb = usb_alloc_urb(0);
+ #endif
+ 	if (!rx_urb) {
+-		err("%s: usb_alloc_urb failed for IR urb", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: usb_alloc_urb failed for IR urb", __FUNCTION__);
+ 		alloc_status = 5;
+ 		goto alloc_status_switch;
+ 	}
+@@ -1241,7 +1241,7 @@
+ 		tx_urb = usb_alloc_urb(0);
+ #endif
+ 		if (!tx_urb) {
+-			err("%s: usb_alloc_urb failed for VFD urb",
++			printk(KERN_INFO KBUILD_MODNAME "error: %s: usb_alloc_urb failed for VFD urb",
+ 			    __FUNCTION__);
+ 			alloc_status = 6;
+ 			goto alloc_status_switch;
+@@ -1276,12 +1276,12 @@
+ 
+ 	lirc_minor = lirc_register_plugin(plugin);
+ 	if (lirc_minor < 0) {
+-		err("%s: lirc_register_plugin failed", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: lirc_register_plugin failed", __FUNCTION__);
+ 		alloc_status = 7;
+ 		UNLOCK_CONTEXT;
+ 		goto alloc_status_switch;
+ 	} else
+-		info("%s: Registered iMON plugin(minor:%d)",
++		printk(KERN_INFO KBUILD_MODNAME "%s: Registered iMON plugin(minor:%d)",
+ 		     __FUNCTION__, lirc_minor);
+ 
+ 	/* Needed while unregistering! */
+@@ -1308,7 +1308,7 @@
+ 		err = sysfs_create_group(&interface->dev.kobj,
+ 					 &imon_attribute_group);
+ 		if (err)
+-			err("%s: Could not create sysfs entries(%d)",
++			printk(KERN_INFO KBUILD_MODNAME "error: %s: Could not create sysfs entries(%d)",
+ 			    __FUNCTION__, err);
+ 	}
+ #else
+@@ -1318,11 +1318,11 @@
+ 
+ 	if (vfd_ep_found) {
+ 		if (debug)
+-			info("Registering VFD with devfs");
++			printk(KERN_INFO KBUILD_MODNAME "Registering VFD with devfs");
+ #ifdef KERNEL_2_5
+ 		if (usb_register_dev(interface, &imon_class)) {
+ 			/* Not a fatal error, so ignore */
+-			info("%s: could not get a minor number for VFD",
++			printk(KERN_INFO KBUILD_MODNAME "%s: could not get a minor number for VFD",
+ 				__FUNCTION__);
+ 		}
+ #else
+@@ -1332,13 +1332,13 @@
+ 					USB_MAJOR, VFD_MINOR_BASE + subminor,
+ 					DEVFS_MODE, &vfd_fops, NULL))) {
+ 			/* not a fatal error so ignore */
+-			info("%s: devfs register failed for VFD",
++			printk(KERN_INFO KBUILD_MODNAME "%s: devfs register failed for VFD",
+ 					__FUNCTION__);
+ 		}
+ #endif
+ 	}
+ 
+-	info("%s: iMON device on usb<%d:%d> initialized",
++	printk(KERN_INFO KBUILD_MODNAME "%s: iMON device on usb<%d:%d> initialized",
+ 			__FUNCTION__, dev->bus->busnum, dev->devnum);
+ 
+ 	UNLOCK_CONTEXT;
+@@ -1395,7 +1395,7 @@
+ #endif
+ 	LOCK_CONTEXT;
+ 
+-	info("%s: iMON device disconnected", __FUNCTION__);
++	printk(KERN_INFO KBUILD_MODNAME "%s: iMON device disconnected", __FUNCTION__);
+ 
+ #ifdef KERNEL_2_5
+ 	/* sysfs_remove_group is safe to call even if sysfs_create_group
+@@ -1441,12 +1441,12 @@
+ {
+ 	int rc;
+ 
+-	info(MOD_DESC ", v" MOD_VERSION);
+-	info(MOD_AUTHOR);
++	printk(MOD_DESC ", v" MOD_VERSION);
++	printk(MOD_AUTHOR);
+ 
+ 	rc = usb_register(&imon_driver);
+ 	if (rc) {
+-		err("%s: usb register failed(%d)", __FUNCTION__, rc);
++		printk(KERN_INFO KBUILD_MODNAME "error: %s: usb register failed(%d)", __FUNCTION__, rc);
+ 		return -ENODEV;
+ 	}
+ 	return SUCCESS;
+@@ -1455,7 +1455,7 @@
+ static void __exit imon_exit(void)
+ {
+ 	usb_deregister(&imon_driver);
+-	info("module removed. Goodbye!");
++	printk(KERN_INFO KBUILD_MODNAME "module removed. Goodbye!");
+ }
+ 
+ 
+diff -ruN lirc-0.8.4a.orig/drivers/lirc_mceusb/lirc_mceusb.c lirc-0.8.4a/drivers/lirc_mceusb/lirc_mceusb.c
+--- lirc-0.8.4a.orig/drivers/lirc_mceusb/lirc_mceusb.c	2009-04-09 16:17:51.000000000 +0200
++++ lirc-0.8.4a/drivers/lirc_mceusb/lirc_mceusb.c	2009-04-09 16:17:57.000000000 +0200
+@@ -700,7 +700,7 @@
+ 			break;
+ 	}
+ 	if (minor >= MAX_DEVICES) {
+-		info("Too many devices plugged in, "
++		printk(KERN_INFO KBUILD_MODNAME "Too many devices plugged in, "
+ 		     "can not handle this device.");
+ 		goto error;
+ 	}
+@@ -708,7 +708,7 @@
+ 	/* allocate memory for our device state and initialize it */
+ 	dev = kmalloc(sizeof(struct usb_skel), GFP_KERNEL);
+ 	if (dev == NULL) {
+-		err("Out of memory");
++		printk(KERN_INFO KBUILD_MODNAME " erro: Out of memory");
+ #ifdef KERNEL_2_5
+ 		retval = -ENOMEM;
+ #endif
+@@ -876,7 +876,7 @@
+ 	usb_set_intfdata(interface, dev);
+ #endif
+ 	/* let the user know what node this device is now attached to */
+-	/* info("USB Microsoft IR Transceiver device now attached to msir%d",
++	/* printk(KERN_INFO KBUILD_MODNAME "USB Microsoft IR Transceiver device now attached to msir%d",
+ 		dev->minor); */
+ 	up(&minor_table_mutex);
+ #ifdef KERNEL_2_5
+@@ -944,7 +944,7 @@
+ 
+ 	mceusb_delete(dev);
+ 
+-	info("Microsoft IR Transceiver #%d now disconnected", minor);
++	printk(KERN_INFO KBUILD_MODNAME "Microsoft IR Transceiver #%d now disconnected", minor);
+ 	up(&dev->sem);
+ 	up(&minor_table_mutex);
+ }
+@@ -974,7 +974,7 @@
+ #endif
+ 	}
+ 
+-	info(DRIVER_DESC " " DRIVER_VERSION);
++	printk(DRIVER_DESC " " DRIVER_VERSION);
+ 	return 0;
+ }
+ 
+diff -ruN lirc-0.8.4a.orig/drivers/lirc_sasem/lirc_sasem.c lirc-0.8.4a/drivers/lirc_sasem/lirc_sasem.c
+--- lirc-0.8.4a.orig/drivers/lirc_sasem/lirc_sasem.c	2009-04-09 16:17:51.000000000 +0200
++++ lirc-0.8.4a/drivers/lirc_sasem/lirc_sasem.c	2009-04-09 16:17:57.000000000 +0200
+@@ -260,7 +260,7 @@
+ 	kfree(context);
+ 
+ 	if (debug)
+-		info("%s: context deleted", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "%s: context deleted", __FUNCTION__);
+ }
+ 
+ static inline void deregister_from_lirc(struct sasem_context *context)
+@@ -270,10 +270,10 @@
+ 
+ 	retval = lirc_unregister_plugin(minor);
+ 	if (retval)
+-		err("%s: unable to deregister from lirc (%d)",
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: unable to deregister from lirc (%d)",
+ 			__FUNCTION__, retval);
+ 	else
+-		info("Deregistered Sasem plugin (minor:%d)", minor);
++		printk(KERN_INFO KBUILD_MODNAME "Deregistered Sasem plugin (minor:%d)", minor);
+ 
+ }
+ 
+@@ -297,7 +297,7 @@
+ 	subminor = iminor(inode);
+ 	interface = usb_find_interface(&sasem_driver, subminor);
+ 	if (!interface) {
+-		err("%s: could not find interface for minor %d",
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: could not find interface for minor %d",
+ 		    __FUNCTION__, subminor);
+ 		retval = -ENODEV;
+ 		goto exit;
+@@ -306,7 +306,7 @@
+ #else
+ 	subminor = MINOR(inode->i_rdev) - VFD_MINOR_BASE;
+ 	if (subminor < 0 || subminor >= MAX_DEVICES) {
+-		err("%s: no record of minor %d", __FUNCTION__, subminor);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no record of minor %d", __FUNCTION__, subminor);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+@@ -314,7 +314,7 @@
+ #endif
+ 
+ 	if (!context) {
+-		err("%s: no context found for minor %d",
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no context found for minor %d",
+ 					__FUNCTION__, subminor);
+ 		retval = -ENODEV;
+ 		goto exit;
+@@ -323,13 +323,13 @@
+ 	LOCK_CONTEXT;
+ 
+ 	if (context->vfd_isopen) {
+-		err("%s: VFD port is already open", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: VFD port is already open", __FUNCTION__);
+ 		retval = -EBUSY;
+ 	} else {
+ 		MOD_INC_USE_COUNT;
+ 		context->vfd_isopen = TRUE;
+ 		file->private_data = context;
+-		info("VFD port opened");
++		printk(KERN_INFO KBUILD_MODNAME "VFD port opened");
+ 	}
+ 
+ 	UNLOCK_CONTEXT;
+@@ -351,7 +351,7 @@
+ 	context = (struct sasem_context *) file->private_data;
+ 
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no context for device", __FUNCTION__);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -366,7 +366,7 @@
+ 		context->vfd_contrast = (unsigned int)arg;
+ 		break;
+ 	default:
+-		info("Unknown IOCTL command");
++		printk(KERN_INFO KBUILD_MODNAME "Unknown IOCTL command");
+ 		UNLOCK_CONTEXT;
+ 		return -ENOIOCTLCMD;  /* not supported */
+ 	}
+@@ -387,19 +387,19 @@
+ 	context = (struct sasem_context *) file->private_data;
+ 
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no context for device", __FUNCTION__);
+ 		return -ENODEV;
+ 	}
+ 
+ 	LOCK_CONTEXT;
+ 
+ 	if (!context->vfd_isopen) {
+-		err("%s: VFD is not open", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: VFD is not open", __FUNCTION__);
+ 		retval = -EIO;
+ 	} else {
+ 		context->vfd_isopen = FALSE;
+ 		MOD_DEC_USE_COUNT;
+-		info("VFD port closed");
++		printk(KERN_INFO KBUILD_MODNAME "VFD port closed");
+ 		if (!context->dev_present && !context->ir_isopen) {
+ 
+ 			/* Device disconnected before close and IR port is
+@@ -446,7 +446,7 @@
+ #endif
+ 	if (retval != SUCCESS) {
+ 		atomic_set(&(context->tx.busy), 0);
+-		err("%s: error submitting urb (%d)", __FUNCTION__, retval);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: error submitting urb (%d)", __FUNCTION__, retval);
+ 	} else {
+ 		/* Wait for tranmission to complete (or abort) */
+ 		UNLOCK_CONTEXT;
+@@ -455,7 +455,7 @@
+ 
+ 		retval = context->tx.status;
+ 		if (retval != SUCCESS)
+-			err("%s: packet tx failed (%d)", __FUNCTION__, retval);
++			printk(KERN_INFO KBUILD_MODNAME " error:%s: packet tx failed (%d)", __FUNCTION__, retval);
+ 	}
+ 
+ 	return retval;
+@@ -475,20 +475,20 @@
+ 
+ 	context = (struct sasem_context *) file->private_data;
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no context for device", __FUNCTION__);
+ 		return -ENODEV;
+ 	}
+ 
+ 	LOCK_CONTEXT;
+ 
+ 	if (!context->dev_present) {
+-		err("%s: no Sasem device present", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no Sasem device present", __FUNCTION__);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+ 
+ 	if (n_bytes <= 0 || n_bytes > 32) {
+-		err("%s: invalid payload size", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: invalid payload size", __FUNCTION__);
+ 		retval = -EINVAL;
+ 		goto exit;
+ 	}
+@@ -540,7 +540,7 @@
+ 		retval = send_packet(context);
+ 		if (retval != SUCCESS) {
+ 
+-			err("%s: send packet failed for packet #%d",
++			printk(KERN_INFO KBUILD_MODNAME " error:%s: send packet failed for packet #%d",
+ 					__FUNCTION__, i);
+ 			goto exit;
+ 		}
+@@ -594,7 +594,7 @@
+ 	LOCK_CONTEXT;
+ 
+ 	if (context->ir_isopen) {
+-		err("%s: IR port is already open", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: IR port is already open", __FUNCTION__);
+ 		retval = -EBUSY;
+ 		goto exit;
+ 	}
+@@ -612,12 +612,12 @@
+ #endif
+ 
+ 	if (retval)
+-		err("%s: usb_submit_urb failed for ir_open (%d)",
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: usb_submit_urb failed for ir_open (%d)",
+ 		    __FUNCTION__, retval);
+ 	else {
+ 		MOD_INC_USE_COUNT;
+ 		context->ir_isopen = TRUE;
+-		info("IR port opened");
++		printk(KERN_INFO KBUILD_MODNAME "IR port opened");
+ 	}
+ 
+ exit:
+@@ -636,7 +636,7 @@
+ 
+ 	context = (struct sasem_context *)data;
+ 	if (!context) {
+-		err("%s: no context for device", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no context for device", __FUNCTION__);
+ 		return;
+ 	}
+ 
+@@ -645,7 +645,7 @@
+ 	usb_kill_urb(context->rx_urb);
+ 	context->ir_isopen = FALSE;
+ 	MOD_DEC_USE_COUNT;
+-	info("IR port closed");
++	printk(KERN_INFO KBUILD_MODNAME "IR port closed");
+ 
+ 	if (!context->dev_present) {
+ 
+@@ -681,7 +681,7 @@
+ 	struct timeval tv;
+ 
+ 	if (len != 8) {
+-		warn("%s: invalid incoming packet size (%d)",
++		printk(KERN_INFO KBUILD_MODNAME " %s: invalid incoming packet size (%d)",
+ 		     __FUNCTION__, len);
+ 		return;
+ 	}
+@@ -756,7 +756,7 @@
+ 		break;
+ 
+ 	default:
+-		warn("%s: status (%d): ignored",
++		printk(KERN_INFO KBUILD_MODNAME " %s: status (%d): ignored",
+ 			 __FUNCTION__, urb->status);
+ 		break;
+ 	}
+@@ -804,7 +804,7 @@
+ 	struct sasem_context *context = NULL;
+ 	int i;
+ 
+-	info("%s: found Sasem device", __FUNCTION__);
++	printk(KERN_INFO KBUILD_MODNAME "%s: found Sasem device", __FUNCTION__);
+ 
+ #if !defined(KERNEL_2_5)
+ 	for (subminor = 0; subminor < MAX_DEVICES; ++subminor) {
+@@ -812,7 +812,7 @@
+ 			break;
+ 	}
+ 	if (subminor == MAX_DEVICES) {
+-		err("%s: allowed number of devices already present",
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: allowed number of devices already present",
+ 		    __FUNCTION__);
+ 		retval = -ENOMEM;
+ 		goto exit;
+@@ -858,7 +858,7 @@
+ 			rx_endpoint = ep;
+ 			ir_ep_found = TRUE;
+ 			if (debug)
+-				info("%s: found IR endpoint", __FUNCTION__);
++				printk(KERN_INFO KBUILD_MODNAME "%s: found IR endpoint", __FUNCTION__);
+ 
+ 		} else if (!vfd_ep_found &&
+ 			ep_dir == USB_DIR_OUT &&
+@@ -867,21 +867,21 @@
+ 			tx_endpoint = ep;
+ 			vfd_ep_found = TRUE;
+ 			if (debug)
+-				info("%s: found VFD endpoint", __FUNCTION__);
++				printk(KERN_INFO KBUILD_MODNAME "%s: found VFD endpoint", __FUNCTION__);
+ 		}
+ 	}
+ 
+ 	/* Input endpoint is mandatory */
+ 	if (!ir_ep_found) {
+ 
+-		err("%s: no valid input (IR) endpoint found.", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: no valid input (IR) endpoint found.", __FUNCTION__);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+ 
+ 	/* Warning if no VFD endpoint */
+ 	if (!vfd_ep_found)
+-		info("%s: no valid output (VFD) endpoint found.", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME "%s: no valid output (VFD) endpoint found.", __FUNCTION__);
+ 
+ 
+ 	/* Allocate memory */
+@@ -889,24 +889,24 @@
+ 
+ 	context = kmalloc(sizeof(struct sasem_context), GFP_KERNEL);
+ 	if (!context) {
+-		err("%s: kmalloc failed for context", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: kmalloc failed for context", __FUNCTION__);
+ 		alloc_status = 1;
+ 		goto alloc_status_switch;
+ 	}
+ 	plugin = kmalloc(sizeof(struct lirc_plugin), GFP_KERNEL);
+ 	if (!plugin) {
+-		err("%s: kmalloc failed for lirc_plugin", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: kmalloc failed for lirc_plugin", __FUNCTION__);
+ 		alloc_status = 2;
+ 		goto alloc_status_switch;
+ 	}
+ 	rbuf = kmalloc(sizeof(struct lirc_buffer), GFP_KERNEL);
+ 	if (!rbuf) {
+-		err("%s: kmalloc failed for lirc_buffer", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: kmalloc failed for lirc_buffer", __FUNCTION__);
+ 		alloc_status = 3;
+ 		goto alloc_status_switch;
+ 	}
+ 	if (lirc_buffer_init(rbuf, BUF_CHUNK_SIZE, BUF_SIZE)) {
+-		err("%s: lirc_buffer_init failed", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: lirc_buffer_init failed", __FUNCTION__);
+ 		alloc_status = 4;
+ 		goto alloc_status_switch;
+ 	}
+@@ -916,7 +916,7 @@
+ 	rx_urb = usb_alloc_urb(0);
+ #endif
+ 	if (!rx_urb) {
+-		err("%s: usb_alloc_urb failed for IR urb", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: usb_alloc_urb failed for IR urb", __FUNCTION__);
+ 		alloc_status = 5;
+ 		goto alloc_status_switch;
+ 	}
+@@ -927,7 +927,7 @@
+ 		tx_urb = usb_alloc_urb(0);
+ #endif
+ 		if (!tx_urb) {
+-			err("%s: usb_alloc_urb failed for VFD urb",
++			printk(KERN_INFO KBUILD_MODNAME " error:%s: usb_alloc_urb failed for VFD urb",
+ 			    __FUNCTION__);
+ 			alloc_status = 6;
+ 			goto alloc_status_switch;
+@@ -958,11 +958,11 @@
+ 
+ 	lirc_minor = lirc_register_plugin(plugin);
+ 	if (lirc_minor < 0) {
+-		err("%s: lirc_register_plugin failed", __FUNCTION__);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: lirc_register_plugin failed", __FUNCTION__);
+ 		alloc_status = 7;
+ 		UNLOCK_CONTEXT;
+ 	} else
+-		info("%s: Registered Sasem plugin (minor:%d)",
++		printk(KERN_INFO KBUILD_MODNAME "%s: Registered Sasem plugin (minor:%d)",
+ 			__FUNCTION__, lirc_minor);
+ 
+ alloc_status_switch:
+@@ -1012,11 +1012,11 @@
+ 	if (vfd_ep_found) {
+ 
+ 		if (debug)
+-			info("Registering VFD with devfs");
++			printk(KERN_INFO KBUILD_MODNAME "Registering VFD with devfs");
+ #ifdef KERNEL_2_5
+ 		if (usb_register_dev(interface, &sasem_class))
+ 			/* Not a fatal error, so ignore */
+-			info("%s: could not get a minor number for VFD",
++			printk(KERN_INFO KBUILD_MODNAME "%s: could not get a minor number for VFD",
+ 				__FUNCTION__);
+ #else
+ 		sprintf(name, DEVFS_NAME, subminor);
+@@ -1026,12 +1026,12 @@
+ 				 DEVFS_MODE, &vfd_fops, NULL);
+ 		if (!context->devfs)
+ 			/* not a fatal error so ignore */
+-			info("%s: devfs register failed for VFD",
++			printk(KERN_INFO KBUILD_MODNAME "%s: devfs register failed for VFD",
+ 					__FUNCTION__);
+ #endif
+ 	}
+ 
+-	info("%s: Sasem device on usb<%d:%d> initialized",
++	printk(KERN_INFO KBUILD_MODNAME "%s: Sasem device on usb<%d:%d> initialized",
+ 			__FUNCTION__, dev->bus->busnum, dev->devnum);
+ 
+ 	UNLOCK_CONTEXT;
+@@ -1064,7 +1064,7 @@
+ #endif
+ 	LOCK_CONTEXT;
+ 
+-	info("%s: Sasem device disconnected", __FUNCTION__);
++	printk(KERN_INFO KBUILD_MODNAME "%s: Sasem device disconnected", __FUNCTION__);
+ 
+ #ifdef KERNEL_2_5
+ 	usb_set_intfdata(interface, NULL);
+@@ -1106,12 +1106,12 @@
+ {
+ 	int rc;
+ 
+-	info(MOD_DESC ", v" MOD_VERSION);
+-	info(MOD_AUTHOR);
++	printk(MOD_DESC ", v" MOD_VERSION);
++	printk(MOD_AUTHOR);
+ 
+ 	rc = usb_register(&sasem_driver);
+ 	if (rc < 0) {
+-		err("%s: usb register failed (%d)", __FUNCTION__, rc);
++		printk(KERN_INFO KBUILD_MODNAME " error:%s: usb register failed (%d)", __FUNCTION__, rc);
+ 		return -ENODEV;
+ 	}
+ 	return SUCCESS;
+@@ -1120,7 +1120,7 @@
+ static void __exit sasem_exit(void)
+ {
+ 	usb_deregister(&sasem_driver);
+-	info("module removed. Goodbye!");
++	printk(KERN_INFO KBUILD_MODNAME "module removed. Goodbye!");
+ }
+ 
+ 

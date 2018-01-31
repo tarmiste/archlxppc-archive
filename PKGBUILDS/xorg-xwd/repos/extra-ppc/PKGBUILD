@@ -1,0 +1,27 @@
+# $Id$
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=xorg-xwd
+pkgver=1.0.5
+pkgrel=2
+pkgdesc="X Window System image dumping utility"
+arch=('i686' 'x86_64' 'ppc')
+url="http://xorg.freedesktop.org/"
+license=('custom')
+depends=('libx11')
+makedepends=('xorg-util-macros' 'libxt')
+groups=('xorg-apps' 'xorg')
+source=(http://xorg.freedesktop.org/archive/individual/app/xwd-${pkgver}.tar.bz2)
+sha1sums=('3b0e4f3f9d28a07444e72952342e21544d4785b6')
+
+build() {
+  cd "${srcdir}/xwd-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/xwd-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

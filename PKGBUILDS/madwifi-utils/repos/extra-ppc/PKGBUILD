@@ -1,0 +1,36 @@
+# $Id: PKGBUILD 70649 2010-02-27 18:41:30Z tpowa $
+# x86 Originally by kleptophobiac <kleptophobiac@gmail.com>
+# x86 Modified by James Rayner for the repositories <iphitus@gmail.com>
+pkgname=madwifi-utils
+pkgver=0.9.4.4133
+_kernver=2.6.37-ARCH
+pkgrel=3
+pkgdesc="Userspace tools of madwifi drivers for Atheros wireless chipsets."
+arch=(i686 x86_64 ppc)
+license=('GPL')
+url="http://madwifi-project.org"
+depends=('wireless_tools')
+makedepends=('sharutils' 'kernel26-pmac-headers')
+provides=("madwifi-ng-utils")
+conflicts=("madwifi-ng-utils")
+replaces=("madwifi-ng-utils")
+# subversion source: svn checkout http://madwifi-project.org/svn/madwifi/trunk madwifi
+source=(ftp://ftp.archlinux.org/other/madwifi/madwifi-${pkgver}.tar.bz2
+	#http://downloads.sourceforge.net/sourceforge/madwifi/madwifi-$pkgver.tar.gz
+	)
+
+build() {
+  [ "${CARCH}" == "i686" ] && export ARCH=i386
+  [ "${CARCH}" == "ppc" ] && export ARCH=powerpc
+
+  #cd $startdir/src/madwifi-$pkgver
+  cd $startdir/src/madwifi
+  make KERNELPATH=/usr/src/linux-${_kernver}/ \
+       tools|| return 1
+  make DESTDIR=$startdir/pkg \
+       BINDIR=/usr/bin \
+       MANDIR=/usr/share/man \
+       KERNELPATH=/usr/src/linux-${_kernver}/ \
+       install-tools
+}
+md5sums=('ca3c3504d000e7b3d7063af46271c932')

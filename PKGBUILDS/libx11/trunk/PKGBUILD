@@ -1,0 +1,41 @@
+# $Id$
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=libx11
+pkgver=1.4.99.901
+pkgrel=2
+pkgdesc="X11 client-side library"
+arch=(i686 x86_64 'ppc')
+url="http://xorg.freedesktop.org/"
+depends=('libxcb' 'xproto' 'kbproto')
+makedepends=('xorg-util-macros' 'xextproto' 'xtrans' 'inputproto')
+options=('!libtool')
+license=('custom')
+source=(${url}/releases/individual/lib/libX11-${pkgver}.tar.bz2
+        xorg.sh
+        xorg.csh)
+sha1sums=('af10b064c1c64ee9e7daae0a7f1f9719eb7e965a'
+          '4b756387426afb2a5bb7a155631ec42348abf5c1'
+          '45b0b310776cf5d9a94b4a18a5c63ddad9de6ba8')
+
+build() {
+  cd "${srcdir}/libX11-${pkgver}"
+  ./configure --prefix=/usr --disable-static --disable-xf86bigfont
+  make
+}
+
+package() {
+  cd "${srcdir}/libX11-${pkgver}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/libX11-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+  install -m755 -d "${pkgdir}/etc/profile.d"
+  install -m755 "${srcdir}/"xorg.{sh,csh} "${pkgdir}/etc/profile.d/"
+
+  install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

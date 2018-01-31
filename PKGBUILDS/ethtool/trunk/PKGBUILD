@@ -1,0 +1,21 @@
+# $Id: PKGBUILD,v 1.1 2009/12/01 01:31:13 dave Exp $
+# x86 Maintainer: Paul Mattal <paul@archlinux.org>
+# ppc Maintainer: David Liana <dliana@frontiernet.net>
+# Contributer: Martin Kemp <mdkemp@elys.com>
+pkgname=ethtool
+pkgver=6
+pkgrel=2
+pkgdesc="gkernel ethtool"
+arch=(i686 x86_64 ppc)
+url="http://sourceforge.net/projects/gkernel/"
+license=('GPL')
+depends=(glibc)
+source=(http://downloads.sourceforge.net/sourceforge/gkernel/$pkgname-$pkgver.tar.gz)
+md5sums=('3b721ec27f17ebf320ba8c505cf66d9c')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr --mandir=/usr/share/man || return 1
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+}

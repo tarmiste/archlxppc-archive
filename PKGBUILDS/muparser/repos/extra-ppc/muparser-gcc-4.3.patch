@@ -1,0 +1,13 @@
+diff -ruN muparser.orig/include/muParserTest.h muparser/include/muParserTest.h
+--- muparser.orig/include/muParserTest.h	2008-06-02 07:35:50.000000000 +0000
++++ muparser/include/muParserTest.h	2008-06-02 07:36:07.000000000 +0000
+@@ -26,7 +26,8 @@
+ #ifndef MU_PARSER_TEST_H
+ #define MU_PARSER_TEST_H
+ 
+-#include <string>
++#include <cstring>
++#include <cstdlib>
+ #include <numeric> // for accumulate
+ #include "muParser.h"
+ #include "muParserInt.h"

@@ -1,0 +1,32 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_install () {
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod -v $KERNEL_VERSION > /dev/null 2>&1
+
+  # message about dd
+  echo ">>> IMPORTANT!"
+  echo ">>> You need to dump the zImage26 file onto your"
+  echo ">>> PreP partition like in this example:"
+  echo ">>>   dd if=/boot/zImage26 of=/dev/sda1"
+  echo ">>> It also assumes your rootfs is on /dev/sda2!"
+}
+
+post_upgrade() {
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod -v $KERNEL_VERSION > /dev/null 2>&1
+
+  # message about dd
+  echo ">>> IMPORTANT!"
+  echo ">>> You need to dump the zImage26 file onto your"
+  echo ">>> PreP partition like in this example:"
+  echo ">>>   dd if=/boot/zImage26 of=/dev/sda1"
+  echo ">>> It also assumes your rootfs is on /dev/sda2!"
+}
+
+op=$1
+shift
+
+$op $*

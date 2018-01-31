@@ -1,0 +1,28 @@
+# $Id: PKGBUILD 144018 2011-12-02 00:36:56Z bisson $
+
+# Contributor: Alexander Fehr <pizzapunk gmail com>
+# Contributor: Brad Gordon <brad@rpgcyco.net>
+# x86 Maintainer: Gaetan Bisson <bisson@archlinux.org>
+
+pkgname=libmowgli
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Performance and usability-oriented extensions to C'
+url='http://www.atheme.org/project/mowgli'
+license=('custom')
+depends=('glibc')
+arch=('ppc' 'i686' 'x86_64')
+source=("http://distfiles.atheme.org/${pkgname}-${pkgver}.tar.gz")
+sha1sums=('403473582e3086c1acaafed59b9915f29a5d0ce0')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

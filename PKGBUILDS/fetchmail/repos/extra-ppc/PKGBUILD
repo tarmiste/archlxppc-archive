@@ -1,0 +1,40 @@
+# $Id: PKGBUILD 138318 2011-09-20 04:51:36Z eric $
+# x86 Maintainer: Aaron Griffin <aaron@archlinux.org>
+
+pkgname=fetchmail
+pkgver=6.3.21
+pkgrel=2
+pkgdesc="A remote-mail retrieval utility"
+arch=('ppc' 'i686' 'x86_64')
+url="http://fetchmail.berlios.de/"
+license=('GPL')
+depends=('openssl')
+makedepends=('python2')
+optdepends=('tk: for using fetchmailconf'
+            'python2: for using fetchmailconf')
+backup=('etc/conf.d/fetchmail')
+options=('!makeflags')
+install=fetchmail.install
+source=(http://download2.berlios.de/fetchmail/${pkgname}-${pkgver}.tar.bz2
+        fetchmail.rc fetchmail.conf)
+md5sums=('0ad8eac47e85bd0ae63870daa09992af'
+         '89fdde15bf81b3a5c065949322b5d138'
+         '8fcd6a22dfbc247755fdd050c5c5c4d3')
+sha1sums=('e32a0d40ec133d651782543ecd7bc9bbee52dff7'
+          '910ec21ad0a619db67e4665189dc46d2a0634ea5'
+          '30401729386d6f774c6c36ab8530842166de54a8')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  sed -i 's|/usr/bin/env python|/usr/bin/env python2|' fetchmailconf.py
+  PYTHON=python2 ./configure --prefix=/usr --with-ssl=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -Dm755 "${srcdir}/fetchmail.rc" "${pkgdir}/etc/rc.d/fetchmail"
+  install -Dm644 "${srcdir}/fetchmail.conf" "${pkgdir}/etc/conf.d/fetchmail"
+  install -d "${pkgdir}/var/lib/fetchmail"
+}

@@ -1,0 +1,52 @@
+# $Id: PKGBUILD 139202 2011-10-01 17:02:00Z heftig $
+# x86 Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: Silvio Knizek (killermoehre)
+
+pkgbase=gnome-disk-utility
+pkgname=(gnome-disk-utility libgdu)
+pkgver=3.0.2
+pkgrel=2
+pkgdesc="GNOME libraries and applications for dealing with storage devices"
+arch=('ppc' 'i686' 'x86_64')
+license=('GPL')
+url="http://www.gnome.org"
+makedepends=('dbus-glib' 'libgnome-keyring' 'udisks' 'libunique3' 'libnotify' 'avahi'
+             'hicolor-icon-theme' 'gtk-doc' 'intltool')
+options=('!libtool' '!emptydirs')
+source=(http://ftp.gnome.org/pub/GNOME/sources/${pkgbase}/${pkgver%.*}/${pkgbase}-${pkgver}.tar.xz
+       fix-freeze.patch)
+sha256sums=('7983f12ba04e84f164d0cae54bb06ed9b3ebe6c0a1c606d63d067fc395aeb0a5'
+            '818b70360978968457d2c50738347c6726ed8d0c007eb57074881a7e33652526')
+
+build() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  patch -Np1 -i "${srcdir}/fix-freeze.patch"
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+      --libexecdir=/usr/lib/gnome-disk-utility \
+      --disable-scrollkeeper --disable-nautilus --disable-static
+  make
+}
+
+package_gnome-disk-utility() {
+  depends=("libgdu=$pkgver-$pkgrel" 'libunique3' 'libnotify' 'hicolor-icon-theme' 'avahi')
+  groups=('gnome-extra')
+  install=gnome-disk-utility.install
+
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+### Split libgdu
+
+  mkdir -p "$srcdir"/libgdu/usr/{include/gnome-disk-utility,lib/pkgconfig}
+
+  mv "$pkgdir"/usr/lib/libgdu.so* "$srcdir/libgdu/usr/lib"
+  mv {"$pkgdir","$srcdir/libgdu"}/usr/include/gnome-disk-utility/gdu
+  mv {"$pkgdir","$srcdir/libgdu"}/usr/lib/pkgconfig/gdu.pc
+}
+
+package_libgdu() {
+  pkgdesc="$pkgdesc (library)"
+  depends=('dbus-glib' 'libgnome-keyring' 'udisks')
+
+  mv "$srcdir"/libgdu/* "$pkgdir"
+}

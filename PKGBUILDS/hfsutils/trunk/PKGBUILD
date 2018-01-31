@@ -1,0 +1,24 @@
+# $Id: PKGBUILD,v 1.4 2008/04/10 12:21:28 kth5 Exp $
+# Maintainer: Alexander Baledeck <alexander.baldeck@unrast.de>
+pkgname=hfsutils
+pkgver=3.2.6
+pkgrel=4
+pkgdesc="tools for reading and writing Macintosh HFS volumes"
+arch=('ppc')
+url="http://www.mars.org/home/rob/proj/hfs/"
+license="GPL"
+group=('base')
+depends=('glibc')
+source=(ftp://ftp.mars.org/pub/hfs/$pkgname-$pkgver.tar.gz)
+md5sums=('fa572afd6da969e25c1455f728750ec4')
+
+build() {
+  cd $startdir/src/$pkgname-$pkgver
+  ./configure --prefix=$startdir/pkg/usr
+  make || return 1
+  mkdir $startdir/pkg/usr
+  mkdir $startdir/pkg/usr/bin
+  mkdir $startdir/pkg/usr/man
+  mkdir $startdir/pkg/usr/man/man1
+  make DESTDIR=$startdir/pkg install
+}

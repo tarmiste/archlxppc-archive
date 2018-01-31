@@ -1,0 +1,767 @@
+# $Id$
+# x86 Maintainer: Andreas Radke <andyrtr@archlinux.org>
+
+pkgbase="openoffice-i18n"
+pkgname=('openoffice-de' 'openoffice-en-GB' 'openoffice-fr' 'openoffice-it' 'openoffice-uk')
+pkgver=3.2.0 # 3.2.0rc5=final
+pkgrel=1
+pkgdesc="OpenOffice language/localisation files"
+arch=('ppc')
+url="http://projects.openoffice.org/native-lang.html" # http://l10n.openoffice.org/languages.html + http://wiki.services.openoffice.org/wiki/Languages
+license=('LGPL')
+depends=("openoffice-base>=${pkgver}")
+makedepends=('rpmextract')
+
+_url="http://ftp-1.gwdg.de/pub/openoffice/extended"
+_oover="3.2.0rc5"
+_rcdate=20100203
+_ootag=OOO320_m12
+_rpmnum=9483
+
+source=(#${_url}/${_oover}/OOo_${_oover}_${_rcdate}_LinuxIntel_langpack_"${pkgname/openoffice-/}".tar.gz
+	${_url}/${_oover}/OOo_${_oover}_${_rcdate}_LinuxIntel_langpack_de.tar.gz
+	${_url}/${_oover}/OOo_${_oover}_${_rcdate}_LinuxIntel_langpack_en-GB.tar.gz
+	${_url}/${_oover}/OOo_${_oover}_${_rcdate}_LinuxIntel_langpack_fr.tar.gz
+	${_url}/${_oover}/OOo_${_oover}_${_rcdate}_LinuxIntel_langpack_it.tar.gz
+	${_url}/${_oover}/OOo_${_oover}_${_rcdate}_LinuxIntel_langpack_uk.tar.gz)
+
+build() {
+  for i in ${pkgname[@]}
+    do echo ${i/openoffice-/} " unpacking..."
+     cd ${srcdir}/${_ootag}_native_packed-1_${i/openoffice-/}.${_rpmnum}/RPMS
+	for j in *.rpm
+	 do rpmextract.sh $j
+	done
+  done
+}
+
+package_openoffice-ar() {
+  pkgdesc="Arabic language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ar.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-as() {
+  pkgdesc="Assamese language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_as.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ast() {
+  pkgdesc="Asturian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ast.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-bg() {
+  pkgdesc="Bulgarian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_bg.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-bn() {
+  pkgdesc="Bengali language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_bn.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ca() {
+  pkgdesc="Catalan language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ca.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-cs() {
+  pkgdesc="Czech language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_cs.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-da() {
+  pkgdesc="Danish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_da.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-de() {
+  pkgdesc="German language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_de.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-dz() {
+  pkgdesc="Dzongkha language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_dz.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-el() {
+  pkgdesc="Greek language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_el.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-en-GB() {
+  pkgdesc="English (GB) language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_en-GB.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-eo() {
+  pkgdesc="Esperanto language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_eo.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-es() {
+  pkgdesc="Spanish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_es.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-et() {
+  pkgdesc="Estonian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_et.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-eu() {
+  pkgdesc="Basque language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_eu.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-fi() {
+  pkgdesc="Finnish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_fi.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-fr() {
+  pkgdesc="French language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_fr.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ga() {
+  pkgdesc="Irish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ga.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-gl() {
+  pkgdesc="Galician language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_gl.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-gu() {
+  pkgdesc="Gujarati language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_gu.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-hi-IN() {
+  pkgdesc="Hindi language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_hi-IN.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-hu() {
+  pkgdesc="Hungarian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_hu.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-id() {
+  pkgdesc="Indonesian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_id.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-is() {
+  pkgdesc="Icelandic language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_is.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-it() {
+  pkgdesc="Italian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_it.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ja() {
+  pkgdesc="Japanese language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ja.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ka() {
+  pkgdesc="Georgian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ka.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-km() {
+  pkgdesc="Khmer (Cambodia) language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_km.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-kn() {
+  pkgdesc="Kannada language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_kn.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ko() {
+  pkgdesc="Korean language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ko.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ku() {
+  pkgdesc="Kurdish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ku.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-lt() {
+  pkgdesc="Lithuanian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_lt.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-lv() {
+  pkgdesc="Latvian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-mk() {
+  pkgdesc="Macedonian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_mk.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ml() {
+  pkgdesc="Malayalam language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ml.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-mr() {
+  pkgdesc="Marathi language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_mr.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-my() {
+  pkgdesc="Burmese language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_my.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-nb() {
+  pkgdesc="Norwegian Bokmal language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_nb.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-nl() {
+  pkgdesc="Dutch language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_nl.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-nn() {
+  pkgdesc="Norwegian Nynorsk language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_nn.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-oc() {
+  pkgdesc="Occitan language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_oc.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-om() {
+  pkgdesc="Oromo language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_om.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-or() {
+  pkgdesc="Oriya language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_or.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-pa-IN() {
+  pkgdesc="Punjabi language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_pa-IN.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-pl() {
+  pkgdesc="Polish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_pl.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-pt-BR() {
+  pkgdesc="Brazil (Port.) language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_pt-BR.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-pt() {
+  pkgdesc="Portuguese language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_pt.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ro() {
+  pkgdesc="Romanian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ro.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ru() {
+  pkgdesc="Russian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ru.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-sh() {
+  pkgdesc="Serbian Latin language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_sh.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-si() {
+  pkgdesc="Sinhala language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_si.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-sk() {
+  pkgdesc="Slovak language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_sk.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-sl() {
+  pkgdesc="Slovenian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_sl.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-sr() {
+  pkgdesc="Serbian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_sr.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-sv() {
+  pkgdesc="Swedish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_sv.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ta() {
+  pkgdesc="Tamil language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ta.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-te() {
+  pkgdesc="Telugu language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_te.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-th() {
+  pkgdesc="Thai language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_th.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-tr() {
+  pkgdesc="Turkish language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_tr.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-ug() {
+  pkgdesc="Uighur language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_ug.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-uk() {
+  pkgdesc="Ukrainian language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_uk.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-uz() {
+  pkgdesc="Uzbek language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_uz.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-vi() {
+  pkgdesc="Vietnamese language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_vi.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-zh-CN() {
+  pkgdesc="Chinese (simplified) language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_zh-CN.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+
+package_openoffice-zh-TW() {
+  pkgdesc="Chinese (traditional) language pack for OpenOffice.org"
+  cd ${srcdir}/${_ootag}_native_packed-1_zh-TW.${_rpmnum}/RPMS
+
+  # install openoffice language files
+  mkdir -p ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org/basis3.2/* ${pkgdir}/usr/lib/openoffice/basis-link
+  cp -R opt/openoffice.org3/* ${pkgdir}/usr/lib/openoffice/basis-link
+  chown root:root -R ${pkgdir}/usr/lib/openoffice
+}
+md5sums=('859e8a044ca39bf2b94b864a55864940'
+         'b5ef0e5a45aa3cafa4e00564919ffcba'
+         '64d67edb52e18b935dd27d3b9a8440cb'
+         '2703a2a6095586781c45c34001ff8b93'
+         '1e6689bfda17364dc24077cd59668984')

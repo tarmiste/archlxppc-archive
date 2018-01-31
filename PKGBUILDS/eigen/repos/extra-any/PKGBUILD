@@ -1,0 +1,28 @@
+# $Id: PKGBUILD 90290 2010-09-10 11:49:47Z andrea $
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Tobias Powalowski <tpowa@archlinux.org>
+pkgname=eigen
+pkgver=2.0.15
+pkgrel=1
+pkgdesc="A lightweight C++ template library for vector and matrix math, a.k.a. linear algebra"
+arch=('any')
+url='http://eigen.tuxfamily.org/index.php?title=Main_Page'
+license=('GPL' 'LGPL3')
+makedepends=('cmake' 'pkg-config')
+source=("http://bitbucket.org/${pkgname}/${pkgname}/get/${pkgver}.tar.bz2")
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../eigen-eigen-0938af7840b0 \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+}
+md5sums=('21cb559b2729fcb6a65c3a5c0b41d5b7')

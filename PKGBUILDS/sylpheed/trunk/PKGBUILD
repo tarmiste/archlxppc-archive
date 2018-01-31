@@ -1,0 +1,24 @@
+# $Id: PKGBUILD,v 1.9 2010/03/15 15:09:30 kth5 Exp $
+# x86 Maintainer: Alexander Fehr <pizzapunk gmail com>
+# Contributor: dorphell <dorphell@archlinux.org>
+pkgname=sylpheed
+pkgver=3.0.0
+pkgrel=2
+pkgdesc="Lightweight and user-friendly e-mail client"
+arch=('i686' 'x86_64' 'ppc')
+url="http://sylpheed.sraoss.jp/en/"
+license=('GPL')
+depends=('gpgme' 'gtkspell')
+makedepends=('compface' 'openssl' 'xorg-headers')
+options=('libtool')
+source=(http://sylpheed.sraoss.jp/${pkgname}/v3.0/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('bb2cf4adfa9577746f54a516e9471bfd')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr \
+              --enable-ldap || return 1
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+}

@@ -1,0 +1,8 @@
+#
+## $repo: Arch Linux PPC @REPO@ repository
+##
+#
+# Europe
+Server = ftp://ftp.archlinuxppc.org/$repo/os/ppc
+Server = ftp://ftp2.archlinuxppc.org/$repo/os/ppc
+Server = http://mir2.archlinuxfr.org/archlinux/$repo/os/ppc

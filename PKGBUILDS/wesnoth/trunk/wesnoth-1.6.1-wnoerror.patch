@@ -1,0 +1,11 @@
+--- wesnoth-1.6.1/configure.ac.orig	2009-05-25 11:24:17.000000000 +0000
++++ wesnoth-1.6.1/configure.ac	2009-05-25 11:24:43.000000000 +0000
+@@ -107,7 +107,7 @@
+ then
+ #   Strict compilation for C files is disabled until somebody wants to clean them.
+ #	CFLAGS="$CFLAGS -Werror -Wno-unused -Wno-sign-compare"
+-	CXXFLAGS="$CXXFLAGS -Werror -Wno-unused -Wno-sign-compare"
++	CXXFLAGS="$CXXFLAGS -Wno-unused -Wno-sign-compare"
+ fi
+ 
+ # Make tests default in svn version

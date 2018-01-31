@@ -1,0 +1,19 @@
+# $Id: PKGBUILD,v 1.1 2009/03/07 17:02:36 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org>
+pkgname=doltool
+pkgver=0.3.2.2744
+pkgrel=1
+pkgdesc="Dolphin binary creator"
+arch=('i686' 'x86_64' 'ppc')
+url="http://gc-linux.org"
+license=('GPL')
+depends=('glibc')
+options=('!emptydirs')
+source=(ftp://ftp.archlinuxppc.org/other/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+
+build() {
+  cd ${srcdir}/${pkgname}/source
+  g++ ${CXXFLAGS} -o doltool -I../include *.cpp
+  install -D -m755 doltool ${pkgdir}/usr/bin/doltool
+}
+md5sums=('d5b8a80a5e932b4b35c0275baf5b9145')

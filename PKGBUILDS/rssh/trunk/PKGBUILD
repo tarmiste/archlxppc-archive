@@ -1,0 +1,40 @@
+# $Id$
+# Contributor: Judd Vinet <jvinet@zeroflux.org>
+# x86 Maintainer: Gaetan Bisson <bisson@archlinux.org>
+
+pkgname=rssh
+pkgver=2.3.3
+pkgrel=3
+pkgdesc='Restricted shell for use with OpenSSH, allowing only scp and/or sftp'
+url='http://www.pizzashack.org/rssh/'
+license=('custom:rssh')
+arch=('i686' 'x86_64' 'ppc')
+backup=('etc/rssh.conf')
+depends=('openssh')
+source=("http://downloads.sourceforge.net/sourceforge/rssh/rssh-${pkgver}.tar.gz"
+        'destdir.patch'
+        'rsync.patch')
+sha1sums=('0a6dd80b5e6059e0db12c9f1276121dd966b610a'
+          '85bd1694decae5872cbeeafd578b147eb13313c6'
+          '41f32f8a77b3a2b924ede6044ab67846e06b5d20')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	patch -p1 -i ../destdir.patch
+	patch -p1 -i ../rsync.patch # FS#21783, debian patch
+
+	./configure \
+		--prefix=/usr \
+		--libexecdir=/usr/lib/rssh \
+		--mandir=/usr/share/man \
+		--sysconfdir=/etc \
+
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/rssh/LICENSE
+}

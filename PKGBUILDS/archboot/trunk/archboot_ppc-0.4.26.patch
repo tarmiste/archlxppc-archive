@@ -1,0 +1,1330 @@
+diff -Naur archboot-0.4.26/archppcbootcd.conf archboot-0.4.26/archppcbootcd.conf
+--- archboot-0.4.26/archppcbootcd.conf	1970-01-01 01:00:00.000000000 +0100
++++ archboot-0.4.26/archppcbootcd.conf	2007-09-28 11:08:14.000000000 +0200
+@@ -0,0 +1,42 @@
++# vim:set ft=sh:
++# Created by Tobias Powalowski <tpowa@archlinux.org>
++# config file for mkbootcd
++
++# DEFAULT kernel boot options
++KERNEL_BOOT_OPTIONS="rootdelay=5"
++
++# mkinitcpio config file, defaulted to stock config file
++MKINITCPIO_CONFIG="/etc/archboot/install-ppc.conf"
++
++# kernel version, defaulted to build for runtime kernel
++VERSION="$(uname -r)"
++
++# kernel image, defaulted to stock arch kernel
++KERNEL="/boot/vmlinux26"
++
++# boot message file
++# blank by default arch-bootmessage hook will create it by default
++BOOTMESSAGE=""
++
++# append this file to the default bootmessage
++APPENDBOOTMESSAGE="/etc/archboot/etc/append-message"
++APPENDBOOTMESSAGE_SYSLINUX="/etc/archboot/etc/append-message-syslinux"
++
++# menu.lst or isolinux.cfg files to use
++ISOLINUXCFG=""
++MENULST=""
++
++# Prompt on CD boot, defaulted to yes, 1=yes 0=no
++PROMPT="1"
++
++# Name of the ISO, if empty Arch Linux is used if not set by a HOOK later
++ISONAME=""
++
++# Timeout in seconds on CD boot, defaulted to 30 to fix usb keyboard issues
++# 0 means wait for prompt
++TIMEOUT="300"
++
++# Setting cdrecord options
++DEVICE="/dev/cdrw"
++SPEED="4"
++BLANKMODE="fast"
+diff -Naur archboot-0.4.26/etc/pacman/community.pacman archboot-0.4.26/etc/pacman/community.pacman
+--- archboot-0.4.26/etc/pacman/community.pacman	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/etc/pacman/community.pacman	1970-01-01 01:00:00.000000000 +0100
+@@ -1,69 +0,0 @@
+-#
+-# The Community tree.  These are community-maintained packages from the
+-# Arch User Repository (http://aur.archlinux.org)
+-
+-[community]
+-# North America
+-Server = ftp://ftp.archlinux.org/community/os/i686
+-Server = ftp://ftp.nethat.com/pub/linux/archlinux/community/os/i686
+-Server = ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/archlinux/community/os/i686
+-Server = ftp://mirror.cs.vt.edu/pub/ArchLinux/community/os/i686
+-Server = ftp://ftp.ibiblio.org/pub/linux/distributions/archlinux/community/os/i686
+-Server = http://www2.cddc.vt.edu/linux/distributions/archlinux/community/os/i686
+-
+-# Europe
+-# -Austria
+-Server = ftp://gd.tuwien.ac.at/opsys/linux/archlinux/community/os/i686
+-# - Belgium
+-Server = ftp://ftp.belnet.be/packages/archlinux/community/os/i686
+-# - Czech Republic
+-Server = ftp://ftp.sh.cvut.cz/MIRRORS/arch/community/os/i686
+-# - Estonia
+-Server = ftp://ftp.estpak.ee/pub/archlinux/community/os/i686
+-# - France
+-Server = ftp://ftp.rez-gif.supelec.fr/pub/Linux/distrib/archlinux/community/os/i686
+-Server = ftp://mir1.archlinuxfr.org/archlinux/community/os/i686
+-Server = ftp://mir2.archlinuxfr.org/archlinux/community/os/i686
+-Server = ftp://distrib-coffee.ipsl.jussieu.fr/pub/linux/archlinux/community/os/i686
+-Server = http://mirrors.jakimowicz.com/archlinux/community/os/i686
+-# - Germany
+-Server = ftp://ftp.tu-chemnitz.de/pub/linux/sunsite.unc-mirror/distributions/archlinux/community/os/i686
+-Server = ftp://ftp.hosteurope.de/mirror/ftp.archlinux.org/community/os/i686
+-# - Great Britain
+-Server = http://ftp.parrswood.manchester.sch.uk/Mirrors/ftp.archlinux.org/community/os/i686
+-# - Greece
+-Server = ftp://ftp.ntua.gr/pub/linux/archlinux/community/os/i686
+-# - Ireland
+-Server = ftp://ftp.heanet.ie/mirrors/ftp.archlinux.org/community/os/i686
+-# - Italy
+-Server = ftp://mi.mirror.garr.it/mirrors/archlinux/community/os/i686
+-# - Netherlands
+-Server = ftp://ftp.nluug.nl/pub/metalab/distributions/archlinux/community/os/i686
+-Server = ftp://ftp.surfnet.nl/pub/os/Linux/distr/archlinux/community/os/i686
+-# - Norway
+-Server= ftp://mirror.djzradio.net/archlinux/community/os/i686
+-# - Poland
+-Server = ftp://sunsite.icm.edu.pl/site/linux-sunsite/distributions/archlinux/community/os/i686
+-Server = ftp://mirror.icis.pcz.pl/archlinux/community/os/i686
+-# - Portugal
+-Server = ftp://gul.est.ips.pt/repos/archlinux/community/os/i686
+-Server = ftp://cesium.di.uminho.pt/pub/archlinux/community/os/i686
+-Server = http://darkstar.ist.utl.pt/archlinux/community/os/i686
+-# - Romania
+-Server = ftp://ftp.iasi.roedu.net/mirrors/archlinux.org/community/os/i686
+-# - Sweden
+-Server = ftp://ftp.ds.hj.se/pub/linux/distributions/archlinux/community/os/i686
+-Server = ftp://ftp.gigabit.nu/community/os/i686
+-# - Switzerland
+-Server = ftp://archlinux.puzzle.ch/community/os/i686
+-# - Ukraine
+-Server = ftp://ftp.linux.kiev.ua/pub/Linux/ArchLinux/community/os/i686
+-
+-# Australia
+-Server = ftp://mirror.pacific.net.au/linux/archlinux/community/os/i686
+-
+-# Asia
+-Server = ftp://cle.linux.org.tw/pub/ArchLinux/community/os/i686
+-Server = http://mirror.vxmatrix.net/ArchLinux/community/os/i686
+-Server = http://dxmirror.vxmatrix.net/ArchLinux/community/os/i686
+-Server = http://cncmirror.vxmatrix.net/ArchLinux/community/os/i686
+diff -Naur archboot-0.4.26/etc/pacman/core.pacman archboot-0.4.26/etc/pacman/core.pacman
+--- archboot-0.4.26/etc/pacman/core.pacman	2007-09-17 23:30:42.000000000 +0200
++++ archboot-0.4.26/etc/pacman/core.pacman	2007-09-28 11:17:46.000000000 +0200
+@@ -1,68 +1,9 @@
+ #
+-# core: Arch Linux core repository
++# CORE: Arch Linux core repository
+ #
+-[core]
+-# North America
+-Server = ftp://ftp.archlinux.org/core/os/i686
+-Server = ftp://ftp.nethat.com/pub/linux/archlinux/core/os/i686
+-Server = ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/archlinux/core/os/i686
+-Server = ftp://mirror.cs.vt.edu/pub/ArchLinux/core/os/i686
+-Server = ftp://ftp.ibiblio.org/pub/linux/distributions/archlinux/core/os/i686
+-Server = http://www2.cddc.vt.edu/linux/distributions/archlinux/core/os/i686
+ 
++# North America
++Server = ftp://xentac.net/ppc/core/os/ppc
+ # Europe
+-# -Austria
+-Server = ftp://gd.tuwien.ac.at/opsys/linux/archlinux/core/os/i686
+-# - Belgium
+-Server = ftp://ftp.belnet.be/packages/archlinux/core/os/i686
+-# - Czech Republic
+-Server = ftp://ftp.sh.cvut.cz/MIRRORS/arch/core/os/i686
+-# - Estonia
+-Server = ftp://ftp.estpak.ee/pub/archlinux/core/os/i686
+-# - France
+-Server = ftp://ftp.rez-gif.supelec.fr/pub/Linux/distrib/archlinux/core/os/i686
+-Server = ftp://mir1.archlinuxfr.org/archlinux/core/os/i686
+-Server = ftp://mir2.archlinuxfr.org/archlinux/core/os/i686
+-Server = ftp://distrib-coffee.ipsl.jussieu.fr/pub/linux/archlinux/core/os/i686
+-Server = http://mirrors.jakimowicz.com/archlinux/core/os/i686
+-# - Germany
+-Server = ftp://ftp.tu-chemnitz.de/pub/linux/sunsite.unc-mirror/distributions/archlinux/core/os/i686
+-Server = ftp://ftp.hosteurope.de/mirror/ftp.archlinux.org/core/os/i686
+-# - Great Britain
+-Server = http://ftp.parrswood.manchester.sch.uk/Mirrors/ftp.archlinux.org/core/os/i686
+-# - Greece
+-Server = ftp://ftp.ntua.gr/pub/linux/archlinux/core/os/i686
+-# - Ireland
+-Server = ftp://ftp.heanet.ie/mirrors/ftp.archlinux.org/core/os/i686
+-# - Italy
+-Server = ftp://mi.mirror.garr.it/mirrors/archlinux/core/os/i686
+-# - Netherlands
+-Server = ftp://ftp.nluug.nl/pub/metalab/distributions/archlinux/core/os/i686
+-Server = ftp://ftp.surfnet.nl/pub/os/Linux/distr/archlinux/core/os/i686
+-# - Norway
+-Server= ftp://mirror.djzradio.net/archlinux/core/os/i686
+-# - Poland
+-Server = ftp://sunsite.icm.edu.pl/site/linux-sunsite/distributions/archlinux/core/os/i686
+-Server = ftp://mirror.icis.pcz.pl/archlinux/core/os/i686
+-# - Portugal
+-Server = ftp://gul.est.ips.pt/repos/archlinux/core/os/i686
+-Server = ftp://cesium.di.uminho.pt/pub/archlinux/core/os/i686
+-Server = http://darkstar.ist.utl.pt/archlinux/core/os/i686
+-# - Romania
+-Server = ftp://ftp.iasi.roedu.net/mirrors/archlinux.org/core/os/i686
+-# - Sweden
+-Server = ftp://ftp.ds.hj.se/pub/linux/distributions/archlinux/core/os/i686
+-Server = ftp://ftp.gigabit.nu/core/os/i686
+-# - Switzerland
+-Server = ftp://archlinux.puzzle.ch/core/os/i686
+-# - Ukraine
+-Server = ftp://ftp.linux.kiev.ua/pub/Linux/ArchLinux/core/os/i686
+-
+-# Australia
+-Server = ftp://mirror.pacific.net.au/linux/archlinux/core/os/i686
+-
+-# Asia
+-Server = ftp://cle.linux.org.tw/pub/ArchLinux/core/os/i686
+-Server = http://mirror.vxmatrix.net/ArchLinux/core/os/i686
+-Server = http://dxmirror.vxmatrix.net/ArchLinux/core/os/i686
+-Server = http://cncmirror.vxmatrix.net/ArchLinux/core/os/i686
+\ Kein Zeilenumbruch am Dateiende.
++Server = ftp://ftp.archlinuxppc.org/core/os/ppc
++Server = http://mir2.archlinuxfr.org/archlinux/core/os/ppc
+diff -Naur archboot-0.4.26/etc/pacman/extra.pacman archboot-0.4.26/etc/pacman/extra.pacman
+--- archboot-0.4.26/etc/pacman/extra.pacman	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/etc/pacman/extra.pacman	2007-09-28 11:17:54.000000000 +0200
+@@ -1,68 +1,10 @@
+ #
+-# EXTRA: Arch Linux secondary repository
++# The Extra Repository
+ #
+-[extra]
+-# North America
+-Server = ftp://ftp.archlinux.org/extra/os/i686
+-Server = ftp://ftp.nethat.com/pub/linux/archlinux/extra/os/i686
+-Server = ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/archlinux/extra/os/i686
+-Server = ftp://mirror.cs.vt.edu/pub/ArchLinux/extra/os/i686
+-Server = ftp://ftp.ibiblio.org/pub/linux/distributions/archlinux/extra/os/i686
+-Server = http://www2.cddc.vt.edu/linux/distributions/archlinux/extra/os/i686
+ 
++# North America
++Server = ftp://xentac.net/ppc/extra/os/ppc
+ # Europe
+-# -Austria
+-Server = ftp://gd.tuwien.ac.at/opsys/linux/archlinux/extra/os/i686
+-# - Belgium
+-Server = ftp://ftp.belnet.be/packages/archlinux/extra/os/i686
+-# - Czech Republic
+-Server = ftp://ftp.sh.cvut.cz/MIRRORS/arch/extra/os/i686
+-# - Estonia
+-Server = ftp://ftp.estpak.ee/pub/archlinux/extra/os/i686
+-# - France
+-Server = ftp://ftp.rez-gif.supelec.fr/pub/Linux/distrib/archlinux/extra/os/i686
+-Server = ftp://mir1.archlinuxfr.org/archlinux/extra/os/i686
+-Server = ftp://mir2.archlinuxfr.org/archlinux/extra/os/i686
+-Server = ftp://distrib-coffee.ipsl.jussieu.fr/pub/linux/archlinux/extra/os/i686
+-Server = http://mirrors.jakimowicz.com/archlinux/extra/os/i686
+-# - Germany
+-Server = ftp://ftp.tu-chemnitz.de/pub/linux/sunsite.unc-mirror/distributions/archlinux/extra/os/i686
+-Server = ftp://ftp.hosteurope.de/mirror/ftp.archlinux.org/extra/os/i686
+-# - Great Britain
+-Server = http://ftp.parrswood.manchester.sch.uk/Mirrors/ftp.archlinux.org/extra/os/i686
+-# - Greece
+-Server = ftp://ftp.ntua.gr/pub/linux/archlinux/extra/os/i686
+-# - Ireland
+-Server = ftp://ftp.heanet.ie/mirrors/ftp.archlinux.org/extra/os/i686
+-# - Italy
+-Server = ftp://mi.mirror.garr.it/mirrors/archlinux/extra/os/i686
+-# - Netherlands
+-Server = ftp://ftp.nluug.nl/pub/metalab/distributions/archlinux/extra/os/i686
+-Server = ftp://ftp.surfnet.nl/pub/os/Linux/distr/archlinux/extra/os/i686
+-# - Norway
+-Server= ftp://mirror.djzradio.net/archlinux/extra/os/i686
+-# - Poland
+-Server = ftp://sunsite.icm.edu.pl/site/linux-sunsite/distributions/archlinux/extra/os/i686
+-Server = ftp://mirror.icis.pcz.pl/archlinux/extra/os/i686
+-# - Portugal
+-Server = ftp://gul.est.ips.pt/repos/archlinux/extra/os/i686
+-Server = ftp://cesium.di.uminho.pt/pub/archlinux/extra/os/i686
+-Server = http://darkstar.ist.utl.pt/archlinux/extra/os/i686
+-# - Romania
+-Server = ftp://ftp.iasi.roedu.net/mirrors/archlinux.org/extra/os/i686
+-# - Sweden
+-Server = ftp://ftp.ds.hj.se/pub/linux/distributions/archlinux/extra/os/i686
+-Server = ftp://ftp.gigabit.nu/extra/os/i686
+-# - Switzerland
+-Server = ftp://archlinux.puzzle.ch/extra/os/i686
+-# - Ukraine
+-Server = ftp://ftp.linux.kiev.ua/pub/Linux/ArchLinux/extra/os/i686
+-
+-# Australia
+-Server = ftp://mirror.pacific.net.au/linux/archlinux/extra/os/i686
+-
+-# Asia
+-Server = ftp://cle.linux.org.tw/pub/ArchLinux/extra/os/i686
+-Server = http://mirror.vxmatrix.net/ArchLinux/extra/os/i686
+-Server = http://dxmirror.vxmatrix.net/ArchLinux/extra/os/i686
+-Server = http://cncmirror.vxmatrix.net/ArchLinux/extra/os/i686
++Server = ftp://ftp.archlinuxppc.org/extra/os/ppc
++Server = ftp://schoolbak.dyndns.org/pub/archlinux/extra/os/ppc
++Server = http://mir2.archlinuxfr.org/archlinux/extra/os/ppc
+diff -Naur archboot-0.4.26/etc/pacman/pacman.conf.pacman archboot-0.4.26/etc/pacman/pacman.conf.pacman
+--- archboot-0.4.26/etc/pacman/pacman.conf.pacman	2007-09-18 07:11:23.000000000 +0200
++++ archboot-0.4.26/etc/pacman/pacman.conf.pacman	2007-09-28 11:18:26.000000000 +0200
+@@ -6,7 +6,9 @@
+ #       first.
+ #
+ # To re-sort your mirror lists by ping/traceroute results, use the
+-# /usr/bin/sortmirrors script.  It requires the "netselect" package.
++# /usr/bin/sortmirrors.pl script.  It requires the "netselect" package.
++#
++#     # sortmirrors.pl </etc/pacman.conf >pacman.conf.new
+ #
+ 
+ # See the pacman manpage for option directives
+@@ -16,8 +18,13 @@
+ #
+ [options]
+ LogFile     = /var/log/pacman.log
++NoUpgrade   = etc/passwd etc/group etc/shadow etc/sudoers
++NoUpgrade   = etc/fstab etc/raidtab etc/ld.so.conf
++NoUpgrade   = etc/rc.conf etc/rc.local
++NoUpgrade   = etc/modprobe.conf etc/modules.conf
++NoUpgrade   = etc/lilo.conf boot/grub/menu.lst
+ HoldPkg     = pacman glibc
+-XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
++#XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+ 
+ #
+ # REPOSITORIES
+@@ -27,9 +34,9 @@
+ # 
+ 
+ #[testing]
+-#Server = ftp://ftp.archlinux.org/testing/os/i686
++#Server = ftp://ftp.archlinuxppc.org/testing/os/ppc
+ 
+-[core]
++[current]
+ # Add your preferred servers here, they will be used first
+ Include = /etc/pacman.d/core
+ 
+@@ -37,14 +44,8 @@
+ # Add your preferred servers here, they will be used first
+ Include = /etc/pacman.d/extra
+ 
+-#[unstable]
+-# Add your preferred servers here, they will be used first
+ #Include = /etc/pacman.d/unstable
+ 
+-#[community]
+-# Add your preferred servers here, they will be used first
+-#Include = /etc/pacman.d/community
+-
+ # An example of a custom package repository.  See the pacman manpage for
+ # tips on creating your own repositories.
+ #[custom]
+diff -Naur archboot-0.4.26/etc/pacman/release.pacman archboot-0.4.26/etc/pacman/release.pacman
+--- archboot-0.4.26/etc/pacman/release.pacman	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/etc/pacman/release.pacman	1970-01-01 01:00:00.000000000 +0100
+@@ -1,73 +0,0 @@
+-#
+-# The Release tree.  This tree is a snapshot view of the Current (core)
+-# repository as it was when the last ISO was released.
+-#
+-# If you use the RELEASE tree, you should disable the CURRENT
+-# tree to avoid conflicts.
+-#
+-
+-[release]
+-# North America
+-Server = ftp://ftp.archlinux.org/release/os/i686
+-Server = ftp://ftp.nethat.com/pub/linux/archlinux/release/os/i686
+-Server = ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/archlinux/release/os/i686
+-Server = ftp://mirror.cs.vt.edu/pub/ArchLinux/release/os/i686
+-Server = ftp://ftp.ibiblio.org/pub/linux/distributions/archlinux/release/os/i686
+-Server = http://www2.cddc.vt.edu/linux/distributions/archlinux/release/os/i686
+-
+-# Europe
+-# -Austria
+-Server = ftp://gd.tuwien.ac.at/opsys/linux/archlinux/release/os/i686
+-# - Belgium
+-Server = ftp://ftp.belnet.be/packages/archlinux/release/os/i686
+-# - Czech Republic
+-Server = ftp://ftp.sh.cvut.cz/MIRRORS/arch/release/os/i686
+-# - Estonia
+-Server = ftp://ftp.estpak.ee/pub/archlinux/release/os/i686
+-# - France
+-Server = ftp://ftp.rez-gif.supelec.fr/pub/Linux/distrib/archlinux/release/os/i686
+-Server = ftp://mir1.archlinuxfr.org/archlinux/release/os/i686
+-Server = ftp://mir2.archlinuxfr.org/archlinux/release/os/i686
+-Server = ftp://distrib-coffee.ipsl.jussieu.fr/pub/linux/archlinux/release/os/i686
+-Server = http://mirrors.jakimowicz.com/archlinux/release/os/i686
+-# - Germany
+-Server = ftp://ftp.tu-chemnitz.de/pub/linux/sunsite.unc-mirror/distributions/archlinux/release/os/i686
+-Server = ftp://ftp.hosteurope.de/mirror/ftp.archlinux.org/release/os/i686
+-# - Great Britain
+-Server = http://ftp.parrswood.manchester.sch.uk/Mirrors/ftp.archlinux.org/release/os/i686
+-# - Greece
+-Server = ftp://ftp.ntua.gr/pub/linux/archlinux/release/os/i686
+-# - Ireland
+-Server = ftp://ftp.heanet.ie/mirrors/ftp.archlinux.org/release/os/i686
+-# - Italy
+-Server = ftp://mi.mirror.garr.it/mirrors/archlinux/release/os/i686
+-# - Netherlands
+-Server = ftp://ftp.nluug.nl/pub/metalab/distributions/archlinux/release/os/i686
+-Server = ftp://ftp.surfnet.nl/pub/os/Linux/distr/archlinux/release/os/i686
+-# - Norway
+-Server= ftp://mirror.djzradio.net/archlinux/release/os/i686
+-# - Poland
+-Server = ftp://sunsite.icm.edu.pl/site/linux-sunsite/distributions/archlinux/release/os/i686
+-Server = ftp://mirror.icis.pcz.pl/archlinux/release/os/i686
+-# - Portugal
+-Server = ftp://gul.est.ips.pt/repos/archlinux/release/os/i686
+-Server = ftp://cesium.di.uminho.pt/pub/archlinux/release/os/i686
+-Server = http://darkstar.ist.utl.pt/archlinux/release/os/i686
+-# - Romania
+-Server = ftp://ftp.iasi.roedu.net/mirrors/archlinux.org/release/os/i686
+-# - Sweden
+-Server = ftp://ftp.ds.hj.se/pub/linux/distributions/archlinux/release/os/i686
+-Server = ftp://ftp.gigabit.nu/release/os/i686
+-# - Switzerland
+-Server = ftp://archlinux.puzzle.ch/release/os/i686
+-# - Ukraine
+-Server = ftp://ftp.linux.kiev.ua/pub/Linux/ArchLinux/release/os/i686
+-
+-# Australia
+-Server = ftp://mirror.pacific.net.au/linux/archlinux/release/os/i686
+-
+-# Asia
+-Server = ftp://cle.linux.org.tw/pub/ArchLinux/release/os/i686
+-Server = http://mirror.vxmatrix.net/ArchLinux/release/os/i686
+-Server = http://dxmirror.vxmatrix.net/ArchLinux/release/os/i686
+-Server = http://cncmirror.vxmatrix.net/ArchLinux/release/os/i686
+diff -Naur archboot-0.4.26/etc/pacman/testing.pacman archboot-0.4.26/etc/pacman/testing.pacman
+--- archboot-0.4.26/etc/pacman/testing.pacman	1970-01-01 01:00:00.000000000 +0100
++++ archboot-0.4.26/etc/pacman/testing.pacman	2007-09-28 11:18:01.000000000 +0200
+@@ -0,0 +1,9 @@
++#
++# CURRENT: Arch Linux core repository
++#
++
++# North America
++Server = ftp://xentac.net/ppc/testing/os/ppc
++# Europe
++Server = ftp://ftp.archlinuxppc.org/testing/os/ppc
++Server = http://mir2.archlinuxfr.org/archlinux/testing/os/ppc
+diff -Naur archboot-0.4.26/etc/pacman/unstable.pacman archboot-0.4.26/etc/pacman/unstable.pacman
+--- archboot-0.4.26/etc/pacman/unstable.pacman	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/etc/pacman/unstable.pacman	2007-09-28 11:18:38.000000000 +0200
+@@ -1,68 +1,6 @@
+ #
+-# UNSTABLE: Development/Unstable branches of software
++# UNSTABLE: Arch Linux core repository
+ #
+-[unstable]
+-# North America
+-Server = ftp://ftp.archlinux.org/unstable/os/i686
+-Server = ftp://ftp.nethat.com/pub/linux/archlinux/unstable/os/i686
+-Server = ftp://ftp-linux.cc.gatech.edu/pub/linux/distributions/archlinux/unstable/os/i686
+-Server = ftp://mirror.cs.vt.edu/pub/ArchLinux/unstable/os/i686
+-Server = ftp://ftp.ibiblio.org/pub/linux/distributions/archlinux/unstable/os/i686
+-Server = http://www2.cddc.vt.edu/linux/distributions/archlinux/unstable/os/i686
+ 
+ # Europe
+-# -Austria
+-Server = ftp://gd.tuwien.ac.at/opsys/linux/archlinux/unstable/os/i686
+-# - Belgium
+-Server = ftp://ftp.belnet.be/packages/archlinux/unstable/os/i686
+-# - Czech Republic
+-Server = ftp://ftp.sh.cvut.cz/MIRRORS/arch/unstable/os/i686
+-# - Estonia
+-Server = ftp://ftp.estpak.ee/pub/archlinux/unstable/os/i686
+-# - France
+-Server = ftp://ftp.rez-gif.supelec.fr/pub/Linux/distrib/archlinux/unstable/os/i686
+-Server = ftp://mir1.archlinuxfr.org/archlinux/unstable/os/i686
+-Server = ftp://mir2.archlinuxfr.org/archlinux/unstable/os/i686
+-Server = ftp://distrib-coffee.ipsl.jussieu.fr/pub/linux/archlinux/unstable/os/i686
+-Server = http://mirrors.jakimowicz.com/archlinux/unstable/os/i686
+-# - Germany
+-Server = ftp://ftp.tu-chemnitz.de/pub/linux/sunsite.unc-mirror/distributions/archlinux/unstable/os/i686
+-Server = ftp://ftp.hosteurope.de/mirror/ftp.archlinux.org/unstable/os/i686
+-# - Great Britain
+-Server = http://ftp.parrswood.manchester.sch.uk/Mirrors/ftp.archlinux.org/unstable/os/i686
+-# - Greece
+-Server = ftp://ftp.ntua.gr/pub/linux/archlinux/unstable/os/i686
+-# - Ireland
+-Server = ftp://ftp.heanet.ie/mirrors/ftp.archlinux.org/unstable/os/i686
+-# - Italy
+-Server = ftp://mi.mirror.garr.it/mirrors/archlinux/unstable/os/i686
+-# - Netherlands
+-Server = ftp://ftp.nluug.nl/pub/metalab/distributions/archlinux/unstable/os/i686
+-Server = ftp://ftp.surfnet.nl/pub/os/Linux/distr/archlinux/unstable/os/i686
+-# - Norway
+-Server= ftp://mirror.djzradio.net/archlinux/unstable/os/i686
+-# - Poland
+-Server = ftp://sunsite.icm.edu.pl/site/linux-sunsite/distributions/archlinux/unstable/os/i686
+-Server = ftp://mirror.icis.pcz.pl/archlinux/unstable/os/i686
+-# - Portugal
+-Server = ftp://gul.est.ips.pt/repos/archlinux/unstable/os/i686
+-Server = ftp://cesium.di.uminho.pt/pub/archlinux/unstable/os/i686
+-Server = http://darkstar.ist.utl.pt/archlinux/unstable/os/i686
+-# - Romania
+-Server = ftp://ftp.iasi.roedu.net/mirrors/archlinux.org/unstable/os/i686
+-# - Sweden
+-Server = ftp://ftp.ds.hj.se/pub/linux/distributions/archlinux/unstable/os/i686
+-Server = ftp://ftp.gigabit.nu/unstable/os/i686
+-# - Switzerland
+-Server = ftp://archlinux.puzzle.ch/unstable/os/i686
+-# - Ukraine
+-Server = ftp://ftp.linux.kiev.ua/pub/Linux/ArchLinux/unstable/os/i686
+-
+-# Australia
+-Server = ftp://mirror.pacific.net.au/linux/archlinux/unstable/os/i686
+-
+-# Asia
+-Server = ftp://cle.linux.org.tw/pub/ArchLinux/unstable/os/i686
+-Server = http://mirror.vxmatrix.net/ArchLinux/unstable/os/i686
+-Server = http://dxmirror.vxmatrix.net/ArchLinux/unstable/os/i686
+-Server = http://cncmirror.vxmatrix.net/ArchLinux/unstable/os/i686
++Server = ftp://ftp.archlinuxppc.org/unstable/os/ppc
+diff -Naur archboot-0.4.26/etc/vimrc archboot-0.4.26/etc/vimrc
+--- archboot-0.4.26/etc/vimrc	1970-01-01 01:00:00.000000000 +0100
++++ archboot-0.4.26/etc/vimrc	2007-03-02 18:29:28.000000000 +0100
+@@ -0,0 +1,76 @@
++" An example for a vimrc file.
++"
++" Maintainer:	Bram Moolenaar <Bram@vim.org>
++" Last change:	2002 Sep 19
++"
++" To use it, copy it to
++"     for Unix and OS/2:  ~/.vimrc
++"	      for Amiga:  s:.vimrc
++"  for MS-DOS and Win32:  $VIM\_vimrc
++"	    for OpenVMS:  sys$login:.vimrc
++
++" When started as "evim", evim.vim will already have done these settings.
++if v:progname =~? "evim"
++  finish
++endif
++
++" Use Vim settings, rather then Vi settings (much better!).
++" This must be first, because it changes other options as a side effect.
++set nocompatible
++
++" allow backspacing over everything in insert mode
++set backspace=indent,eol,start
++
++set history=50		" keep 50 lines of command line history
++set ruler		" show the cursor position all the time
++set showcmd		" display incomplete commands
++set incsearch		" do incremental searching
++
++" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
++" let &guioptions = substitute(&guioptions, "t", "", "g")
++
++" Don't use Ex mode, use Q for formatting
++map Q gq
++
++" This is an alternative that also works in block mode, but the deleted
++" text is lost and it only works for putting the current register.
++"vnoremap p "_dp
++
++" Switch syntax highlighting on, when the terminal has colors
++" Also switch on highlighting the last used search pattern.
++if &t_Co > 2 || has("gui_running")
++  syntax on
++  set hlsearch
++endif
++
++" Only do this part when compiled with support for autocommands.
++if has("autocmd")
++
++  " Enable file type detection.
++  " Use the default filetype settings, so that mail gets 'tw' set to 72,
++  " 'cindent' is on in C files, etc.
++  " Also load indent files, to automatically do language-dependent indenting.
++  filetype plugin indent on
++
++  " Put these in an autocmd group, so that we can delete them easily.
++  augroup vimrcEx
++  au!
++
++  " For all text files set 'textwidth' to 78 characters.
++  autocmd FileType text setlocal textwidth=78
++
++  " When editing a file, always jump to the last known cursor position.
++  " Don't do it when the position is invalid or when inside an event handler
++  " (happens when dropping a file on gvim).
++  autocmd BufReadPost *
++    \ if line("'\"") > 0 && line("'\"") <= line("$") |
++    \   exe "normal g`\"" |
++    \ endif
++
++  augroup END
++
++else
++
++  set autoindent		" always set autoindenting on
++
++endif " has("autocmd")
+diff -Naur archboot-0.4.26/etc/yaboot/yaboot.conf archboot-0.4.26/etc/yaboot/yaboot.conf
+--- archboot-0.4.26/etc/yaboot/yaboot.conf	1970-01-01 01:00:00.000000000 +0100
++++ archboot-0.4.26/etc/yaboot/yaboot.conf	2007-09-28 11:08:14.000000000 +0200
+@@ -0,0 +1,86 @@
++## Example yaboot.conf for ybin and yaboot >= 0.6
++## see man yaboot.conf for more details.
++
++## Change `unconfigured' to your bootstrap partition eg: /dev/hda2
++boot=unconfigured
++
++## device is the OpenFirmware device path to the disk containing
++## kernel images.  if your disk is /dev/hda you can find the
++## OpenFirmware path by running the command: ofpath /dev/hda DO NOT
++## specify a partition number for this!  On IBM hardware you can
++## generally comment this out.
++
++device=hd:
++
++## partition is the partition number where the kernel images are
++## located.  The kernel images should be on your root filesystem, so
++## this is usually the same partition number as your root filesystem.
++## so if root = /dev/hda3 (the 3rd partition) then you should have
++## partition=3  This *MUST* be set correct or yaboot won't boot!  This
++## option can be either set globally as shown here, or per image in
++## the image= sections
++
++partition=3
++
++## delay is the amount of time in seconds the dual boot menu (if one
++## is configured, by the presense of macos, macosx, etc options here)
++## will wait before choosing the default OS (GNU/Linux or the value of
++## defaultos=).  If you omit this then the value of timeout=
++## (converted to seconds) will be used.
++
++delay=10
++
++## timeout is the amount of time in tenths of a second that yaboot
++## will wait before booting the default kernel image (the first image=
++## section in this config file or the value of default=).  
++
++timeout=40
++install=/usr/lib/yaboot/yaboot
++magicboot=/usr/lib/yaboot/ofboot
++
++## Change the default colors, fgcolor is the text color, bgcolor is
++## the screen background color. (default: fgcolor=white, bgcolor=black)
++#fgcolor=black
++#bgcolor=green
++
++## Password supplied in plaintext, required for yaboot to boot, unless
++## restricted is also present (see below). Be sure to
++## chmod 600 /etc/yaboot.conf if you set this!
++
++#password=secret
++
++## Password supplied as an md5 hash, see above
++
++#password=$1$saltstrg$HnJ/gcM3oKhNbnzUPgXTD/
++
++## A password is only required to boot an image specified here if
++## parameters are specified on the command line or if the user enters
++## an image is not specified in the configuration file at all (ie.
++## arbitrary file load).  restricted can also be placed in an image
++## section in that case any image not including the restricted keyword
++## will be fully password protected.
++
++#restricted
++
++## image is the kernel itself, commonly kept in / but also commonly
++## found in /boot.  Note that /boot should generally not be its own
++## partition on powerpcs, its not necessary and complicates things.
++## Make sure /boot is on the partition specified by partition= see
++## above.  /boot should never be an HFS filesystem.  You may point
++## image= to a symbolic link so long as the symlink does not cross
++## partition boundries.
++
++image=/boot/vmlinux26
++	label=Linux
++	root=/dev/hda3
++	initrd=/boot/kernel26.img
++	append="video=ofonly"
++	read-only
++
++image=/boot/vmlinux26
++        label=arch-fallback
++        root=/dev/sda3
++        initrd=/boot/kernel26-fallback.img
++        read-only
++
++
+diff -Naur archboot-0.4.26/install/arch_baseppc archboot-0.4.26/install/arch_baseppc
+--- archboot-0.4.26/install/arch_baseppc	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/install/arch_baseppc	2007-09-28 12:42:46.000000000 +0200
+@@ -28,7 +28,7 @@
+ 
+     ### adding needed programs from running system
+     add_file "${CONFIG}" "/config"
+-    SCRIPT="arch-base"
++    SCRIPT="arch_base"
+     BINARIES="init agetty mount modprobe modinfo umount basename du clear env head id md5sum nano netcat printf tail tee test tr tty uptime wc which whoami xargs yes syslog-ng bash swapon uniq cut seq snarf find sort mac-fdisk parted sfdisk gawk cp mv shutdown free ls rm sed test less chgrp chmod chown date df dialog dmesg egrep fgrep grep hostname kill killall killall5 more ps pwd rmdir stty sync tar touch uname vim lsmod modinfo rmmod hdparm true mktemp chroot dirname expr bzip2 hwclock depmod su"
+     add_file "/usr/bin/reset"
+     add_file "/sbin/swapoff"
+@@ -57,6 +57,8 @@
+     add_file "/etc/rc.d/functions"
+     add_file "/etc/archboot/etc/rc.conf" "/etc/rc.conf"
+     add_file "/etc/rc.d/syslog-ng"
++    add_file "/sbin/reboot"
++    add_file "/bin/pidof"
+ 
+     ### adding config files of installation system
+     for i in $(find /etc/archboot/etc/ -maxdepth 1 ! -type d ! -name 'init' ! -name "udev.rules" ! -name "menu.lst" ! -name "isolinux.cfg" ! -name "append-message*"); do
+diff -Naur archboot-0.4.26/install/arch_bootmessage_ppc archboot-0.4.26/install/arch_bootmessage_ppc
+--- archboot-0.4.26/install/arch_bootmessage_ppc	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/install/arch_bootmessage_ppc	2007-09-28 12:00:30.000000000 +0200
+@@ -7,7 +7,8 @@
+     [ "${RUNPROGRAM}" = "mkbootcd-grub" ] && TITLEMSG="GRUB"
+     [ "${RUNPROGRAM}" = "mksyslinux" ] && TITLEMSG="SYSLINUX"
+     [ "${RUNPROGRAM}" = "mkpxelinux" ] && TITLEMSG="PXELINUX"
+-
++    # change to english locale!
++    export LANG=en_US
+     CONFIGMSG="INSTALLATION / RESCUEBOOT SYSTEM"
+     if ! [ "${LOCALSETUP}" = "yes" ]; then 
+     	CVSMSG=$(mktemp /tmp/archmsg.XXXX)
+@@ -16,8 +17,8 @@
+     	# checkout actual name from cvs rc.sysinit
+     	export CVSROOT=${CVSSETUP}
+     	cd ${CVSMSG}
+-    	cvs -z3 co -r ${TAG} arch/build/base/initscripts/rc.sysinit
+-    	NAME=$(grep 'Arch' arch/build/base/initscripts/rc.sysinit | sed -e 's/printhl "//g' -e 's/$C_OTHER(${C_H2}//g' -e 's/\\n"//g' -e 's/$C_OTHER)//g')
++    	cvs co -r ${TAG} core/base/initscripts/rc.sysinit
++    	NAME=$(grep 'Arch' core/base/initscripts/rc.sysinit | sed -e 's/printhl "//g' -e 's/$C_OTHER(${C_H2}//g' -e 's/\\n"//g' -e 's/$C_OTHER)//g')
+     else
+     	NAME=$(grep 'Arch' ${RCSYSINIT} | sed -e 's/printhl "//g' -e 's/$C_OTHER(${C_H2}//g' -e 's/\\n"//g' -e 's/$C_OTHER)//g')
+     fi
+@@ -28,7 +29,8 @@
+     echo "" >> ${BOOTMESSAGE}
+     echo "${TITLEMSG} BOOT" >> ${BOOTMESSAGE}
+     echo "Creation Tool: '$(echo ${RUNPROGRAM} | sed 's|-grub||')' written by Tobias Powalowski <tpowa@archlinux.org>" >> ${BOOTMESSAGE}
+-    echo "Edited by Benoit Chesneau <benoitc@archlinuxppc> for Arch Linux PPC" >> ${BOOTMESSAGE}
++    echo "Adapted for Archlinux PPC by: Benoit Chesneau <benoitc@archlinuxppc.org>" >> ${BOOTMESSAGE}
++    echo "                              Armin Luntzer     <armin@archlinuxppc.org>" >> ${BOOTMESSAGE}
+     echo "" >> ${BOOTMESSAGE}
+     echo "${CONFIGMSG}" >> ${BOOTMESSAGE} 
+     echo "${NAME}" >> ${BOOTMESSAGE}
+diff -Naur archboot-0.4.26/install/arch_core_installppc archboot-0.4.26/install/arch_core_installppc
+--- archboot-0.4.26/install/arch_core_installppc	1970-01-01 01:00:00.000000000 +0100
++++ archboot-0.4.26/install/arch_core_installppc	2007-09-28 11:56:05.000000000 +0200
+@@ -0,0 +1,155 @@
++# Created by Tobias Powalowski <tpowa@archlinux.org>
++
++install ()
++{
++    ###  check for root
++    if ! [ $UID -eq 0 ]; then 
++	echo "ERROR: only works when run as root!"
++	exit 1
++    fi
++    ### check for activated testing repository
++    if ! [ "$(grep '^\[testing\]' /etc/pacman.conf)" = "" ]; then 
++	echo "WARNING: TESTING REPOSITORY ACTIVATED"
++	echo "-------------------------------------"
++	echo "POSSIBILITY OF BROKEN BINARY PACKAGES ON INSTALL MEDIA!"
++	echo "Use a chroot instead to avoid those problems."
++	echo "5 seconds time to cancel with CTRL+C"
++	sleep 5
++    fi
++    ### begin cvs part
++    if ! [ "${LOCALSETUP}" = "yes" ]; then 
++    	CVSTREE=$(mktemp /tmp/corecvs.XXXX)
++	ARCH_CVSTREE=$(mktemp /tmp/archcvs.XXXX)
++    	rm ${CVSTREE}
++	rm ${ARCH_CVSTREE}
++    	mkdir -p ${CVSTREE}
++	mkdir -p ${ARCH_CVSTREE}
++    	# checkout actual core cvs
++    	export CVSROOT=${CVSSETUP}
++    else
++    	CVSTREE=${CVSTREE}
++	ARCH_CVSTREE=${ARCH_CVSTREE}
++    fi
++    cd ${CVSTREE}
++    if ! [ "${LOCALSETUP}" = "yes" ]; then
++    	cvs co -r ${TAG} core/
++    	MAINCVSDIR="${CVSTREE}/core"
++    	cd  ${MAINCVSDIR}
++    	SEARCHCVS=$(find ./ -type d ! -name "CVS")
++    else
++    	cd ${MAINCVSDIR}
++    	SEARCHCVS=$(find ./ -type d ! -name "CVS")
++    fi
++
++    if ! [ "${TEMPDIR}" = "" ]; then 
++    	mkdir -p ${TEMPDIR}/core/pkg/
++    	# Download all packages
++    	PACKAGES=$(for i in ${SEARCHCVS};do ! [ "$(echo $i | awk -F/ '{print $3}')" = "" ] && echo -n "core/$(echo $i|  awk -F/ '{print $3}') ";done)
++    	if ! [ "${LOCALSETUP}" = "yes" ]; then
++    		pacman -Sy
++    		if  ! [ "$(pacman -Sw --noconfirm ${PACKAGES})" ]; then 
++    			echo "ABORTING: Something went wrong in package retrieving or md5sum check."
++    			exit 1
++    		fi
++    	else
++    		DBGENERATE="$(mktemp /tmp/db-generate.XXX)"
++    		rm ${DBGENERATE}
++    		mkdir -p ${DBGENERATE}
++    		gensync ${MAINCVSDIR}/ ${DBGENERATE}/core.db.tar.gz ${PACKAGEDIR}
++    		PACMANREPO="$(mktemp /tmp/pacman-repo.XXX)"
++    		rm ${PACMANREPO}
++    		mkdir -p ${PACMANREPO}
++    		mount --bind ${PACKAGEDIR} ${PACMANREPO}
++    		mv ${DBGENERATE}/core.db.tar.gz ${PACMANREPO}/
++    		rm -r ${DBGENERATE}
++    		PACMANCONF="$(mktemp /tmp/pacman-conf.XXX)"
++    		echo "[core]" >> ${PACMANCONF}
++    		echo "Server = file://${PACMANREPO}" >> ${PACMANCONF}
++    		pacman -Sy --config ${PACMANCONF}
++    		if ! [ "$(pacman -Sw --noconfirm --config ${PACMANCONF} ${PACKAGES})" ]; then 
++    			echo "ABORTING: Something went wrong in package retrieving or md5sum check."
++    			umount ${PACMANREPO}
++    			exit 1
++    		fi
++    	fi
++    	# collect the packages
++    	cd ${MAINCVSDIR}
++    	for COPY in ${SEARCHCVS};do
++    		if ! [ "$(echo ${COPY} | awk -F/ '{print $3}')" = "" ]; then
++    	 	source "${COPY}/PKGBUILD"
++    		cp /var/cache/pacman/pkg/${pkgname}-${pkgver}-${pkgrel}.pkg.tar.gz ${TEMPDIR}/core/pkg/
++    		echo "$(echo ${COPY}| awk -F/ '{print $2}')/${pkgname}-${pkgver}-${pkgrel}.pkg.tar.gz" >> ${TEMPDIR}/core/pkg/packages.txt
++    		fi
++    	done
++    	# generate packages.txt
++    	sort -u ${TEMPDIR}/core/pkg/packages.txt -o ${TEMPDIR}/core/pkg/packages.txt 
++    fi
++    SCRIPT=
++    BINARIES=
++    # always needed for every install
++    cd ${ARCH_CVSTREE}
++    if ! [ "${LOCALSETUP}" = "yes" ]; then
++	export CVSROOT=${ARCH_CVSSETUP}
++    	cvs co arch/scripts/{km,setup,quickinst}
++    	cvs co arch/doc/en/guide/install/arch-install-guide.txt
++    	cvs co arch/mirrors.txt
++    fi
++    # fix km script
++    KM=$(mktemp /tmp/km.XXXX)
++    if ! [ "${LOCALSETUP}" = "yes" ]; then 
++    	cp -f ${ARCH_CVSTREE}/arch/scripts/km ${KM}
++    else
++    	cp -f ${KMSCRIPT} ${KM}
++    fi
++    sed -i -e 's#$BASEDIR/keymaps/##g' ${KM}
++    chmod 755 ${KM}
++    mkdir -p ${TEMPDIR}/arch
++    add_file "${KM}" "/bin/km"
++    # fix mirrors.txt
++    if ! [ "${LOCALSETUP}" = "yes" ]; then 
++    	sed -i -e "s/i686/$(uname -m)/g" ${CVSTREE}/arch/mirrors.txt
++    	add_file "${ARCH_CVSTREE}/arch/scripts/setup" "/arch/setup"
++    	add_file "${ARCH_CVSTREE}/arch/scripts/quickinst" "/arch/quickinst"
++    	add_file "${ARCH_CVSTREE}/arch/mirrors.txt" "/arch/mirrors.txt"
++    else
++    	sed -i -e "s/i686/$(uname -m)/g" ${MIRRORS}
++    	add_file "${SETUP}" "/arch/setup"
++    	add_file "${QUICKINST}" "/arch/quickinst"
++    	add_file "${MIRRORS}" "/arch/mirrors.txt"
++    fi
++    DOCS=$(mktemp /tmp/docs.XXXX)
++    if ! [ "${LOCALSETUP}" = "yes" ]; then 
++    	cp -f ${ARCH_CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${DOCS}
++    else
++    	cp -f ${DOCUMENTATION} ${DOCS}
++    fi
++    gzip -9 ${DOCS}
++    add_file "${DOCS}.gz" "/arch/archdoc.txt.gz" 
++    add_dir "/src"
++    if ! [ "${LOCALSETUP}" = "yes" ]; then
++    	if ! [ "${TEMPDIR}" = "" ]; then
++    		cp ${ARCH_CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${TEMPDIR}/arch/archdoc.txt
++    		cd ${TEMPDIR}/arch/pkg/setup/
++    		#wget ${FTPSERVER}/$(uname -m)/setup/pacman.pkg.tar.gz 
++    		cd ${TEMPDIR}/core/pkg/
++    		wget ${FTPSERVER}/$(uname -m)/core.db.tar.gz
++    	fi
++    else
++    	if ! [ "${TEMPDIR}" = "" ]; then
++    		cp -f ${DOCUMENTATION} ${TEMPDIR}/arch/archdoc.txt
++    		#cp -f ${PACMANBINARY} ${TEMPDIR}/arch/pkg/setup/
++    		mv ${PACMANREPO}/core.db.tar.gz ${TEMPDIR}/core/pkg/
++    		umount ${PACMANREPO}
++    	fi 
++    fi
++
++    # generate iso title name
++    [ "${RUNPROGRAM}" = "mkbootcd" -o "${RUNPROGRAM}" = "mkbootcd-grub" ] && echo "Arch Linux CORE $(uname -m)" >> ${ISONAME}
++}
++
++help ()
++{
++cat <<HELPEOF
++  This hook sets up all you need for a arch core install image.
++HELPEOF
++}
+diff -Naur archboot-0.4.26/install/arch_current_installppc archboot-0.4.26/install/arch_current_installppc
+--- archboot-0.4.26/install/arch_current_installppc	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/install/arch_current_installppc	1970-01-01 01:00:00.000000000 +0100
+@@ -1,151 +0,0 @@
+-# Created by Tobias Powalowski <tpowa@archlinux.org>
+-
+-install ()
+-{
+-    ###  check for root
+-    if ! [ $UID -eq 0 ]; then 
+-	echo "ERROR: only works when run as root!"
+-	exit 1
+-    fi
+-    ### check for activated testing repository
+-    if ! [ "$(grep '^\[testing\]' /etc/pacman.conf)" = "" ]; then 
+-	echo "WARNING: TESTING REPOSITORY ACTIVATED"
+-	echo "-------------------------------------"
+-	echo "POSSIBILITY OF BROKEN BINARY PACKAGES ON INSTALL MEDIA!"
+-	echo "Use a chroot instead to avoid those problems."
+-	echo "5 seconds time to cancel with CTRL+C"
+-	sleep 5
+-    fi
+-    ### begin cvs part
+-    if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	CVSTREE=$(mktemp /tmp/archcvs.XXXX)
+-    	rm ${CVSTREE}
+-    	mkdir -p ${CVSTREE}
+-    	# checkout actual CURRENT cvs
+-    	export CVSROOT=${CVSSETUP}
+-	export CVSROOT_ARCH=${CVSARCH}
+-    else
+-    	CVSTREE=${CVSTREE}
+-    fi
+-    cd ${CVSTREE}
+-    if ! [ "${LOCALSETUP}" = "yes" ]; then
+-    	cvs -d ${CVSROOT} co -r ${TAG} current/
+-    	MAINCVSDIR="${CVSTREE}/current"
+-    	cd  ${MAINCVSDIR}
+-    	SEARCHCVS=$(find ./ -type d ! -name "CVS")
+-    else
+-    	cd ${MAINCVSDIR}
+-    	SEARCHCVS=$(find ./ -type d ! -name "CVS")
+-    fi
+-
+-    if ! [ "${TEMPDIR}" = "" ]; then 
+-    	mkdir -p ${TEMPDIR}/arch/pkg/setup
+-    	# Download all packages
+-    	PACKAGES=$(for i in ${SEARCHCVS};do ! [ "$(echo $i | awk -F/ '{print $3}')" = "" ] && echo -n "current/$(echo $i|  awk -F/ '{print $3}') ";done)
+-    	if ! [ "${LOCALSETUP}" = "yes" ]; then
+-    		pacman -Sy
+-    		if  ! [ "$(pacman -Sw --noconfirm ${PACKAGES})" ]; then 
+-    			echo "ABORTING: Something went wrong in package retrieving or md5sum check."
+-    			exit 1
+-    		fi
+-    	else
+-    		DBGENERATE="$(mktemp /tmp/db-generate.XXX)"
+-    		rm ${DBGENERATE}
+-    		mkdir -p ${DBGENERATE}
+-    		gensync ${MAINCVSDIR}/ ${DBGENERATE}/current.db.tar.gz ${PACKAGEDIR}
+-    		PACMANREPO="$(mktemp /tmp/pacman-repo.XXX)"
+-    		rm ${PACMANREPO}
+-    		mkdir -p ${PACMANREPO}
+-    		mount --bind ${PACKAGEDIR} ${PACMANREPO}
+-    		mv ${DBGENERATE}/current.db.tar.gz ${PACMANREPO}/
+-    		rm -r ${DBGENERATE}
+-    		PACMANCONF="$(mktemp /tmp/pacman-conf.XXX)"
+-    		echo "[current]" >> ${PACMANCONF}
+-    		echo "Server = file://${PACMANREPO}" >> ${PACMANCONF}
+-    		pacman -Sy --config ${PACMANCONF}
+-    		if ! [ "$(pacman -Sw --noconfirm --config ${PACMANCONF} ${PACKAGES})" ]; then 
+-    			echo "ABORTING: Something went wrong in package retrieving or md5sum check."
+-    			umount ${PACMANREPO}
+-    			exit 1
+-    		fi
+-    	fi
+-    	# collect the packages
+-    	cd ${MAINCVSDIR}
+-    	for COPY in ${SEARCHCVS};do
+-    		if ! [ "$(echo ${COPY} | awk -F/ '{print $3}')" = "" ]; then
+-    	 	source "${COPY}/PKGBUILD"
+-    		cp /var/cache/pacman/pkg/${pkgname}-${pkgver}-${pkgrel}.pkg.tar.gz ${TEMPDIR}/arch/pkg/
+-    		echo "$(echo ${COPY}| awk -F/ '{print $2}')/${pkgname}-${pkgver}-${pkgrel}.pkg.tar.gz" >> ${TEMPDIR}/arch/pkg/setup/packages.txt
+-    		fi
+-    	done
+-    	# generate packages.txt
+-    	sort -u ${TEMPDIR}/arch/pkg/setup/packages.txt -o ${TEMPDIR}/arch/pkg/setup/packages.txt 
+-    fi
+-    SCRIPT=
+-    BINARIES=
+-    # always needed for every install
+-    cd ${CVSTREE}
+-    if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	cvs -d ${CVSROOT_ARCH} co arch/scripts/{km,setup,quickinst}
+-    	cvs -d ${CVSROOT_ARCH} co arch/doc/en/guide/install/arch-install-guide.txt
+-    	cvs -d ${CVSROOT_ARCH} co arch/mirrors.txt
+-    fi
+-    # fix km script
+-    KM=$(mktemp /tmp/km.XXXX)
+-    if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	cp -f ${CVSTREE}/arch/scripts/km ${KM}
+-    else
+-    	cp -f ${KMSCRIPT} ${KM}
+-    fi
+-    sed -i -e 's#$BASEDIR/keymaps/##g' ${KM}
+-    chmod 755 ${KM}
+-    mkdir -p ${TEMPDIR}/arch
+-    add_file "${KM}" "/bin/km"
+-    # fix mirrors.txt
+-    if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	sed -i -e "s/i686/$(uname -m)/g" ${CVSTREE}/arch/mirrors.txt
+-    	add_file "${CVSTREE}/arch/scripts/setup" "/arch/setup"
+-    	add_file "${CVSTREE}/arch/scripts/quickinst" "/arch/quickinst"
+-    	add_file "${CVSTREE}/arch/mirrors.txt" "/arch/mirrors.txt"
+-    else
+-    	sed -i -e "s/i686/$(uname -m)/g" ${MIRRORS}
+-    	add_file "${SETUP}" "/arch/setup"
+-    	add_file "${QUICKINST}" "/arch/quickinst"
+-    	add_file "${MIRRORS}" "/arch/mirrors.txt"
+-    fi
+-    DOCS=$(mktemp /tmp/docs.XXXX)
+-    if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	cp -f ${CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${DOCS}
+-    else
+-    	cp -f ${DOCUMENTATION} ${DOCS}
+-    fi
+-    gzip -9 ${DOCS}
+-    add_file "${DOCS}.gz" "/arch/archdoc.txt.gz" 
+-    add_dir "/src"
+-    if ! [ "${LOCALSETUP}" = "yes" ]; then
+-    	if ! [ "${TEMPDIR}" = "" ]; then
+-    		cp ${CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${TEMPDIR}/arch/archdoc.txt
+-    		cd ${TEMPDIR}/arch/pkg/setup/
+-    		wget ${FTPSERVER}/$(uname -m)/setup/pacman.pkg.tar.gz 
+-    		cd ${TEMPDIR}/arch/pkg/
+-    		wget ${FTPSERVER}/$(uname -m)/current.db.tar.gz
+-    	fi
+-    else
+-    	if ! [ "${TEMPDIR}" = "" ]; then
+-    		cp -f ${DOCUMENTATION} ${TEMPDIR}/arch/archdoc.txt
+-    		cp -f ${PACMANBINARY} ${TEMPDIR}/arch/pkg/setup/
+-    		mv ${PACMANREPO}/current.db.tar.gz ${TEMPDIR}/arch/pkg/
+-    		umount ${PACMANREPO}
+-    	fi 
+-    fi
+-
+-    # generate iso title name
+-    [ "${RUNPROGRAM}" = "mkbootcd" -o "${RUNPROGRAM}" = "mkbootcd-grub" ] && echo "Arch Linux CURRENT $(uname -m)" >> ${ISONAME}
+-}
+-
+-help ()
+-{
+-cat <<HELPEOF
+-  This hook sets up all you need for a arch current install image.
+-HELPEOF
+-}
+diff -Naur archboot-0.4.26/install/arch_filesystems_ppc archboot-0.4.26/install/arch_filesystems_ppc
+--- archboot-0.4.26/install/arch_filesystems_ppc	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/install/arch_filesystems_ppc	2007-09-28 11:35:33.000000000 +0200
+@@ -2,10 +2,12 @@
+ 
+ install ()
+ {
+-    MODULES=" $(checked_modules '/kernel/fs' | grep -v "nls") $(checked_modules '/kernel/fs/nls/nls_cp437') "
+-    BINARIES="mkswap mkreiserfs reiserfsck reiserfstune resize_reiserfs mkfs.ext2 badblocks blkid dumpe2fs e2fsck e2image e2label findfs fsck logsave resize2fs tune2fs mkfs.ext3 mkfs.xfs mkntfs fsck.ext2 fsck.ext3 fsck.xfs xfs_repair xfs_check xfs_freeze xfs_io xfs_admin xfs_db mkdosfs dosfsck"
++    MODULES=" $(checked_modules '/kernel/fs') "
++    BINARIES="mkswap debugreiserfs mkreiserfs fsck.reiserfs reiserfsck reiserfstune resize_reiserfs badblocks blkid debugfs dumpe2fs mke2fs e2fsck e2image findfs fsck logsave mkfs.ext2 resize2fs mkntfs ntfsmount ntfscp ntfsclone ntfslabel ntfsresize ntfsundelete ntfscat ntfscluster ntfscmp ntfsfix ntfsinfo ntfsls jfs_debugfs jfs_fsck jfs_fscklog jfs_logdump jfs_mkfs jfs_tune mkfs.xfs fsck.xfs xfs_repair xfs_admin xfs_bmap xfs_check xfs_copy xfs_db xfs_freeze xfs_growfs xfs_info xfs_io xfs_logprint xfs_mdrestore xfs_metadump xfs_mkfile xfs_ncheck xfs_quota xfs_rtcp mkdosfs dosfsck ntfs-3g"
+     FILES=""
+-    SCRIPT="arch-filesystems"
++    SCRIPT="arch_filesystems"
++    ln -s /sbin/mkreiserfs /sbin/mkfs.reiserfs
++    ln -s /sbin/fsck.reiserfs /sbin/reiserfsck
+ }
+ 
+ help ()
+diff -Naur archboot-0.4.26/install/arch_ftp_installppc archboot-0.4.26/install/arch_ftp_installppc
+--- archboot-0.4.26/install/arch_ftp_installppc	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/install/arch_ftp_installppc	2007-09-28 11:58:32.000000000 +0200
+@@ -13,28 +13,32 @@
+     fi
+     ### begin cvs part
+     if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	CVSTREE=$(mktemp /tmp/archcvs.XXXX)
++    	CVSTREE=$(mktemp /tmp/corecvs.XXXX)
++	ARCH_CVSTREE=$(mktemp /tmp/archcvs.XXXX)
+     	rm ${CVSTREE}
++	rm ${ARCH_CVSTREE}
+     	mkdir -p ${CVSTREE}
++	mkdir -p ${ARCH_CVSTREE}
+     	# checkout actual CURRENT cvs
+     	export CVSROOT=${CVSSETUP}
+-	export CVSROOT_ARCH=${CVSARCH}
+     else
+     	CVSTREE=${CVSTREE}
++	ARCH_CVSTREE=${ARCH_CVSTREE}
+     fi
+     SCRIPT=
+     BINARIES=
+     # always needed for every install
+-    cd ${CVSTREE}
++    cd ${ARCH_CVSTREE}
+     if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	cvs -d ${CVSROOT_ARCH} -coo arch/scripts/{km,setup,quickinst}
+-    	cvs -d ${CVSROOT_ARCH} co arch/doc/en/guide/install/arch-install-guide.txt
+-    	cvs -d ${CVSROOT_ARCH} co arch/mirrors.txt
++	export CVSROOT=${ARCH_CVSSETUP}
++    	cvs co arch/scripts/{km,setup,quickinst}
++    	cvs co arch/doc/en/guide/install/arch-install-guide.txt
++    	cvs co arch/mirrors.txt
+     fi
+     # fix km script
+     KM=$(mktemp /tmp/km.XXXX)
+     if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	cp -f ${CVSTREE}/arch/scripts/km ${KM}
++    	cp -f ${ARCH_CVSTREE}/arch/scripts/km ${KM}
+     else
+     	cp -f ${KMSCRIPT} ${KM}
+     fi
+@@ -44,10 +48,10 @@
+     add_file "${KM}" "/bin/km"
+     # fix mirrors.txt
+     if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	sed -i -e "s/i686/$(uname -m)/g" ${CVSTREE}/arch/mirrors.txt
+-    	add_file "${CVSTREE}/arch/scripts/setup" "/arch/setup"
+-    	add_file "${CVSTREE}/arch/scripts/quickinst" "/arch/quickinst"
+-    	add_file "${CVSTREE}/arch/mirrors.txt" "/arch/mirrors.txt"
++    	sed -i -e "s/i686/$(uname -m)/g" ${ARCH_CVSTREE}/arch/mirrors.txt
++    	add_file "${ARCH_CVSTREE}/arch/scripts/setup" "/arch/setup"
++    	add_file "${ARCH_CVSTREE}/arch/scripts/quickinst" "/arch/quickinst"
++    	add_file "${ARCH_CVSTREE}/arch/mirrors.txt" "/arch/mirrors.txt"
+     else
+     	sed -i -e "s/i686/$(uname -m)/g" ${MIRRORS}
+     	add_file "${SETUP}" "/arch/setup"
+@@ -56,7 +60,7 @@
+     fi
+     DOCS=$(mktemp /tmp/docs.XXXX)
+     if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	cp -f ${CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${DOCS}
++    	cp -f ${ARCH_CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${DOCS}
+     else
+     	cp -f ${DOCUMENTATION} ${DOCS}
+     fi
+@@ -64,7 +68,7 @@
+     add_file "${DOCS}.gz" "/arch/archdoc.txt.gz" 
+     add_dir "/src"
+     if ! [ "${LOCALSETUP}" = "yes" ]; then 
+-    	! [ "${TEMPDIR}" = "" ] && cp ${CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${TEMPDIR}/arch/archdoc.txt
++    	! [ "${TEMPDIR}" = "" ] && cp ${ARCH_CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt ${TEMPDIR}/arch/archdoc.txt
+     else
+     	! [ "${TEMPDIR}" = "" ] && cp -f ${DOCUMENTATION} ${TEMPDIR}/arch/archdoc.txt
+     fi
+diff -Naur archboot-0.4.26/install/arch_hwdetect_ppc archboot-0.4.26/install/arch_hwdetect_ppc
+--- archboot-0.4.26/install/arch_hwdetect_ppc	1970-01-01 01:00:00.000000000 +0100
++++ archboot-0.4.26/install/arch_hwdetect_ppc	2007-09-28 11:39:53.000000000 +0200
+@@ -0,0 +1,18 @@
++# vim:set ft=sh:
++
++install ()
++{
++    MODULES=""
++    BINARIES=""
++    FILES=""
++    SCRIPT="arch_hwdetect"
++    add_file /sbin/hwdetect /sbin/hwdetect
++}
++
++help ()
++{
++cat <<HELPEOF
++  This hook will use hwdetect to load 
++  and detect the needed modules for your system.
++HELPEOF
++}
+diff -Naur archboot-0.4.26/install/arch_keymap_ppc archboot-0.4.26/install/arch_keymap_ppc
+--- archboot-0.4.26/install/arch_keymap_ppc	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/install/arch_keymap_ppc	2007-09-28 11:08:14.000000000 +0200
+@@ -11,7 +11,7 @@
+     add_file /usr/bin/dumpkeys /bin/dumpkeys
+     add_file /usr/bin/kbd_mode /bin/kdb_mode
+     add_file /usr/bin/setfont /bin/setfont
+-        for i in $(find /usr/share/kbd/ ! -type d -name "atari*" ! -name "sun*" ! -name "README*" ! -name "amiga*"); do
++        for i in $(find /usr/share/kbd/ ! -type d ! -name "atari*" ! -name "sun*" ! -name "README*" ! -name "amiga*"); do
+             add_file $i
+         done
+ }
+diff -Naur archboot-0.4.26/install/arch_pacman_ppc archboot-0.4.26/install/arch_pacman_ppc
+--- archboot-0.4.26/install/arch_pacman_ppc	1970-01-01 01:00:00.000000000 +0100
++++ archboot-0.4.26/install/arch_pacman_ppc	2007-09-28 12:42:01.000000000 +0200
+@@ -0,0 +1,43 @@
++# Created by Tobias Powalowski <tpowa@archlinux.org>
++
++install ()
++{
++    MODULES=""
++    BINARIES="pacman pacman.static"
++    FILES=""
++    SCRIPT="arch_pacman"
++
++DEPENDS="initscripts cvs wget bash coreutils cryptsetup dialog \
++e2fsprogs findutils gawk grep iputils jfsutils less lvm2 mdadm module-init-tools nano \
++ncurses net-tools gnu-netcat ntfsprogs pcmciautils procps psmisc reiserfsprogs sed snarf \
++syslog-ng sysvinit tar util-linux which wireless_tools xfsprogs dnsutils hdparm \
++netkit-telnet openssh hwdetect portmap shadow bridge-utils ifenslave cpufrequtils links tcp_wrappers \
++dosfstools udev initscripts filesystem kernel26-pmac glibc kernel-headers xinetd naim links pacman screen kbd pam \
++dhcpcd bzip2 gcc-libs mktemp openssl zlib libelf gpm sysfsutils libgcrypt libgpg-error popt ppp libpcap \
++rp-pppoe iptables capi4k-utils ntfs-3g isdn4k-utils pciutils usbutils vpnc openvpn bcm43xx-fwcutter \
++wpa_supplicant gzip rsync libarchive libdownload device-mapper cracklib nfs-utils nfsidmap readline acl attr \
++pcre cpio archboot fuse klibc libusb vim lzo2 libsasl libldap libevent gpm sdparm pptpclient licenses \
++smbclient"
++
++for i in $DEPENDS; do
++	for k in  $(echo /var/lib/pacman/local/$i-[0-9]*-[0-9]*); do
++		add_file "$k/depends"
++		add_file "$k/files"
++		add_file "$k/desc"
++	done
++done
++add_dir "/var/log"
++add_file "/etc/archboot/etc/pacman/pacman.conf.pacman" "/etc/pacman.conf"
++add_file "/etc/archboot/etc/pacman/core.pacman" "/etc/pacman.d/core"
++add_file "/etc/archboot/etc/pacman/extra.pacman" "/etc/pacman.d/extra"
++add_file "/etc/archboot/etc/pacman/unstable.pacman" "/etc/pacman.d/unstable"
++add_file "/etc/archboot/etc/pacman/release.pacman" "/etc/pacman.d/release"
++add_file "/etc/archboot/etc/pacman/community.pacman" "/etc/pacman.d/community"
++}
++
++help ()
++{
++cat<<HELPEOF
++  This hook includes the pacman on an arch boot image.
++HELPEOF
++} 
+diff -Naur archboot-0.4.26/install/arch_yaboot archboot-0.4.26/install/arch_yaboot
+--- archboot-0.4.26/install/arch_yaboot	2007-09-14 16:11:56.000000000 +0200
++++ archboot-0.4.26/install/arch_yaboot	2007-09-28 11:08:14.000000000 +0200
+@@ -3,10 +3,14 @@
+ install ()
+ {
+     MODULES=""
+-    BINARIES="yaboot"
++    BINARIES="ofpath ybin yabootconfig"
+     FILES=""
+     SCRIPT=""
+     add_file "/etc/archboot/etc/yaboot/yaboot.conf" "/etc/yaboot.conf"
++    add_file "/usr/lib/yaboot/yaboot"
++    add_file "/usr/lib/yaboot/addnote"
++    add_file "/usr/lib/yaboot/ofboot"
++    add_file "/usr/sbin/mkofboot"
+ }
+ 
+ help ()
+diff -Naur archboot-0.4.26/install-ppc.conf archboot-0.4.26/install-ppc.conf
+--- archboot-0.4.26/install-ppc.conf	2007-09-28 11:54:15.000000000 +0200
++++ archboot-0.4.26/install-ppc.conf	2007-09-28 11:54:44.000000000 +0200
+@@ -14,7 +14,9 @@
+ # default is set to ftp install media
+ #
+ # Please change the other hooks only if you know what you are doing.
+-HOOKS="arch-ftp-installppc arch-bootmessage-ppc arch-motd arch-pam arch-shadow arch-base-ppc arch-hwdetect arch-udev ide pata scsi sata arch-net arch-isdn arch-pcmcia usb usbinput fw arch-raid arch-lvm2 arch-encrypt arch-filesystems-ppc arch-keymap-ppc arch-remote arch-cpufreq arch-fb arch-links arch-naim arch-pacman arch-addons arch-kexec arch-ppp arch-pppoe arch-yaboot arch-iptables arch-pciutils arch-usbutils arch-openvpn arch-vpnc"
++#HOOKS="arch_ftp_installppc arch_bootmessage_ppc arch_motd arch_pam arch_shadow arch_base_ppc arch_hwdetect arch_udev ide pata scsi sata arch_net arch_isdn arch_pcmcia usb usbinput fw arch_raid arch_lvm2 arch_encrypt arch_filesystems_ppc arch_keymap_ppc arch_remote arch_cpufreq arch_fb arch_links arch_naim arch_pacman arch_addons arch_kexec arch_ppp arch_pppoe arch_yaboot arch_iptables arch_pciutils arch_usbutils arch_openvpn arch_vpnc"
++
++HOOKS="arch_ftp_installppc arch_bootmessage_ppc arch_motd arch_pam arch_shadow arch_baseppc arch_hwdetect_ppc arch_udev ide pata scsi sata arch_net arch_isdn arch_pcmcia usb usbinput fw arch_raid arch_lvm2 arch_encrypt arch_filesystems_ppc arch_keymap_ppc arch_remote arch_cpufreq arch_fb arch_links arch_naim arch_pacman_ppc arch_addons  arch_ppp arch_pppoe arch_yaboot arch_iptables arch_capi4k arch_pciutils arch_usbutils arch_openvpn arch_vpnc"
+ #
+ # adding pxelinux hook if mkpxelinux is used.
+ if [ "${RUNPROGRAM}" = "mkpxelinux" ]; then
+@@ -26,16 +28,13 @@
+ # the default install media creating process, uses latest files from online cvs!
+ #
+ #SERVER PARAMETERS
+-FTPSERVER="ftp://ftp.archlinuxppc.org/current/os"
+-# CVS-CURRENT SERVER
+-CVSCURRENT=":pserver:anonymous:anonymous@cvs.archlinuxppc.org:/home/cvs-current"
+-# CVS-CURRENT TAG
++FTPSERVER="ftp://ftp.archlinuxppc.org/core/os"
++# CVS SERVER
++ARCH_CVSSETUP=":pserver:anonymous:anonymous@cvs.archlinuxppc.org:/home/cvs-arch"
++CVSSETUP=":pserver:anonymous:anonymous@cvs.archlinuxppc.org:/home/cvs-core"
++# CVS TAG
+ TAG="CURRENT"
+ 
+-CVSARCH=":pserver:anonymous:anonymous@cvs.archlinuxppc.org:/home/cvs-arch"
+-
+-
+-
+ ###### LOCAL SETUP
+ # only needed if you want to build custom install media
+ # disabled by default you can ignore all those parameters below 
+@@ -56,52 +55,47 @@
+ # cvs -z3 co arch/scripts/{km,setup,quickinst}
+ # cvs -z3 co arch/doc/en/guide/install/arch-install-guide.txt
+ # cvs -z3 co arch/mirrors.txt
+-# ### needed for base install media
+-
+-# export CVSROOT=":pserver:anonymous:anonymous@cvs.archlinuxppc.org:/home/cvs-current"
+-# TAG="CURRENT"
+-# cvs -z3 co -r ${TAG} arch/build/base/
+-# cvs -z3 co -r ${TAG} arch/build/kernels/
+-# ### needed for current install media
+-# cvs -z3 co -r ${TAG} arch/build/
++# export CVSROOT=":pserver:anonymous:anonymous@cvs.archlinuxppc.org:/home/cvs-core"
++# cvs -z3 co -r ${TAG} core/
+ # ---------------
+ # Now you can start to modify this tree to your needs.
+ 
+ ### GENERAL REMASTER PARAMETERS
+ # enter here your custom/modified cvs tree
+ CVSTREE=""
++ARCH_CVSTREE=""
+ 
+ # path to keyboard layout change script
+-KMSCRIPT="${CVSTREE}/arch/scripts/km"
++KMSCRIPT="${ARCH_CVSTREE}/arch/scripts/km"
+ 
+ # path to setup script
+-SETUP="${CVSTREE}/arch/scripts/setup"
++SETUP="${ARCH_CVSTREE}/arch/scripts/setup"
+ 
+ # path to quickinst script
+-QUICKINST="${CVSTREE}/arch/scripts/quickinst"
++QUICKINST="${ARCH_CVSTREE}/arch/scripts/quickinst"
+ 
+ # path to file which include the mirrors
+-MIRRORS="${CVSTREE}/arch/mirrors.txt"
++MIRRORS="${ARCH_CVSTREE}/arch/mirrors.txt"
+ 
+ # path to documentation file
+-DOCUMENTATION="${CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt"
++DOCUMENTATION="${ARCH_CVSTREE}/arch/doc/en/guide/install/arch-install-guide.txt"
+ 
+ # path to built packages
+ PACKAGEDIR=""
+ 
+ # path to static pacman
+ # download it from: 
+-# ftp://ftp.archlinuxppc.org/current/os/<yourarchitecture>/setup/pacman.pkg.tar.gz
++# ftp://ftp.archlinuxppc.org/core/os/<yourarchitecture>/setup/pacman.pkg.tar.gz
+ # or build it on your own ;)
+ PACMANBINARY=""
+ 
+ # path to rc.sysinit to get arch version
+-RCSYSINIT="${CVSTREE}/arch/build/base/initscripts/rc.sysinit"
++RCSYSINIT="${CVSTREE}/core/base/initscripts/rc.sysinit"
+ 
+ #### REMASTER FTP INSTALL MEDIA
+ # No extra parameters needed
+ 
+-#### REMASTER BASE/CURRENT INSTALL MEDIA
++#### REMASTER CORE INSTALL MEDIA
+ ### main cvs dir for base install
+ # Note: the MAINCVSDIR dir must include a 'base' and 'kernels' directory
+-MAINCVSDIR="${CVSTREE}/current"
++MAINCVSDIR="${CVSTREE}/core"

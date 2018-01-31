@@ -1,0 +1,31 @@
+# $Id: PKGBUILD 120143 2011-04-20 11:59:42Z ibiru $
+# x86 Maintainer : Ionut Biru <ibiru@archlinux.org>
+# Contributor: Gabriel Martinez < reitaka at gmail dot com >
+
+pkgname=libplist
+pkgver=1.4
+pkgrel=1
+pkgdesc="A library to handle Apple Property List format whereas it's binary or XML"
+url="http://libimobiledevice.org/"
+arch=('ppc' 'i686' 'x86_64')
+license=('GPL2' 'LGPL2.1')
+depends=('glib2' 'libxml2' 'python2')
+makedepends=('cmake' 'swig' 'python-distribute')
+source=(http://www.libimobiledevice.org/downloads/${pkgname}-${pkgver}.tar.bz2)
+
+build() {
+  cd "${srcdir}"
+
+  mkdir build
+  cd build
+  cmake ../"${pkgname}-${pkgver}" \
+      -DCMAKE_SKIP_RPATH=ON -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+      -DCMAKE_INSTALL_PREFIX:PATH=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}
+md5sums=('2ef8bf33d9aeb078c6d8b6ecafbc6396')

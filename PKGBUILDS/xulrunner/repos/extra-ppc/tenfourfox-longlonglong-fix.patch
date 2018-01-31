@@ -1,0 +1,11 @@
+--- mozilla-2.0/js/src/nanojit/avmplus.h.orig	2011-03-23 15:25:57.627471999 +0000
++++ mozilla-2.0/js/src/nanojit/avmplus.h	2011-03-23 15:32:02.689576442 +0000
+@@ -151,7 +151,7 @@
+ 
+ # define AVMPLUS_HAS_RDTSC 1
+ 
+-typedef unsigned long long int unsigned long long;
++typedef unsigned long long int uint64_t;
+ 
+ static __inline__ unsigned long long rdtsc(void)
+ {

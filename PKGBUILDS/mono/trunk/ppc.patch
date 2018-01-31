@@ -1,0 +1,11 @@
+--- a/mono/metadata/sgen-archdep.h	2011-01-08 16:15:29.000000000 +0100
++++ b/mono/metadata/sgen-archdep.h	2011-01-08 16:15:13.000000000 +0100
+@@ -102,7 +102,7 @@
+ 	((a)[14] = (gpointer) (UCONTEXT_REG_R15 (ctx)));	\
+ 	} while (0)
+ 
+-#elif defined(__ppc__)
++#elif defined(__ppc__) || defined(__powerpc__) || defined (__POWERPC__)
+ 
+ #define REDZONE_SIZE	224
+ 

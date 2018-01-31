@@ -1,0 +1,43 @@
+--- blog_poster.py.orig	2005-06-10 19:58:42.000000000 +0000
++++ blog_poster.py	2005-06-10 19:59:06.000000000 +0000
+@@ -9,13 +9,6 @@
+ from gnomeblog import blog
+ from gnomeblog import blogger_prefs
+ 
+-#check if pygtkspell is installed
+-try:
+-    import gtkspell
+-    use_gtkspell = 1
+-except:
+-    use_gtkspell = 0
+-
+ gconf_prefix = None
+ 
+ class BlogPoster(gtk.Frame):
+@@ -36,10 +29,6 @@
+         
+         self.blogEntry   = rich_entry.RichEntry()
+ 
+-	#if we are using gtkspell, attach it to the blogEntry
+-	if use_gtkspell:
+-		gtkspell.Spell(self.blogEntry)
+-
+         scroller         = gtk.ScrolledWindow()
+         self.postButton  = gtk.Button(_("_Post Entry"))
+         
+@@ -117,15 +106,10 @@
+ 
+         #we must turn off the spell checker so as not to confuse
+         #the markup to html converter
+-        if use_gtkspell:
+-            spell = gtkspell.get_from_text_view(self.blogEntry)
+-            spell.detach()
+         
+         html_text = self.blogEntry.getHTML()
+ 
+ 	#turn spelling back on
+-        if use_gtkspell:
+-            gtkspell.Spell(self.blogEntry)
+ 
+         print "Text is: {\n %s \n }\n" % (html_text)
+         title = self.titleEntry.get_text().decode('utf-8')

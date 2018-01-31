@@ -1,0 +1,12 @@
+diff -Naur wmii-3.6+debian.orig/rc/wmiirc.sh wmii-3.6+debian/rc/wmiirc.sh
+--- wmii-3.6+debian.orig/rc/wmiirc.sh	2007-11-16 13:59:15.000000000 +0000
++++ wmii-3.6+debian/rc/wmiirc.sh	2007-11-18 16:46:25.000000000 +0000
+@@ -18,7 +18,7 @@
+ set -- $(echo $WMII_NORMCOLORS $WMII_FOCUSCOLORS)
+ WMII_MENU="dmenu -b -fn '$WMII_FONT' -nf '$1' -nb '$2' -sf '$4' -sb '$5'"
+ WMII_9MENU="wmii9menu -font '$WMII_FONT' -nf '$1' -nb '$2' -sf '$4' -sb '$5' -br '$6'"
+-WMII_TERM="xterm"
++WMII_TERM="x-terminal-emulator"
+ 
+ # Column Rules
+ wmiir write /colrules <<!

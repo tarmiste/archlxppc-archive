@@ -1,0 +1,41 @@
+# $Id$
+# Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
+# Contributor: tobias <tobias funnychar archlinux.org>
+
+pkgname=xfwm4
+pkgver=4.8.3
+pkgrel=1
+pkgdesc="Xfce window manager"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.xfce.org/"
+license=('GPL2')
+groups=('xfce4')
+depends=('libxfce4ui' 'libwnck' 'hicolor-icon-theme')
+makedepends=('pkgconfig' 'compositeproto' 'intltool')
+options=('!libtool')
+install=$pkgname.install
+source=(http://archive.xfce.org/src/xfce/$pkgname/4.8/$pkgname-$pkgver.tar.bz2)
+sha256sums=('0b0e8bea0b257958ad416ab5678cf0cdd7e909943d4d5ab32afc35295a78227e')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib \
+    --localstatedir=/var \
+    --disable-static \
+    --enable-startup-notification \
+    --enable-randr \
+    --enable-compositor \
+    --enable-xsync \
+    --disable-debug
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

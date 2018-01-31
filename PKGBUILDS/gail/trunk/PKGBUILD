@@ -1,0 +1,23 @@
+# $Id: PKGBUILD,v 1.12 2008/08/11 13:08:39 kth5 Exp $
+#  ppc Maintainer: Benoit Chesneau <benoitc@archlinuxppc.org>
+# i686 Maintainer: Jan de Groot <jan@archlinux.org>
+pkgname=gail
+pkgver=1.22.3
+pkgrel=1
+pkgdesc="The GNOME Accessibility Project"
+arch=(i686 x86_64 ppc)
+license=('GPL')
+depends=('gtk2>=2.12.9')
+makedepends=('pkgconfig' 'perlxml' 'xorg-headers')
+options=('!libtool')
+url="http://www.gnome.org"
+source=(http://ftp.gnome.org/pub/gnome/sources/${pkgname}/1.22/${pkgname}-${pkgver}.tar.bz2)
+
+build() {
+  cd ${startdir}/src/${pkgname}-${pkgver}
+  ./configure --prefix=/usr --sysconfdir=/etc \
+              --localstatedir=/var --disable-static || return 1
+  make || return 1
+  make DESTDIR=${startdir}/pkg install || return 1
+}
+md5sums=('1b0d2b3d5f89fb620ce6122e52578b41')

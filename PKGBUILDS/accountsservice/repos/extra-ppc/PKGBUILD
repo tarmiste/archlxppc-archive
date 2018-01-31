@@ -1,0 +1,33 @@
+# $Id: PKGBUILD 141268 2011-10-27 16:31:57Z ibiru $
+# x86 Maintainer: Ionut Biru <ibiru@archlinux.org>
+
+pkgname=accountsservice
+pkgver=0.6.15
+pkgrel=1
+pkgdesc="D-Bus interface for user account query and manipulation"
+arch=('ppc' i686 x86_64)
+url="http://cgit.freedesktop.org/accountsservice/"
+license=('GPL3')
+depends=('dbus-glib' 'polkit')
+makedepends=('intltool' 'gobject-introspection')
+options=('!libtool')
+source=(http://cgit.freedesktop.org/accountsservice/snapshot/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('939e58e57334801ca578b182a09141c4')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./autogen.sh
+  ./configure --prefix=/usr --sysconfdir=/etc \
+    --libexecdir=/usr/lib/accountsservice \
+    --with-systemdsystemunitdir=/lib/systemd/system \
+    --localstatedir=/var --disable-static
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

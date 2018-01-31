@@ -1,0 +1,30 @@
+# $Id: PKGBUILD 143235 2011-11-23 19:29:05Z andrea $
+# x86 Maintainer: Ronald van Haren <ronald.archlinux.org>
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=libktorrent
+pkgver=1.1.3
+pkgrel=1
+pkgdesc="A BitTorrent protocol implementation"
+arch=('ppc' 'i686' 'x86_64')
+url="http://ktorrent.org"
+license=('GPL2')
+depends=('kdelibs')
+makedepends=('automoc4' 'cmake' 'boost' 'doxygen')
+source=("http://ktorrent.org/downloads/4.1.3/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('665b6139ab68b83c6465509e29e839e0')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+}

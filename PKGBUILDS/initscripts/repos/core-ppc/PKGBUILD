@@ -1,0 +1,37 @@
+# $Id: PKGBUILD 141041 2011-10-22 09:32:03Z tomegun $
+# x86 Maintainer: Tom Gundersen <teg@jklm.no>
+# x86 Maintainer: Thomas Bächler <thomas@archlinux.org>
+# x86 Maintainer: Aaron Griffin <aaron@archlinux.org>
+
+pkgname=initscripts
+pkgver=2011.11.3
+pkgrel=1
+pkgdesc="System initialization/bootup scripts"
+arch=('ppc' 'i686' 'x86_64')
+url="http://www.archlinux.org"
+license=('GPL2')
+groups=('base')
+backup=(etc/inittab etc/rc.conf etc/rc.local etc/rc.local.shutdown etc/conf.d/wireless)
+depends=('glibc' 'bash' 'grep' 'coreutils' 'udev>=173' 'iproute2'
+         'ncurses' 'kbd' 'findutils' 'sysvinit')
+optdepends=('bridge-utils: Network bridging support'
+            'dhcpcd: DHCP network configuration'
+            'net-tools: legacy network support'
+            'wireless_tools: Wireless networking')
+makedepends=('asciidoc') # No needed to provide it to the end users.. install it
+			 # from ABS community.
+install=initscripts.install
+source=("ftp://mirrors.kernel.org/archlinux/other/initscripts/${pkgname}-${pkgver}.tar.xz"
+        'wireless.conf.d' 'archppc.patch')
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  if [ ${CARCH} == 'ppc' ]; then
+	  patch -Np1 -i ${srcdir}/archppc.patch
+  fi
+  make DESTDIR=${pkgdir} install
+  install -D -m644 ${srcdir}/wireless.conf.d ${pkgdir}/etc/conf.d/wireless
+}
+md5sums=('b32b4becf2ccbd9d287f164d0e197c83'
+         '027576534885b8d5dded9be546057b12'
+         '930c1bcb425af25edbfab94c656179be')

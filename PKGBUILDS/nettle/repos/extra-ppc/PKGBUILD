@@ -1,0 +1,36 @@
+# $Id: PKGBUILD 140462 2011-10-15 08:19:09Z andyrtr $
+# x86 Maintainer: Andreas Radke <andyrtr@archlinux.org>
+# Contributor: bender02 at gmx dot com
+
+pkgname=nettle
+pkgver=2.4
+pkgrel=1
+pkgdesc="A low-level cryptographic library"
+arch=('ppc' 'i686' 'x86_64')
+url="http://www.lysator.liu.se/~nisse/nettle/"
+license=('GPL2')
+install=$pkgname.install
+depends=('gmp')
+source=(ftp://ftp.lysator.liu.se/pub/security/lsh/$pkgname-$pkgver.tar.gz)
+md5sums=(''450be8c4886d46c09f49f568ad6fa013'')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr --libdir=/usr/lib \
+	--enable-shared \
+	--disable-static # <-- seems not working now
+  make
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make -k check
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+  
+  # remove static libs
+  rm -f ${pkgdir}/usr/lib/{libhogweed,libnettle}.a
+}

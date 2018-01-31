@@ -1,0 +1,41 @@
+# $Id: PKGBUILD 138129 2011-09-17 02:28:33Z allan $
+# x86 Maintainer: AndyRTR <andyrtr@archlinux.org>
+# Contributor: tobias <tobias funnychar archlinux.org>
+
+pkgname=xfdesktop
+pkgver=4.8.3
+pkgrel=1
+pkgdesc="A desktop manager for Xfce"
+arch=('ppc' 'i686' 'x86_64')
+license=('GPL2')
+url="http://www.xfce.org/"
+groups=('xfce4')
+depends=('libxfce4ui' 'thunar>=1.2.0' 'garcon' 'hicolor-icon-theme' 'libwnck>=2.30.0')
+makedepends=('intltool' 'xfce4-panel>=4.8.0')
+optdepends=('xfce4-panel: panel menu plugin')
+conflicts=('xfce4-menueditor')
+replaces=('xfce4-menueditor')
+options=('!libtool')
+install=xfdesktop.install
+source=(http://archive.xfce.org/src/xfce/${pkgname}/4.8/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('617c667c469698e8c974e38412cb484c')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr \
+	--sysconfdir=/etc \
+	--libexecdir=/usr/lib \
+	--localstatedir=/var \
+	--disable-static \
+	--enable-gio-unix \
+	--enable-thunarx \
+	--enable-exo \
+	--enable-notifications \
+	--disable-debug
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,40 @@
+# $Id: PKGBUILD 137306 2011-09-06 22:52:36Z bisson $
+# x86 Maintainer: Gaetan Bisson <bisson@archlinux.org>
+# Contributor: damir <damir@archlinux.org>
+# Contributor: Gan Lu <rhythm.gan@gmail.com>
+
+pkgname=scim
+pkgver=1.4.11
+pkgrel=2
+pkgdesc='Input method user interface and development platform'
+url='http://www.scim-im.org/projects/scim'
+license=('GPL')
+arch=('ppc' 'i686' 'x86_64')
+options=('!libtool')
+makedepends=('intltool')
+depends=('gtk2' 'libtool')
+backup=('etc/scim/config' 'etc/scim/global')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha1sums=('e202e42df52f5c9a88f6ae4d4ce04f94bc22e27c')
+
+install=install
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	./bootstrap
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--disable-static \
+		--with-gnu-ld \
+		--with-x \
+
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	make DESTDIR="${pkgdir}" install
+}

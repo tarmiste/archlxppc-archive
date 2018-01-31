@@ -1,0 +1,40 @@
+# $Id: PKGBUILD 137722 2011-09-10 14:14:07Z pierre $
+# x86 Maintainer: Tobias Powalowski <tpowa@archlinux.org>
+
+pkgname=dmapi
+pkgver=2.2.10
+pkgrel=3
+pkgdesc="Data migration API"
+arch=('ppc')
+url="http://oss.sgi.com/projects/xfs/"
+license=('GPL')
+depends=('glibc')
+makedepends=('xfsprogs')
+provides=('xfsdmapi')
+conflicts=('xfsdmapi')
+replaces=('xfsdmapi')
+options=('!libtool')
+source=("ftp://oss.sgi.com/projects/xfs/cmd_tars/$pkgname-$pkgver.tar.gz")
+md5sums=('c6e4ace10c446bbb92576e5dd19aec24')
+
+build() {
+  cd $srcdir/dmapi-$pkgver
+  [ "$CARCH" = "ppc" ] && export CFLAGS="$CLFAGS -fPIC"
+  export INSTALL_USER=root
+  export INSTALL_GROUP=root
+  export DEBUG=-DNDEBUG
+  autoconf
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/dmapi-$pkgver
+  make DIST_ROOT=$pkgdir install install-dev
+  # the static lib
+  install -D -m644 libdm/.libs/libdm.a $pkgdir/usr/lib/libdm.a
+  # and the header file, please
+  install -D -m644 include/dmapi.h $pkgdir/usr/include/xfs/dmapi.h
+  # kill libexec dir
+  rm -rf $pkgdir/usr/libexec
+}

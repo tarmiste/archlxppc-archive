@@ -1,0 +1,35 @@
+# $Id: PKGBUILD 77897 2010-04-19 01:46:54Z andrea $
+# x86 Maintainer: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Jeff Mickey <jeff@archlinux.org>
+# Contributor: John Proctor <jproctor@prium.net>
+
+pkgname=commoncpp2
+pkgver=1.8.0
+pkgrel=1
+pkgdesc="GNU Common C++ 2"
+arch=('ppc' 'i686' 'x86_64')
+url='http://www.gnu.org/software/commoncpp/'
+license=('GPL' 'custom')
+depends=('gcc-libs' 'zlib' 'sh')
+options=('!libtool' '!makeflags')
+source=("http://ftp.gnu.org/pub/gnu/commoncpp/${pkgname}-${pkgver}.tar.gz"
+	ppc_patch.diff)
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  patch -Np1 -i ${srcdir}/ppc_patch.diff
+  ./configure --prefix=/usr
+  make || return 1
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install || return 1
+  
+  gzip -9 ${pkgdir}/usr/share/info/commoncpp2.info
+  rm ${pkgdir}/usr/share/info/dir
+  
+  install -D -m644 COPYING.addendum ${pkgdir}/usr/share/licenses/$pkgname/LICENSE
+}
+md5sums=('502c34af4661ea77849ee1edc4a23042'
+         'bf411d9d264119645150b6094a15b0ee')

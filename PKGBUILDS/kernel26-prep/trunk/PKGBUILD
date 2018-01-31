@@ -1,0 +1,136 @@
+# $Id: PKGBUILD,v 1.2 2006/10/12 15:32:24 kth5 Exp $
+# Maintainer: Alexander Baldeck <alexander@archlinux.org>
+pkgname=kernel26-prep
+basekernel=2.6.17
+pkgver=2.6.17.13
+pkgrel=1
+pkgdesc="The Linux Kernel and modules"
+arch=(ppc)
+url="http://www.kernel.org"
+backup=('boot/kconfig26.prep')
+depends=('module-init-tools' 'mkinitcpio')
+# pwc, ieee80211 and hostap-driver26 modules are included in kernel26 now
+# kernel24 support is dropped since glibc24
+replaces=('kernel24' 'kernel24-scsi' 'kernel26-scsi' 'alsa-driver' 'ieee80211')
+install=kernel26.install
+source=(ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-$basekernel.tar.bz2 \
+  http://www.kernel.org/pub/linux/kernel/v2.6/patch-$pkgver.bz2 \
+  #http://www.kernel.org/pub/linux/kernel/v2.6/testing/patch-2.6.19-rc1.bz2 \
+  #http://www.kernel.org/pub/linux/kernel/v2.6/snapshots/patch-2.6.19-rc1-git6.bz2 \
+  ftp://152.104.238.194/cn/nic/r1000_v1.04.tgz \
+  config logo_linux_clut224.ppm logo_linux_mono.pbm logo_linux_vga16.ppm \
+  mkinitcpio-kernel26.conf \
+  #ftp://ftp.kernel.org/pub/linux/kernel/people/lenb/acpi/patches/release/$basekernel/acpi-release-20060310-$basekernel.diff.bz2 \
+  acpi-dsdt-initrd-v0.8.1-2.6.16.patch r1000-build.patch)
+
+build() {
+  export KARCH=ppc
+  export ARCH=ppc
+
+  cd $startdir/src/linux-$basekernel
+  # add upstream patch from 2.6.17 series
+  patch -Np1 -i ../patch-$pkgver || return 1
+  #patch -Np1 -i ../patch-2.6.19-rc1-git6 || return 1
+  
+  # add acpi custom dsdt patch
+  #patch -Np1 -i ../acpi-dsdt-initrd-v0.8.1-2.6.16.patch || return 1
+ 
+  # remove the extraversion from Makefile
+  sed -i 's|^EXTRAVERSION = .*$|EXTRAVERSION =|g' Makefile  
+  # Arch logo!
+  cp ../logo_linux_clut224.ppm drivers/video/logo/
+  cp ../logo_linux_mono.pbm drivers/video/logo/
+  cp ../logo_linux_vga16.ppm drivers/video/logo/
+
+  # get rid of the 'i' in i686
+  cat ../config | sed "s|#CARCH#|${KARCH}|g" >./.config
+  
+
+  # build the full kernel version to use in pathnames
+  . ./.config
+  _kernver="${basekernel}${CONFIG_LOCALVERSION}"
+  # load configuration
+  yes "" | make config
+  # build!
+  make zImage modules || return 1
+  mkdir -p $startdir/pkg/{lib/modules,boot}
+  make INSTALL_MOD_PATH=$startdir/pkg modules_install || return 1
+  cp System.map $startdir/pkg/boot/System.map26.prep
+  cp vmlinux $startdir/pkg/boot/vmlinux26.prep
+  cp arch/ppc/boot/images/zImage.prep $startdir/pkg/boot/zImage26.prep
+ 
+
+
+  install -D -m644 Makefile \
+    $startdir/pkg/usr/src/linux-${_kernver}/Makefile
+  install -D -m644 kernel/Makefile \
+    $startdir/pkg/usr/src/linux-${_kernver}/kernel/Makefile
+  install -D -m644 .config \
+    $startdir/pkg/usr/src/linux-${_kernver}/.config
+  install -D -m644 .config $startdir/pkg/boot/kconfig26.prep
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/include
+
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/arch/$KARCH/kernel
+
+  for i in acpi config linux math-emu media net pcmcia scsi sound video; do
+    cp -a include/$i $startdir/pkg/usr/src/linux-${_kernver}/include/
+  done
+
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/include/{asm,asm-ppc}
+  #cp -a include/asm-powerpc/* $startdir/pkg/usr/src/linux-${_kernver}/include/asm
+  cp -a include/asm-ppc/* $startdir/pkg/usr/src/linux-${_kernver}/include/asm
+  cp -a include/asm-generic $startdir/pkg/usr/src/linux-${_kernver}/include/asm-generic
+
+  # copy files necessary for later builds, like nvidia and vmware
+  cp Module.symvers $startdir/pkg/usr/src/linux-${_kernver}
+  cp -a scripts $startdir/pkg/usr/src/linux-${_kernver}
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/.tmp_versions
+  
+  cp arch/$KARCH/Makefile $startdir/pkg/usr/src/linux-${_kernver}/arch/$KARCH/
+  cp arch/$KARCH/kernel/asm-offsets.s $startdir/pkg/usr/src/linux-${_kernver}/arch/$KARCH/kernel/
+
+  # add headers for lirc package
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/drivers/media/video
+  cp drivers/media/video/*.h  $startdir/pkg/usr/src/linux-${_kernver}/drivers/media/video/
+  for i in bt8xx cpia2 cx25840 cx88 em28xx et61x251 pwc saa7134 sn9c102 usbvideo zc0301; do
+   mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/drivers/media/video/$i
+   cp -a drivers/media/video/$i/*.h $startdir/pkg/usr/src/linux-${_kernver}/drivers/media/video/$i
+  done
+  # add dm headers
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/drivers/md
+  cp drivers/md/*.h  $startdir/pkg/usr/src/linux-${_kernver}/drivers/md
+  # add inotify.h
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/include/linux
+  cp include/linux/inotify.h $startdir/pkg/usr/src/linux-${_kernver}/include/linux/
+  # add CLUSTERIP file for iptables
+  mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/net/ipv4/netfilter/
+  cp net/ipv4/netfilter/ipt_CLUSTERIP.c $startdir/pkg/usr/src/linux-${_kernver}/net/ipv4/netfilter/
+  # copy in Kconfig files
+  for i in `find . -name "Kconfig*"`; do 
+    mkdir -p $startdir/pkg/usr/src/linux-${_kernver}/`echo $i | sed 's|/Kconfig.*||'`
+    cp $i $startdir/pkg/usr/src/linux-${_kernver}/$i
+  done
+
+  cd $startdir/pkg/usr/src/linux-${_kernver}/include && ln -s asm-$KARCH asm
+
+  chown -R root.root $startdir/pkg/usr/src/linux-${_kernver}
+  cd $startdir/pkg/lib/modules/${_kernver} && \
+    (rm -f source build; ln -sf ../../../usr/src/linux-${_kernver} build)
+  # for binary modules make prepare
+  cd $startdir/pkg/lib/modules/${_kernver}/build
+  make prepare
+  # install fallback mkinitcpio.conf file for kernel
+  install -m644 -D $startdir/src/mkinitcpio-kernel26.conf $startdir/pkg/boot/mkinitcpio-kernel26prep.conf
+  # set correct depmod command for install
+  sed -i -e "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/g" $startdir/kernel26.install
+  # install r1000 driver for newer realtek network cards
+  cd $startdir/src/r1000_v1.04/
+  patch -Np0 -i $startdir/src/r1000-build.patch || return 1
+  make KDIR=$startdir/src/linux-$basekernel modules
+   install -D -m644 $startdir/src/r1000_v1.04/src/r1000.ko $startdir/pkg/lib/modules/${_kernver}/kernel/drivers/net/r1000.ko
+}
+md5sums=('37ddefe96625502161f075b9d907f21e' '8bba5493a097abac45df584d863fba67'\
+         '95ffba4436fbb866a7e68809eac3bfb9' 'faed3c94d620f962f4e82786c314a5de'\
+         '5a62bcc7e96601052c7405459b483826' 'ed6b42fea2f5d27f7eb920746ccc1ebb'\
+         'a995ec849ea43d3c89d607bbdd1e7d09' '8baffc788327d96b55d2e3a1ae31fe1c'\
+         'f75a56d3dd46f28480ccd23463a497fc' '82fd4f8c08dff9e802013aaf0e00e3a0')

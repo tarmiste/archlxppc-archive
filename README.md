@@ -6,5 +6,6 @@
 # This repository contains PKGBUILDS and packages.   This repository is
 # intended for historical reference only, and not for active development.
 #
+# This repository does not contain any binaries or source tarballs.
 
 
